@@ -1,101 +1,85 @@
-import Image from 'next/image';
+import InputNumber from '@/components/InputNumber';
+import TextField from '@/components/TextField';
+import {
+  Button,
+  Container,
+  Grid,
+  GridCol,
+  InputWrapper,
+  Text,
+  Textarea,
+  Title,
+} from '@mantine/core';
+import { DateInput, TimeInput } from '@mantine/dates';
 
 export default function Home() {
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm sm:text-left">
-          <li className="mb-2">
-            Get started by editing{' '}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-semibold dark:bg-white/[.06]">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div>
+      <Container size="lg">
+        <Grid>
+          <GridCol span={{ base: 12, md: 8, lg: 7 }}>
+            <div className="rounded-xl bg-white p-5">
+              <Title className="mb-3 mt-4 font-medium text-[#222]" order={4}>
+                Thông tin người đặt
+              </Title>
+              <Grid>
+                <GridCol span={12}>
+                  <TextField label="Tên liên lạc" />
+                </GridCol>
+                <GridCol span={{ base: 12, sm: 6 }}>
+                  <TextField label="Số điện thoại" />
+                </GridCol>
+                <GridCol span={{ base: 12, sm: 6 }}>
+                  <TextField label="Email" />
+                </GridCol>
+                <GridCol span={12}>
+                  <Textarea label="Ghi chú" />
+                </GridCol>
+                <GridCol span={12}>
+                  <div className="flex justify-end">
+                    <Button>Tiếp tục</Button>
+                  </div>
+                </GridCol>
+              </Grid>
+            </div>
+          </GridCol>
+          <GridCol span={{ base: 12, md: 4, lg: 5 }}>
+            <div className="rounded-xl bg-white p-5">
+              <div className="rounded-lg border border-gray-200 p-4">
+                <Title
+                  className="-mx-4 mb-2 border-b border-gray-200 px-4 pb-2 font-medium text-[#222]"
+                  order={4}
+                >
+                  Thông tin phòng
+                </Title>
+                <Grid>
+                  <GridCol span={{ base: 12, sm: 6 }}>
+                    <InputNumber label="Số lượng người lớn" min={1} />
+                  </GridCol>
+                  <GridCol span={{ base: 12, sm: 6 }}>
+                    <InputNumber label="Số lượng trẻ em" min={0} />
+                  </GridCol>
+                  <GridCol span={{ base: 12, sm: 6 }}>
+                    <InputWrapper label="Ngày đến">
+                      <DateInput defaultDate={new Date()} />
+                    </InputWrapper>
+                  </GridCol>
+                  <GridCol span={{ base: 12, sm: 6 }}>
+                    <InputWrapper label="Giờ đến">
+                      <TimeInput />
+                    </InputWrapper>
+                  </GridCol>
+                </Grid>
+              </div>
 
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            className="bg-foreground text-background flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent px-4 text-sm transition-colors hover:bg-[#383838] sm:h-12 sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="flex h-10 items-center justify-center rounded-full border border-solid border-black/[.08] px-4 text-sm transition-colors hover:border-transparent hover:bg-[#f2f2f2] sm:h-12 sm:min-w-44 sm:px-5 sm:text-base dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-6">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+              <button className="mt-3 flex w-full items-center justify-between gap-3 rounded-lg border border-red-500 px-3 py-2 text-sm font-semibold text-red-500">
+                <Text>Sản phẩm chọn kèm</Text>
+                <Text>Khám phá ngay {'>'}</Text>
+              </button>
+            </div>
+          </GridCol>
+        </Grid>
+      </Container>
     </div>
   );
 }
