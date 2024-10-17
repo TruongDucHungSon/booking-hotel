@@ -1,12 +1,9 @@
-import { MantineProvider } from '@mantine/core';
-import type { Metadata } from 'next';
-import './globals.css';
-import { DatesProvider } from '@mantine/dates';
-import 'dayjs/locale/vi';
 import DefaultLayout from '@/layout';
-import { Inter } from 'next/font/google';
-const inter = Inter({ subsets: ['latin'] });
-
+import Footer from '@/layout/Footer';
+import type { Metadata } from 'next';
+import { Plus_Jakarta_Sans } from 'next/font/google';
+import './globals.css';
+const plus_jakarta_sans = Plus_Jakarta_Sans({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Booking App',
   description: 'Description Booking App',
@@ -19,12 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-gray-100`}>
-        <MantineProvider>
-          <DatesProvider settings={{ locale: 'vi', timezone: 'UTC' }}>
-            <DefaultLayout>{children}</DefaultLayout>
-          </DatesProvider>
-        </MantineProvider>
+      <body className={`${plus_jakarta_sans.className}`}>
+        <DefaultLayout />
+        {children}
+        <Footer />
       </body>
     </html>
   );

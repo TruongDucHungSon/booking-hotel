@@ -1,8 +1,92 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 @layer base {
   @import '@mantine/core/styles.css';
   @import '@mantine/dates/styles.css';
+}
+html {
+  background: #fff;
+  color: #000;
+}
+
+@font-face {
+  font-family: 'Wylie Voigen';
+  src: url('../font//SVN-Wylie\ Voigen.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.hover-gradient {
+  background: linear-gradient(108deg, #3a449b -22.88%, #ef5f5f 108.34%);
+  background-clip: text; /* Chỉ sử dụng nếu bạn muốn gradient cho chữ */
+  -webkit-background-clip: text; /* Chỉ sử dụng nếu bạn muốn gradient cho chữ */
+  -webkit-text-fill-color: transparent;
+}
+
+@layer components {
+  .text-gradient-hover {
+    background: linear-gradient(108deg, #3a449b -22.88%, #ef5f5f 108.34%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+.container {
+  @apply mx-auto w-full max-w-[1312px];
+}
+
+.font-varela {
+  font-family: 'Varela Round', sans-serif;
+}
+
+.bg-gradient {
+  background: linear-gradient(90deg, #3a449b -22.88%, #ef5f5f 130.34%);
+}
+
+.swiper-pagination-bullet {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #fff !important;
+  opacity: 0.3 !important;
+  border-radius: 50% !important;
+  transition: opacity 0.3s ease !important;
+}
+.swiper-pagination-bullet-active {
+  opacity: 1 !important;
+  background-color: #fff !important;
+  width: 8px !important; /* Increase size for active dot */
+  height: 8px !important; /* Increase size for active dot */
+  border-radius: 50% !important;
+}
+
+/* Target only the Swiper instance inside the custom-swiper class */
+.custom-swiper .swiper-pagination-bullet {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #ef5f5f !important;
+  opacity: 0.3 !important;
+  border-radius: 50% !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.custom-swiper .swiper-pagination-bullet-active {
+  opacity: 1 !important;
+  background-color: #ef5f5f !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+}
+
+.abs-center {
+  @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+.shadow-opacity {
+  background: linear-gradient(0deg, #ffffff 0%, rgba(245, 245, 245, 0) 100%);
+}
+
+.bg-contact {
+  background: linear-gradient(-81deg, #3a449b -22.88%, #ef5f5f 108.34%);
 }

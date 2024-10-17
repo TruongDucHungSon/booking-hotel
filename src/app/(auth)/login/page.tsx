@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import TextField from '@/components/TextField';
 import { Button, Container, Divider, Title } from '@mantine/core';
-
+import React from 'react';
+import TextField from '../../../components/TextField/index';
 const Login = () => {
   return (
     <Container size="md" className="flex bg-white p-2 lg:rounded-md">
