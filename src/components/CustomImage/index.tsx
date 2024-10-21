@@ -28,7 +28,6 @@ const CustomImage: FC<CustomImageProps> = ({
         alt={alt}
         width={width}
         height={height}
-        objectFit="cover"
         quality={100}
         priority
         className={`h-full w-full object-cover ${classNameImg}`}

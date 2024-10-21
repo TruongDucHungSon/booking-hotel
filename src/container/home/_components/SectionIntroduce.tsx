@@ -1,12 +1,12 @@
 import IntroduceSrc from '@/assets/images/banner/introduce_banner.jpg';
 import CustomImage from '@/components/CustomImage';
-import Title from '../../components/Title/Title';
+import Title from '../../../components/Title/Title';
 const SectionIntroduce = () => {
   return (
     <section className="h-full bg-white py-20">
       <div className="container">
         <Title>Giới thiệu BLoom massage</Title>
-        <div className="container mb-8">
+        <div className="mb-8">
           <p className="mx-auto mt-4 w-full text-center text-black lg:w-[962px]">
             BLOOM MASAGE là thương hiệu spa được thành lập từ năm 2009. Kiến trúc theo phong cách Á
             Đông hiện đại kết hợp với nội thất trang trí tinh tế mang đến không gian hài hòa, ấm
@@ -21,7 +21,7 @@ const SectionIntroduce = () => {
             height={588}
             src={IntroduceSrc.src}
             alt="Banner Introduce"
-            className=""
+            className="w-[750px]"
           />
           <div className="w-full text-black lg:max-w-[756px]">
             <h4 className="mb-8 text-base font-medium">
@@ -29,7 +29,7 @@ const SectionIntroduce = () => {
               là mục tiêu của chúng tôi. Hãy để bản thân được nâng niu và yêu thương bản thân mình
               hơn!
             </h4>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
                 <div className="h-[68px] w-[68px]">
                   <svg

@@ -31,10 +31,10 @@ const DefaultLayout = () => {
               <li key={item.name}>
                 <Link
                   href={item.link}
-                  className={`text-[16px] font-medium leading-[20.16px] transition-colors duration-500 ${
+                  className={`text-[16px] font-medium leading-[20.16px] transition-colors duration-300 ease-in-out ${
                     pathname === item.link
-                      ? 'text-gradient-hover' // Add your gradient here
-                      : 'hover:text-gradient-hover text-primary'
+                      ? 'text-[#3A449B]' // Add your gradient here
+                      : 'text-primary hover:text-[#3A449B]'
                   }`}
                 >
                   {item.name}

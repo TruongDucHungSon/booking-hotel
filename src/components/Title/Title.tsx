@@ -2,10 +2,11 @@ import React from 'react';
 type Title = {
   children: React.ReactNode;
   className?: string;
+  type?: 'primary' | 'secondary';
 };
-const Title = ({ children, className }: Title) => {
+const Title = ({ children, className, type = 'primary' }: Title) => {
   return (
-    <div className="bg-white">
+    <div className={`${type === 'primary' ? `bg-[#ffffff]` : `bg-[#f1f1f4]`}`}>
       <h4
         className={`mx-auto flex w-full justify-center gap-[10px] text-center font-wylie text-[28px] font-normal capitalize leading-[41.86px] text-black lg:w-[500px] ${className} relative`}
       >

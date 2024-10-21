@@ -1,5 +1,5 @@
-import SaleSrc from '../../assets/images/service/sale.jpg';
-import CustomImage from '../../components/CustomImage/index';
+import SaleSrc from '../../../assets/images/service/sale.jpg';
+import CustomImage from '../../../components/CustomImage/index';
 
 const SectionSale = () => {
   return (
@@ -12,7 +12,7 @@ const SectionSale = () => {
           alt="sale"
           className="h-[500px] w-full"
         />
-        <div className="absolute left-[34%] top-1/2 z-50 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute left-[36%] top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 lg:left-[34%]">
           <h5 className="hover-gradient pb-3 font-wylie text-[48px] leading-[46px]">
             Khuyến mãi đặc biệt của bloom massage
           </h5>

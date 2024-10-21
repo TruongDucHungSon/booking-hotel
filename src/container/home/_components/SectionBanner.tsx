@@ -7,17 +7,17 @@ import 'swiper/css/autoplay'; // Import autoplay styles
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import SlideSrc1 from '../../assets/images/slider/slide1.png';
-import SlideSrc2 from '../../assets/images/slider/slide2.png';
-import SlideSrc3 from '../../assets/images/slider/slide3.png';
-import CustomImage from '../../components/CustomImage/index';
+import SlideSrc1 from '../../../assets/images/slider/slide1.png';
+import SlideSrc2 from '../../../assets/images/slider/slide2.png';
+import SlideSrc3 from '../../../assets/images/slider/slide3.png';
+import CustomImage from '../../../components/CustomImage/index';
 // import required modules
 import { Autoplay, Pagination } from 'swiper/modules';
 const SectionBanner = () => {
   return (
-    <section className="bg-gradient py-8">
+    <section className="mb-20 bg-gradient py-8">
       {/* header banner */}
-      <div className="mx-auto w-full pr-10 text-center text-white lg:w-[1212px]">
+      <div className="mx-auto w-full pl-5 pr-10 text-center text-white lg:w-[1212px]">
         <div className="flex justify-between">
           <svg
             width="83"
@@ -65,7 +65,7 @@ const SectionBanner = () => {
       </div>
 
       {/* slider banner */}
-      <div className="z-50 mt-8 h-[350px]">
+      <div className="container z-50 mt-8 h-[350px]">
         <Swiper
           spaceBetween={2}
           pagination={{
