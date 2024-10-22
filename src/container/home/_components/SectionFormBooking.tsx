@@ -1,4 +1,11 @@
 'use client';
+import DateIc from '@/assets/svgs/arrow/date.svg';
+import ArrowIc from '@/assets/svgs/arrow/down.svg';
+import LocationIc from '@/assets/svgs/arrow/location.svg';
+import StoreIc from '@/assets/svgs/arrow/store.svg';
+import TimeIc from '@/assets/svgs/arrow/time.svg';
+import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
+import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { vi } from 'date-fns/locale';
 import { useState } from 'react';
@@ -68,10 +75,17 @@ const SectionFormBooking = () => {
               <button
                 type="button"
                 onClick={() => toggleDropdown('location')}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-2 text-base font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none"
+                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none"
               >
+                <CustomImage width={18} height={18} src={LocationIc} alt="Arrow Down" />
                 {serviceLocation}
-                <span>▼</span>
+                <CustomImage
+                  width={18}
+                  height={18}
+                  src={downBLue}
+                  alt="Arrow Down"
+                  className={`transition-all duration-300 ${dropdowns.location ? 'rotate-180' : ''}`}
+                />
               </button>
               {dropdowns.location && (
                 <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
@@ -93,10 +107,17 @@ const SectionFormBooking = () => {
               <button
                 type="button"
                 onClick={() => toggleDropdown('store')}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-2 text-base font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none"
+                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none"
               >
+                <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
                 {store}
-                <span>▼</span>
+                <CustomImage
+                  width={18}
+                  height={18}
+                  src={ArrowIc}
+                  alt="Arrow Down"
+                  className={`transition-all duration-300 ${dropdowns.store ? 'rotate-180' : ''}`}
+                />
               </button>
               {dropdowns.store && (
                 <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
@@ -114,35 +135,63 @@ const SectionFormBooking = () => {
             </div>
 
             {/* Date and Time Pickers */}
-            <div className="flex w-full items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white text-base font-medium text-[#B9B9B9] lg:w-1/3">
-              <div className="relative flex w-full items-center">
+            <div className="flex w-full items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white px-2 text-base font-medium text-[#B9B9B9] lg:w-[42%]">
+              <div className="relative flex w-full items-center justify-center gap-2 px-2">
+                <CustomImage
+                  width={18}
+                  height={18}
+                  src={DateIc}
+                  alt="Arrow Down"
+                  className="h-6 w-6"
+                />
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => date && setStartDate(date)}
                   dateFormat="dd/MM/yyyy"
-                  className="w-full rounded-2xl bg-white px-4 py-2 text-base font-medium text-black focus:outline-none"
+                  className="w-full rounded-2xl bg-white py-[10px] text-base font-medium text-black focus:outline-none"
                   placeholderText="Chọn ngày"
                   locale={vi}
                   popperPlacement="bottom"
+                />
+                <CustomImage
+                  width={18}
+                  height={18}
+                  src={ArrowIc}
+                  alt="Arrow Down"
+                  className="h-6 w-6"
                 />
               </div>
 
               <span>|</span>
               <div className="relative flex w-full items-center justify-between">
+                <CustomImage
+                  width={50}
+                  height={50}
+                  src={TimeIc}
+                  alt="Arrow Down"
+                  className="h-6 w-7"
+                />
                 <button
                   type="button"
                   onClick={() => toggleDropdown('time')}
-                  className="w-full cursor-pointer rounded-md border-none bg-transparent px-4 py-2 text-left text-base font-medium text-primary focus:border-[#3A449B] focus:outline-none"
+                  className="w-full cursor-pointer rounded-md border-none bg-transparent px-2 py-2 text-left text-base font-medium text-primary focus:border-[#3A449B] focus:outline-none"
                 >
                   {selectedTime || 'Chọn giờ'}
                 </button>
+                <CustomImage
+                  width={50}
+                  height={50}
+                  src={ArrowIc}
+                  alt="Arrow Down"
+                  className="h-6 w-6"
+                />
                 {dropdowns.time && (
                   <ul className="sidebar-scroll absolute top-12 z-10 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
                     {availableTimes.map((time) => (
                       <li
                         key={time}
                         onClick={() => handleSelect('time', time)}
-                        className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
+                        className="cursor-pointer rounded-xl px-4 py-[10px] transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
                       >
                         {time}
                       </li>

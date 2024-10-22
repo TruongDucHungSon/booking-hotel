@@ -12,7 +12,7 @@ export const Navigation = [
   },
   {
     name: 'Giới thiệu',
-    link: '#',
+    link: '/gioi-thieu',
   },
   {
     name: 'Đặt lịch massage',

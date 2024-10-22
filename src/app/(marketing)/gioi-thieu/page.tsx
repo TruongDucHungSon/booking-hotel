@@ -1,11 +1,7 @@
-import React from 'react';
+import IntroducePage from '@/container/introduce';
 
-const IntroducePage = () => {
-  return (
-    <main>
-      <h1>Giới thiệu</h1>
-    </main>
-  );
+const page = () => {
+  return <IntroducePage />;
 };
 
-export default IntroducePage;
+export default page;
