@@ -273,7 +273,7 @@ const SectionFormBooking = () => {
             <div key={service.id} className="group max-w-sm transform rounded-3xl">
               <div className="flex justify-center overflow-hidden rounded-xl">
                 <CustomImage
-                  src={service.image}
+                  src={service.image.src}
                   alt="service"
                   width={500}
                   height={500}
@@ -292,7 +292,7 @@ const SectionFormBooking = () => {
             {/* Left Section: Image */}
             <div className="flex w-full justify-center md:w-1/2">
               <div className="relative h-[600px] max-w-[530px]">
-                <CustomImage src={sv6} alt="massage" width={500} height={500} />
+                <CustomImage src={sv6.src} alt="massage" width={500} height={500} />
               </div>
             </div>
 
