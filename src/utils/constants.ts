@@ -16,7 +16,7 @@ export const Navigation = [
   },
   {
     name: 'Đặt lịch massage',
-    link: '#',
+    link: 'dat-lich',
   },
   {
     name: 'Sản phẩm',

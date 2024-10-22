@@ -1,6 +1,7 @@
 'use client';
 import CustomImage from '@/components/CustomImage';
 import { SERVICE } from '@/utils/constants';
+import Link from 'next/link';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -43,7 +44,7 @@ const SectionService = () => {
                   <h3 className="mb-2 text-base font-semibold uppercase text-primary">
                     {service.title}
                   </h3>
-                  <a
+                  <Link
                     href={service.path}
                     className="group flex items-center justify-center gap-2 font-medium text-[#3A449B] hover:underline"
                   >
@@ -74,7 +75,7 @@ const SectionService = () => {
                         </defs>
                       </svg>
                     </span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </SwiperSlide>
