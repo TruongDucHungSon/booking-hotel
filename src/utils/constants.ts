@@ -20,7 +20,7 @@ export const Navigation = [
   },
   {
     name: 'Sản phẩm',
-    link: '#',
+    link: '/san-pham',
   },
   {
     name: 'Tin tức',
