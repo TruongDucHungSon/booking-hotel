@@ -15,8 +15,8 @@ export const Navigation = [
     link: '/gioi-thieu',
   },
   {
-    name: 'Dịch Vụ',
-    link: 'dich-vu',
+    name: 'Dịch vụ',
+    link: '/dich-vu',
   },
   {
     name: 'Sản phẩm',

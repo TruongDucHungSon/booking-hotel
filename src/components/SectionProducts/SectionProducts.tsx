@@ -28,7 +28,7 @@ const SectionProducts = () => {
               </div>
               <button
                 type="button"
-                className="mt-[10px] w-full rounded-[10px] border border-[#3A449B] px-4 py-2 font-medium text-[#3A449B]"
+                className="mt-[10px] w-full rounded-[10px] border border-[#3A449B] px-4 py-2 font-medium text-[#3A449B] transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
               >
                 Mua ngay
               </button>
