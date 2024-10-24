@@ -15,8 +15,8 @@ export const Navigation = [
     link: '/gioi-thieu',
   },
   {
-    name: 'Đặt lịch massage',
-    link: 'dat-lich',
+    name: 'Dịch Vụ',
+    link: 'dich-vu',
   },
   {
     name: 'Sản phẩm',

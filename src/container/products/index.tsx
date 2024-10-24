@@ -4,7 +4,7 @@ import pr1 from '../../assets/svgs/introduce/pr1.jpg';
 import CustomImage from '../../components/CustomImage';
 import Title from '../../components/Title/Title';
 
-const products = [
+export const products = [
   {
     id: 1,
     name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
@@ -134,17 +134,20 @@ const ProductPage = () => {
               key={product.id}
             >
               <div className="flex justify-center overflow-hidden rounded-xl">
-                <Link href="#">
+                <Link href="/san-pham/san-pham-chuc-nang">
                   <CustomImage
                     src={product.image.src}
                     alt="product"
                     width={500}
                     height={500}
-                    className="max-h-[200px] cursor-pointer object-contain transition-transform duration-300 group-hover:scale-110"
+                    className="h-[200px] cursor-pointer object-contain transition-transform duration-300 group-hover:scale-110"
                   />
                 </Link>
               </div>
-              <Link href="#" className="mt-2 text-base font-medium text-[#3A449B]">
+              <Link
+                href="/san-pham/san-pham-chuc-nang"
+                className="mt-2 text-base font-medium text-[#3A449B]"
+              >
                 {product.name}
               </Link>
               <div className="mt-2">

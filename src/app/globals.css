@@ -214,3 +214,13 @@ html {
   align-items: center !important;
   color: #fff !important;
 }
+
+.shadow-quality {
+  box-shadow: 2px 2px 12px 0px #e3e3e366;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  font-size: 24px !important;
+  color: #000 !important;
+}
