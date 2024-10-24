@@ -8,7 +8,7 @@ const SectionProducts = () => {
       <Title>Sản phẩm liên quan</Title>
       {/* list products */}
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {products.map((product) => (
+        {products.slice(0, 6).map((product) => (
           <div
             className="flex gap-4 rounded-3xl border border-[#E8E8E8] bg-white p-4"
             key={product.id}
