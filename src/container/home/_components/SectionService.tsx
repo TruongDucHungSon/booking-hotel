@@ -28,8 +28,8 @@ const SectionService = () => {
             1024: { slidesPerView: 5 },
           }}
         >
-          {SERVICE.map((service, index) => (
-            <SwiperSlide key={index}>
+          {SERVICE.map((service) => (
+            <SwiperSlide key={service.id}>
               <div className="pb-14">
                 <div className="rounded-bl-[20px] rounded-br-[20px] rounded-tl-[300px] rounded-tr-[300px] border border-[#e7e7e7] p-2">
                   <CustomImage
@@ -81,6 +81,28 @@ const SectionService = () => {
             </SwiperSlide>
           ))}
         </Swiper>
+        <div className="mt-8">
+          <Link
+            href="/dich-vu"
+            className="group mx-auto flex w-[260px] items-center justify-center gap-2 rounded-2xl bg-[#3A449B] px-6 py-[12px] font-medium text-white"
+          >
+            Xem tất cả
+            <span className="transition-all duration-300 group-hover:translate-x-2">
+              <svg
+                width="14"
+                height="11"
+                viewBox="0 0 14 11"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.00008 10.2116L8.06008 9.27163L11.1134 6.21163L0.333415 6.21163L0.333414 4.8783L11.1134 4.8783L8.05341 1.8183L9.00008 0.878296L13.6667 5.54496L9.00008 10.2116Z"
+                  fill="white"
+                />
+              </svg>
+            </span>
+          </Link>
+        </div>
       </div>
     </section>
   );

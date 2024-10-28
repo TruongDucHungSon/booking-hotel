@@ -8,7 +8,7 @@ const SectionNew = () => {
   return (
     <section className="container py-20">
       <Title>Tin tức</Title>
-      <div className="mt-8 grid grid-cols-2 gap-6 lg:grid-cols-4">
+      <div className="place-center mt-8 grid grid-cols-2 gap-6 lg:grid-cols-4">
         {map(NEW, (item) => (
           <div
             className="group cursor-pointer overflow-hidden rounded-3xl bg-[#f3f3f3] p-4"
@@ -118,6 +118,28 @@ const SectionNew = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="mt-8 flex justify-center">
+        <Link
+          href="/dich-vu"
+          className="group mx-auto flex w-[260px] items-center justify-center gap-2 rounded-2xl bg-[#3A449B] px-6 py-[12px] font-medium text-white"
+        >
+          Xem tất cả
+          <span className="transition-all duration-300 group-hover:translate-x-2">
+            <svg
+              width="14"
+              height="11"
+              viewBox="0 0 14 11"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.00008 10.2116L8.06008 9.27163L11.1134 6.21163L0.333415 6.21163L0.333414 4.8783L11.1134 4.8783L8.05341 1.8183L9.00008 0.878296L13.6667 5.54496L9.00008 10.2116Z"
+                fill="white"
+              />
+            </svg>
+          </span>
+        </Link>
       </div>
     </section>
   );

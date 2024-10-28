@@ -1,8 +1,7 @@
-import React from 'react';
-import BookingPage from '../../../container/booking/index';
+import ServicesPage from '../../../container/services/index';
 
 const page = () => {
-  return <BookingPage />;
+  return <ServicesPage />;
 };
 
 export default page;

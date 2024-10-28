@@ -1,12 +1,11 @@
-import React from 'react';
-import SectionBooking from './_components/SectionBooking';
-import SectionGallery from './_components/SectionGallery';
+import SectionProducts from '@/components/SectionProducts/SectionProducts';
+import SectionFormBooking from '../booking/_components/SectionFormBooking';
 
 const BookingPage = () => {
   return (
-    <main className="container">
-      <SectionBooking />
-      <SectionGallery />
+    <main className="container pt-20">
+      <SectionFormBooking />
+      <SectionProducts />
     </main>
   );
 };

@@ -8,11 +8,17 @@ import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { vi } from 'date-fns/locale';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
 const SectionFormBooking = () => {
+  const router = useRouter();
+
+  const handleNavigate = () => {
+    router.push('/dat-lich');
+  };
+
   const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
   const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
   const [selectedTime, setSelectedTime] = useState('');
@@ -210,6 +216,7 @@ const SectionFormBooking = () => {
             </p>
             <button
               type="submit"
+              onClick={handleNavigate}
               className="w-full rounded-2xl bg-[#3A449B] px-4 py-2 text-base font-medium text-white shadow-sm transition-all duration-300 ease-in-out hover:bg-[#2c3568] focus:outline-none lg:w-[260px]"
             >
               Đặt lịch ngay
