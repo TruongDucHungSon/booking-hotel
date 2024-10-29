@@ -24,11 +24,11 @@ export const Navigation = [
   },
   {
     name: 'Tin tức',
-    link: '#',
+    link: '/tin-tuc',
   },
   {
     name: 'Liên hệ',
-    link: '#',
+    link: '/lien-he',
   },
 ] as const;
 
@@ -136,3 +136,78 @@ export const NEW = [
     path: '#',
   },
 ] as const;
+
+export const newsArticles = [
+  {
+    title: 'Top 3 Sữa Tắm Hương Nước Hoa Thơm Quyến Rũ',
+    description:
+      'Ngoài việc dưỡng ẩm và làm sạch làn da, thì sữa tắm hương nước hoa mang đến hương thơm quyến rũ dài lâu',
+    date: '19/06/2023',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww', // Replace with actual paths
+  },
+  {
+    title: 'Top 3 Sữa Tắm Hương Nước Hoa Thơm Quyến Rũ',
+    description:
+      'Ngoài việc dưỡng ẩm và làm sạch làn da, thì sữa tắm hương nước hoa mang đến hương thơm quyến rũ dài lâu',
+    date: '19/06/2023',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+  },
+  {
+    title: 'Top 3 Sữa Tắm Hương Nước Hoa Thơm Quyến Rũ',
+    description:
+      'Ngoài việc dưỡng ẩm và làm sạch làn da, thì sữa tắm hương nước hoa mang đến hương thơm quyến rũ dài lâu',
+    date: '19/06/2023',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+  },
+  {
+    title: 'Top 3 Sữa Tắm Hương Nước Hoa Thơm Quyến Rũ',
+    description:
+      'Ngoài việc dưỡng ẩm và làm sạch làn da, thì sữa tắm hương nước hoa mang đến hương thơm quyến rũ dài lâu',
+    date: '19/06/2023',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+  },
+  {
+    title: 'Top 3 Sữa Tắm Hương Nước Hoa Thơm Quyến Rũ',
+    description:
+      'Ngoài việc dưỡng ẩm và làm sạch làn da, thì sữa tắm hương nước hoa mang đến hương thơm quyến rũ dài lâu',
+    date: '19/06/2023',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+  },
+  {
+    title: 'Top 3 Sữa Tắm Hương Nước Hoa Thơm Quyến Rũ',
+    description:
+      'Ngoài việc dưỡng ẩm và làm sạch làn da, thì sữa tắm hương nước hoa mang đến hương thơm quyến rũ dài lâu',
+    date: '19/06/2023',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+  },
+  {
+    title: 'Top 3 Sữa Tắm Hương Nước Hoa Thơm Quyến Rũ',
+    description:
+      'Ngoài việc dưỡng ẩm và làm sạch làn da, thì sữa tắm hương nước hoa mang đến hương thơm quyến rũ dài lâu',
+    date: '19/06/2023',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+  },
+  {
+    title: 'Top 3 Sữa Tắm Hương Nước Hoa Thơm Quyến Rũ',
+    description:
+      'Ngoài việc dưỡng ẩm và làm sạch làn da, thì sữa tắm hương nước hoa mang đến hương thơm quyến rũ dài lâu',
+    date: '19/06/2023',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+  },
+  {
+    title: 'Top 3 Sữa Tắm Hương Nước Hoa Thơm Quyến Rũ',
+    description:
+      'Ngoài việc dưỡng ẩm và làm sạch làn da, thì sữa tắm hương nước hoa mang đến hương thơm quyến rũ dài lâu',
+    date: '19/06/2023',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+  },
+];
