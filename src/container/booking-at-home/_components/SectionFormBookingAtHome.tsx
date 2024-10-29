@@ -1,16 +1,9 @@
 'use client';
 
-import CustomImage from '@/components/CustomImage';
-import ServiceSelectionModal from '@/components/modal/ModalServicer';
-import { servicesData } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
+import ServiceSelectionModal, { Service } from '@/components/modal/ModalServicer';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import RoomSrc1 from '../../../assets/images/room/r1.png';
-import RoomSrc2 from '../../../assets/images/room/r2.png';
-import RoomSrc3 from '../../../assets/images/room/r3.png';
-import RoomSrc4 from '../../../assets/images/room/r4.png';
-import RoomSrc5 from '../../../assets/images/room/r5.png';
-import RoomSrc6 from '../../../assets/images/room/r6.png';
 import bed from '../../../assets/svgs/arrow/bed.svg';
 import BoxIc from '../../../assets/svgs/arrow/box.svg';
 import box1 from '../../../assets/svgs/arrow/box1.svg';
@@ -22,10 +15,11 @@ import massa from '../../../assets/svgs/arrow/massa.svg';
 import SaleIc from '../../../assets/svgs/arrow/sale.svg';
 import service from '../../../assets/svgs/arrow/service.svg';
 import StoreIc from '../../../assets/svgs/arrow/store.svg';
+
 import voucher from '../../../assets/svgs/arrow/voucher.svg';
 import downBlue from '../../../assets/svgs/search/dropdowBlu.svg';
+import CustomImage from '../../../components/CustomImage';
 import Title from '../../../components/Title/Title';
-import SelectionModalForm, { RoomProps } from '../../../components/modal/SelectionModalForm';
 type FormValues = {
   fullName: string;
   phoneNumber: string;
@@ -38,25 +32,47 @@ type FormValues = {
   service: string[];
   note: string;
 };
+export const servicesData: Service[] = [
+  {
+    id: '1',
+    name: 'Service A',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '2',
+    name: 'Service B',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '3',
+    name: 'Service C',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '4',
+    name: 'Service D',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '5',
+    name: 'Service E',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '6',
+    name: 'Service S',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  // Add more services as needed
+];
 
-const SectionFormBooking = () => {
-  const roomsData: RoomProps[] = [
-    { name: 'Phòng Luxury VIP 1 ', image: RoomSrc1 },
-    { name: 'Phòng Luxury VIP 2', image: RoomSrc2 },
-    { name: 'Phòng Luxury VIP 3', image: RoomSrc3 },
-    { name: 'Phòng Luxury VIP 4', image: RoomSrc4 },
-    { name: 'Phòng Luxury VIP 5', image: RoomSrc5 },
-    { name: 'Phòng Luxury VIP 6', image: RoomSrc6 },
-  ];
-  const bedsData: RoomProps[] = [
-    { name: 'Giường Luxury Thượng Hạng 1 ', image: RoomSrc1 },
-    { name: 'Giường Luxury Thượng Hạng 2', image: RoomSrc2 },
-    { name: 'Giường Luxury Thượng Hạng 3', image: RoomSrc3 },
-    { name: 'Giường Luxury Thượng Hạng 4', image: RoomSrc4 },
-    { name: 'Giường Luxury Thượng Hạng 5', image: RoomSrc5 },
-    { name: 'Giường Luxury Thượng Hạng 6', image: RoomSrc6 },
-  ];
-
+const SectionFormBookingAtHome = () => {
   const stores = [
     'Bloom Massage Hoàn Kiếm Hà Nội',
     'Bloom Massage Cầu Giấy',
@@ -64,59 +80,6 @@ const SectionFormBooking = () => {
     'Bloom Massage Tây Hồ',
     'Bloom Massage Ba Đình',
   ];
-  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
-  const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
-  const [dropdowns, setDropdowns] = useState({
-    store: false,
-    location: false,
-    room: false,
-  });
-  const [selectedRoom, setSelectedRoom] = useState(roomsData[0].name);
-  const [isModalOpenRoom, setModalOpenRoom] = useState(false);
-  const openModalRoom = () => setModalOpenRoom(true);
-  const closeModalRoom = () => setModalOpenRoom(false);
-
-  const [selectedBed, setSelectedBed] = useState<string[]>([]);
-  const [isModalOpenBed, setModalOpenBed] = useState(false);
-  const openModalBed = () => setModalOpenBed(true);
-  const closeModalBed = () => setModalOpenBed(false);
-
-  const handleRoomSelect = (room: RoomProps) => {
-    setSelectedRoom(room.name); // Set the selected room name
-    // Optionally, handle other actions (e.g., set room details)
-  };
-  const handleBedSelect = (bed: RoomProps) => {
-    setSelectedBed((prevSelectedBeds) => {
-      // Check if the bed is already selected
-      const isSelected = prevSelectedBeds.includes(bed.name);
-      if (isSelected) {
-        // If selected, remove it
-        return prevSelectedBeds.filter((selectedBed: string) => selectedBed !== bed.name);
-      } else {
-        // If not selected, add it, but only if there are fewer than 2 already selected
-        if (prevSelectedBeds.length < 2) {
-          return [...prevSelectedBeds, bed.name];
-        }
-        return prevSelectedBeds; // Return current state if already 2 beds are selected
-      }
-    });
-  };
-
-  const handleBedRemove = (bedToRemove: string) => {
-    setSelectedBed((prevSelectedBeds) => prevSelectedBeds.filter((bed) => bed !== bedToRemove));
-  };
-  const toggleDropdown = (type: keyof typeof dropdowns) => {
-    setDropdowns((prev) => ({
-      ...prev,
-      [type]: !prev[type],
-    }));
-  };
-
-  const handleSelect = (type: keyof typeof dropdowns, value: string) => {
-    if (type === 'store') setStore(value);
-    if (type === 'location') setServiceLocation(value);
-    toggleDropdown(type); // Close dropdown after selecting
-  };
 
   const [isModalOpenService, setIsModalOpenService] = useState(false);
   const [selectedServices, setSelectedServices] = useState<{ [key: string]: number }>({});
@@ -132,12 +95,38 @@ const SectionFormBooking = () => {
   const handleSelectServices = (selected: { [key: string]: number }) => {
     setSelectedServices(selected);
   };
+
+  const employees = ['Nguyễn Văn A', 'Trần Thị B', 'Phạm Văn C', 'Lê Thị D', 'Hoàng Văn E'];
+
+  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
+  const [employee, setEmployee] = useState('Nguyễn Văn A');
+  const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
+  const [dropdowns, setDropdowns] = useState({
+    store: false,
+    location: false,
+    employee: false,
+  });
+
   const handleRemoveService = (serviceId: string) => {
     setSelectedServices((prev) => {
       const updated = { ...prev };
       delete updated[serviceId]; // Remove the service from the selected services
       return updated;
     });
+  };
+
+  const toggleDropdown = (type: keyof typeof dropdowns) => {
+    setDropdowns((prev) => ({
+      ...prev,
+      [type]: !prev[type],
+    }));
+  };
+
+  const handleSelect = (type: keyof typeof dropdowns, value: string) => {
+    if (type === 'store') setStore(value);
+    if (type === 'location') setServiceLocation(value);
+    if (type === 'employee') setEmployee(value);
+    toggleDropdown(type); // Close dropdown after selecting
   };
 
   const { register, handleSubmit } = useForm<FormValues>();
@@ -216,6 +205,37 @@ const SectionFormBooking = () => {
                         className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
                       >
                         {storeOption}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              {/* Employee Dropdown */}
+              <div className="relative mt-6 w-full">
+                <button
+                  type="button"
+                  onClick={() => toggleDropdown('employee')}
+                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none"
+                >
+                  <CustomImage width={18} height={18} src={StoreIc} alt="Employee Icon" />
+                  {employee}
+                  <CustomImage
+                    width={18}
+                    height={18}
+                    src={ArrowIc}
+                    alt="Arrow Down"
+                    className={`transition-all duration-300 ${dropdowns.employee ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                {dropdowns.employee && (
+                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
+                    {employees.map((employeeOption) => (
+                      <li
+                        key={employeeOption}
+                        onClick={() => handleSelect('employee', employeeOption)}
+                        className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
+                      >
+                        {employeeOption}
                       </li>
                     ))}
                   </ul>
@@ -311,92 +331,6 @@ const SectionFormBooking = () => {
                 />
               </div>
             </div>
-            {/* Room choice */}
-            <div className="relative mb-4 w-full">
-              <button
-                type="button"
-                onClick={openModalRoom}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium focus:border-[#3A449B] focus:outline-none"
-              >
-                Phòng massage
-                <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
-              </button>
-              {/* Display selected room */}
-              <div className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] font-medium leading-4 text-black/85">
-                {selectedRoom}
-              </div>
-            </div>
-            {/* Room Selection Modal */}
-            <SelectionModalForm
-              isOpen={isModalOpenRoom}
-              onClose={closeModalRoom}
-              onSelectRoom={handleRoomSelect}
-              rooms={roomsData}
-              title="Đặt phòng"
-              sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
-              sutTitle2="chỉ chấp nhận đặt phòng sau một tuần"
-              sutTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
-            />
-            {/* bed choice */}
-            <div className="relative mb-4 w-full">
-              <button
-                type="button"
-                onClick={openModalBed}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium focus:border-[#3A449B] focus:outline-none"
-              >
-                Giường massage
-                <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
-              </button>
-
-              {/* Display selected beds */}
-              {selectedBed.map((bed) =>
-                bed ? (
-                  <div
-                    key={bed}
-                    className="mt-2 flex w-fit items-center justify-between rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] font-medium leading-4 text-black/85"
-                  >
-                    <div onClick={() => handleBedRemove(bed)} className="flex items-center gap-2">
-                      <CustomImage
-                        width={18}
-                        height={18}
-                        src={deleteIc}
-                        alt="Minus"
-                        className="h-[14px] w-[14px]"
-                      />
-                      {bed}
-                    </div>
-                  </div>
-                ) : null,
-              )}
-            </div>
-
-            {/* bed Selection Modal */}
-            <SelectionModalForm
-              isOpen={isModalOpenBed}
-              onClose={closeModalBed}
-              onSelectRoom={handleBedSelect}
-              rooms={bedsData}
-              title="Đặt phòng"
-              sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
-              sutTitle2="chỉ chấp nhận đặt phòng sau một tuần"
-              sutTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
-            />
-
-            <div className="relative mb-4 w-full">
-              <button
-                type="button"
-                onClick={openModalRoom}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium focus:border-[#3A449B] focus:outline-none"
-              >
-                Phòng massage
-                <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
-              </button>
-              {/* Display selected room */}
-              <div className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] font-medium leading-4 text-black/85">
-                {selectedRoom}
-              </div>
-            </div>
-
             <div>
               <button
                 type="button"
@@ -435,7 +369,7 @@ const SectionFormBooking = () => {
                           alt="Arrow Down"
                           className="h-[14px] w-[14px]"
                         />
-                        <p key={serviceId} className="">
+                        <p key={serviceId}>
                           {quantity} {service.name}
                         </p>
                       </div>
@@ -444,7 +378,6 @@ const SectionFormBooking = () => {
                 </div>
               </div>
             </div>
-
             <div className="mb-4">
               <label className="block text-base font-medium text-black">Ghi chú</label>
               <textarea
@@ -614,4 +547,4 @@ const SectionFormBooking = () => {
   );
 };
 
-export default SectionFormBooking;
+export default SectionFormBookingAtHome;
