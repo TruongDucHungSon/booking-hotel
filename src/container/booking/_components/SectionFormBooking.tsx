@@ -382,21 +382,6 @@ const SectionFormBooking = () => {
               sutTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
             />
 
-            <div className="relative mb-4 w-full">
-              <button
-                type="button"
-                onClick={openModalRoom}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium focus:border-[#3A449B] focus:outline-none"
-              >
-                Phòng massage
-                <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
-              </button>
-              {/* Display selected room */}
-              <div className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] font-medium leading-4 text-black/85">
-                {selectedRoom}
-              </div>
-            </div>
-
             <div>
               <button
                 type="button"
