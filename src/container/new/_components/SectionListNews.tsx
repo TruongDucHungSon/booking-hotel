@@ -20,7 +20,7 @@ const SectionListNews = () => {
                 classNameImg="rounded-tl-3xl rounded-tr-3xl"
               />
               <div className="p-4">
-                <Link href={''} className="text-base font-semibold">
+                <Link href={'/tin-tuc/1'} className="text-base font-semibold">
                   {article.title}
                 </Link>
                 <p className="mb-4 mt-2 line-clamp-3 text-sm text-[#343434]">
@@ -29,7 +29,7 @@ const SectionListNews = () => {
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-[#343434]">{article.date}</p>
                   <Link
-                    href={''}
+                    href={'/tin-tuc/1'}
                     className="group flex items-center justify-center gap-2 font-medium text-[#3A449B] hover:underline"
                   >
                     Xem Thêm
