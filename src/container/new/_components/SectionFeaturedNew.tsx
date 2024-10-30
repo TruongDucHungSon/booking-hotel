@@ -1,20 +1,7 @@
 import QcSrc from '@/assets/images/new/qc.png';
 import CustomImage from '@/components/CustomImage';
+import { featuredArticles } from '@/utils/constants';
 const SectionFeaturedNew = () => {
-  const featuredArticles = [
-    {
-      title: 'HiFu Plus – Công Nghệ Nâng Cơ Trẻ Hóa Da Số 1 Hiện Nay',
-      date: 'Mừng ngày 8-3 sắp gõ cửa! Bạn đã chọn được món quà ưng ý để dành tặng những...',
-    },
-    {
-      title: 'Những Lý Do Khiến Nhật Bản Trở Thành Quốc Gia Đáng Sống Nhất Thế Giới',
-      date: 'Mừng ngày 8-3 sắp gõ cửa! Bạn đã chọn được món quà ưng ý để dành tặng những...',
-    },
-    {
-      title: 'Moichi Skin – Phương Pháp Làm Đẹp Da Đến Từ Nhật Bản',
-      date: 'Mừng ngày 8-3 sắp gõ cửa! Bạn đã chọn được món quà ưng ý để dành tặng những...',
-    },
-  ];
   return (
     <section>
       <div className="">

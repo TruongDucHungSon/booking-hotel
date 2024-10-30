@@ -39,31 +39,32 @@ type FormValues = {
   note: string;
 };
 
-const SectionFormBooking = () => {
-  const roomsData: RoomProps[] = [
-    { name: 'Phòng Luxury VIP 1 ', image: RoomSrc1 },
-    { name: 'Phòng Luxury VIP 2', image: RoomSrc2 },
-    { name: 'Phòng Luxury VIP 3', image: RoomSrc3 },
-    { name: 'Phòng Luxury VIP 4', image: RoomSrc4 },
-    { name: 'Phòng Luxury VIP 5', image: RoomSrc5 },
-    { name: 'Phòng Luxury VIP 6', image: RoomSrc6 },
-  ];
-  const bedsData: RoomProps[] = [
-    { name: 'Giường Luxury Thượng Hạng 1 ', image: RoomSrc1 },
-    { name: 'Giường Luxury Thượng Hạng 2', image: RoomSrc2 },
-    { name: 'Giường Luxury Thượng Hạng 3', image: RoomSrc3 },
-    { name: 'Giường Luxury Thượng Hạng 4', image: RoomSrc4 },
-    { name: 'Giường Luxury Thượng Hạng 5', image: RoomSrc5 },
-    { name: 'Giường Luxury Thượng Hạng 6', image: RoomSrc6 },
-  ];
+export const roomsData: RoomProps[] = [
+  { name: 'Phòng Luxury VIP 1 ', image: RoomSrc1 },
+  { name: 'Phòng Luxury VIP 2', image: RoomSrc2 },
+  { name: 'Phòng Luxury VIP 3', image: RoomSrc3 },
+  { name: 'Phòng Luxury VIP 4', image: RoomSrc4 },
+  { name: 'Phòng Luxury VIP 5', image: RoomSrc5 },
+  { name: 'Phòng Luxury VIP 6', image: RoomSrc6 },
+];
+export const bedsData: RoomProps[] = [
+  { name: 'Giường Luxury Thượng Hạng 1 ', image: RoomSrc1 },
+  { name: 'Giường Luxury Thượng Hạng 2', image: RoomSrc2 },
+  { name: 'Giường Luxury Thượng Hạng 3', image: RoomSrc3 },
+  { name: 'Giường Luxury Thượng Hạng 4', image: RoomSrc4 },
+  { name: 'Giường Luxury Thượng Hạng 5', image: RoomSrc5 },
+  { name: 'Giường Luxury Thượng Hạng 6', image: RoomSrc6 },
+];
 
-  const stores = [
-    'Bloom Massage Hoàn Kiếm Hà Nội',
-    'Bloom Massage Cầu Giấy',
-    'Bloom Massage Đống Đa',
-    'Bloom Massage Tây Hồ',
-    'Bloom Massage Ba Đình',
-  ];
+export const stores = [
+  'Bloom Massage Hoàn Kiếm Hà Nội',
+  'Bloom Massage Cầu Giấy',
+  'Bloom Massage Đống Đa',
+  'Bloom Massage Tây Hồ',
+  'Bloom Massage Ba Đình',
+];
+
+const SectionFormBooking = () => {
   const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
   const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
   const [dropdowns, setDropdowns] = useState({

@@ -211,3 +211,62 @@ export const newsArticles = [
       'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
   },
 ];
+
+export interface Branch {
+  name: string;
+  coords: [number, number];
+  address: string;
+}
+
+export const branches: Branch[] = [
+  {
+    name: 'Cần Thơ',
+    coords: [10.0452, 105.7469],
+    address: 'Tầng 2, số Nguyễn Trãi, P. Cái Khế, Q. Ninh Kiều, Cần Thơ',
+  },
+  {
+    name: 'Vĩnh Long',
+    coords: [10.2537, 105.9722],
+    address: 'Bờ kè Trần Hoàng, Phường 8, Vĩnh Long',
+  },
+  {
+    name: 'Tiền Giang',
+    coords: [10.3588, 106.3679],
+    address: '43 Nguyễn Huỳnh Đức, P.3, TP. Mỹ Tho, T. Tiền Giang',
+  },
+  {
+    name: 'Hà Nội',
+    coords: [10.2415, 106.3756],
+    address: '43 Nguyễn Huỳnh Đức, P.3, TP. Mỹ Tho, T. Tiền Giang',
+  },
+  {
+    name: 'Hải Phòng',
+    coords: [10.2415, 106.3756],
+    address: '43 Nguyễn Huỳnh Đức, P.3, TP. Mỹ Tho, T. Tiền Giang',
+  },
+  {
+    name: 'Bình Dương',
+    coords: [10.2415, 106.3756],
+    address: '43 Nguyễn Huỳnh Đức, P.3, TP. Mỹ Tho, T. Tiền Giang',
+  },
+  {
+    name: 'Thành Phố Hồ Chí Minh',
+    coords: [10.2415, 106.3756],
+    address: '43 Nguyễn Huỳnh Đức, P.3, TP. Mỹ Tho, T. Tiền Giang',
+  },
+];
+
+export const featuredArticles = [
+  {
+    title: 'HiFu Plus – Công Nghệ Nâng Cơ Trẻ Hóa Da Số 1 Hiện Nay',
+    date: 'Mừng ngày 8-3 sắp gõ cửa! Bạn đã chọn được món quà ưng ý để dành tặng những...',
+  },
+  {
+    title: 'Những Lý Do Khiến Nhật Bản Trở Thành Quốc Gia Đáng Sống Nhất Thế Giới',
+    date: 'Mừng ngày 8-3 sắp gõ cửa! Bạn đã chọn được món quà ưng ý để dành tặng những...',
+  },
+  {
+    title: 'Moichi Skin – Phương Pháp Làm Đẹp Da Đến Từ Nhật Bản',
+    date: 'Mừng ngày 8-3 sắp gõ cửa! Bạn đã chọn được món quà ưng ý để dành tặng những...',
+  },
+];
