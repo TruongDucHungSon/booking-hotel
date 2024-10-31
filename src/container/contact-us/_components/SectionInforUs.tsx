@@ -1,6 +1,7 @@
 'use client';
 
 import addressIc from '@/assets/svgs/contact/address.svg';
+import locationIc from '@/assets/svgs/contact/location.svg';
 import mailIc from '@/assets/svgs/contact/mail.svg';
 import phoneIc from '@/assets/svgs/contact/phone.svg';
 import UseIc from '@/assets/svgs/contact/user.svg';
@@ -10,10 +11,11 @@ import WhiteDrIc from '@/assets/svgs/contact/white_dr.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { Branch, branches } from '@/utils/constants';
+import L from 'leaflet';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-// Import động các thành phần của react-leaflet và vô hiệu hóa SSR
+// Import dynamic components from react-leaflet and disable SSR
 const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
   ssr: false,
 });
@@ -26,21 +28,32 @@ const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLa
 const SectionInforUs: React.FC = () => {
   const [activeBranch, setActiveBranch] = useState<Branch | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [customIcon, setCustomIcon] = useState<L.Icon<L.IconOptions> | null>(null);
 
-  // Đảm bảo chỉ render bản đồ trên client-side
+  // Ensure the map renders only on the client side
   useEffect(() => {
     setIsClient(true);
+    // Define the custom icon in useEffect to ensure it's on the client
+    const icon = L.icon({
+      iconUrl: locationIc.src,
+      iconSize: [25, 41], // Size of the icon
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+    });
+    setCustomIcon(icon);
   }, []);
 
-  // Xử lý sự kiện khi người dùng chọn một chi nhánh
-  const handleBranchClick = (branch: Branch) => setActiveBranch(branch);
+  // Handle branch selection
+  const handleBranchClick = (branch: Branch) => {
+    setActiveBranch(branch);
+  };
 
   return (
     <div className="container py-20">
       <Title>Liên hệ với chúng tôi</Title>
       <div className="mt-8 h-fit space-y-6 rounded-lg bg-white">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-[1.2fr,1fr]">
-          {/* Danh sách chi nhánh */}
+          {/* Branch List */}
           <div className="rounded-xl border border-[#E8E8E8] p-6">
             <h3 className="mb-4 text-lg font-semibold text-[#18181B]">Chi Nhánh Của Chúng Tôi</h3>
             <ul className="sidebar-scroll h-[530px] space-y-4 overflow-y-scroll">
@@ -58,24 +71,26 @@ const SectionInforUs: React.FC = () => {
                     <div>
                       <p className="mb-[6px] text-lg font-semibold">{branch.name}</p>
                       <div className="flex items-center gap-2">
-                        {activeBranch?.name === branch.name ? (
-                          <CustomImage width={18} height={18} src={addressWhite} alt="Mail" />
-                        ) : (
-                          <CustomImage width={18} height={18} src={addressIc} alt="Mail" />
-                        )}
+                        <CustomImage
+                          width={18}
+                          height={18}
+                          src={activeBranch?.name === branch.name ? addressWhite : addressIc}
+                          alt="Address"
+                        />
                         <p className="text-sm">{branch.address}</p>
                       </div>
                       <div className="mt-2 flex items-center gap-2">
-                        {activeBranch?.name === branch.name ? (
-                          <CustomImage width={18} height={18} src={callWhite} alt="Mail" />
-                        ) : (
-                          <CustomImage width={18} height={18} src={phoneIc} alt="Mail" />
-                        )}
+                        <CustomImage
+                          width={18}
+                          height={18}
+                          src={activeBranch?.name === branch.name ? callWhite : phoneIc}
+                          alt="Phone"
+                        />
                         <p className="text-sm">0981 123 106</p>
                       </div>
                     </div>
                     <div>
-                      <CustomImage width={18} height={18} src={WhiteDrIc} alt="Mail" />
+                      <CustomImage width={18} height={18} src={WhiteDrIc} alt="Doctor Icon" />
                     </div>
                   </div>
                 </li>
@@ -83,7 +98,7 @@ const SectionInforUs: React.FC = () => {
             </ul>
           </div>
 
-          {/* Form thông tin khách hàng */}
+          {/* Customer Information Form */}
           <div>
             <h3 className="mb-4 text-lg font-semibold text-[#18181B]">Thông Tin Khách Hàng</h3>
             <form className="space-y-4">
@@ -130,7 +145,7 @@ const SectionInforUs: React.FC = () => {
               <div>
                 <label className="block text-base font-medium text-[#18181b]">Email</label>
                 <div className="mt-[10px] flex items-center gap-2 rounded-xl border border-[#E8E8E8] px-4 py-[14px]">
-                  <CustomImage width={18} height={18} src={mailIc} alt="User" />
+                  <CustomImage width={18} height={18} src={mailIc} alt="Email" />
                   <input
                     type="email"
                     placeholder="abc@gmail.com"
@@ -139,7 +154,7 @@ const SectionInforUs: React.FC = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="service" className="block text-sm font-medium text-[#18181b]">
+                <label htmlFor="service" className="block text-base font-medium text-[#18181b]">
                   Dịch vụ
                 </label>
                 <select
@@ -162,24 +177,17 @@ const SectionInforUs: React.FC = () => {
           </div>
         </div>
 
-        {/* Bản đồ tương tác */}
-        {isClient && (
+        {/* Interactive Map */}
+        {isClient && customIcon && (
           <div className="mt-6">
-            <MapContainer
-              center={[10.3588, 106.3679]}
-              zoom={10}
-              className="h-[564px] w-full rounded-lg"
-            >
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <MapContainer center={[10.3588, 106.3679]} zoom={12} className="h-[500px] rounded-lg">
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              />
               {branches.map((branch) => (
-                <Marker
-                  key={branch.name}
-                  position={branch.coords}
-                  eventHandlers={{
-                    click: () => handleBranchClick(branch),
-                  }}
-                >
-                  <Popup>{branch.address}</Popup>
+                <Marker key={branch.name} position={branch.coords} icon={customIcon}>
+                  <Popup>{branch.name}</Popup>
                 </Marker>
               ))}
             </MapContainer>

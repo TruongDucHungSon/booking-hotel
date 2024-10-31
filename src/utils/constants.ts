@@ -1,3 +1,4 @@
+import pr1 from '@/assets/svgs/introduce/pr1.jpg';
 import New1 from '../assets/images/new/new1.png';
 import Service1 from '../assets/images/service/sv1.png';
 import Service2 from '../assets/images/service/sv2.png';
@@ -236,23 +237,23 @@ export const branches: Branch[] = [
   },
   {
     name: 'Hà Nội',
-    coords: [10.2415, 106.3756],
-    address: '43 Nguyễn Huỳnh Đức, P.3, TP. Mỹ Tho, T. Tiền Giang',
+    coords: [21.0285, 105.8542],
+    address: 'Số 1 Đinh Tiên Hoàng, Hoàn Kiếm, Hà Nội',
   },
   {
     name: 'Hải Phòng',
-    coords: [10.2415, 106.3756],
-    address: '43 Nguyễn Huỳnh Đức, P.3, TP. Mỹ Tho, T. Tiền Giang',
+    coords: [20.8449, 106.6881],
+    address: '25 Đường Lê Chân, Hải Phòng',
   },
   {
     name: 'Bình Dương',
-    coords: [10.2415, 106.3756],
-    address: '43 Nguyễn Huỳnh Đức, P.3, TP. Mỹ Tho, T. Tiền Giang',
+    coords: [11.3257, 106.6631],
+    address: '32 Đại lộ Bình Dương, TP. Thủ Dầu Một, Bình Dương',
   },
   {
     name: 'Thành Phố Hồ Chí Minh',
-    coords: [10.2415, 106.3756],
-    address: '43 Nguyễn Huỳnh Đức, P.3, TP. Mỹ Tho, T. Tiền Giang',
+    coords: [10.7769, 106.7009],
+    address: 'Đường Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh',
   },
 ];
 
@@ -270,3 +271,118 @@ export const featuredArticles = [
     date: 'Mừng ngày 8-3 sắp gõ cửa! Bạn đã chọn được món quà ưng ý để dành tặng những...',
   },
 ];
+
+export const products = [
+  {
+    id: 1,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 2,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 3,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 4,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 5,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 6,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 7,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 8,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 9,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 10,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 11,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 12,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 13,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 14,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 15,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+  {
+    id: 16,
+    name: 'Sữa tắm Victoria’s Secret hương thơm quyến rũ',
+    price: 560000,
+    originalPrice: 670000,
+    image: pr1,
+  },
+] as const;

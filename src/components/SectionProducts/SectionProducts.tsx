@@ -1,4 +1,4 @@
-import { products } from '@/container/products';
+import { products } from '@/utils/constants';
 import CustomImage from '../CustomImage';
 import Title from '../Title/Title';
 
