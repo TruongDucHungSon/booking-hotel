@@ -15,7 +15,7 @@ import L from 'leaflet';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-// Import dynamic components from react-leaflet and disable SSR
+// Dynamically import react-leaflet components with SSR disabled
 const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
   ssr: false,
 });
@@ -31,18 +31,19 @@ const SectionInforUs: React.FC = () => {
   const [customIcon, setCustomIcon] = useState<L.Icon<L.IconOptions> | null>(null);
 
   useEffect(() => {
-    setIsClient(true);
-    const icon = L.icon({
-      iconUrl: locationIc.src,
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-    });
-    setCustomIcon(icon);
+    if (typeof window !== 'undefined') {
+      // Client-side only code
+      setIsClient(true);
+      const icon = L.icon({
+        iconUrl: locationIc.src,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+      });
+      setCustomIcon(icon);
+    }
   }, []);
 
-  if (!isClient) return null;
-  // Handle branch selection
   const handleBranchClick = (branch: Branch) => {
     setActiveBranch(branch);
   };
