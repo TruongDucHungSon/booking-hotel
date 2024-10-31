@@ -30,19 +30,18 @@ const SectionInforUs: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [customIcon, setCustomIcon] = useState<L.Icon<L.IconOptions> | null>(null);
 
-  // Ensure the map renders only on the client side
   useEffect(() => {
     setIsClient(true);
-    // Define the custom icon in useEffect to ensure it's on the client
     const icon = L.icon({
       iconUrl: locationIc.src,
-      iconSize: [25, 41], // Size of the icon
+      iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
     });
     setCustomIcon(icon);
   }, []);
 
+  if (!isClient) return null;
   // Handle branch selection
   const handleBranchClick = (branch: Branch) => {
     setActiveBranch(branch);
@@ -179,19 +178,17 @@ const SectionInforUs: React.FC = () => {
 
         {/* Interactive Map */}
         {isClient && customIcon && (
-          <div className="mt-6">
-            <MapContainer center={[10.3588, 106.3679]} zoom={12} className="h-[500px] rounded-lg">
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-              {branches.map((branch) => (
-                <Marker key={branch.name} position={branch.coords} icon={customIcon}>
-                  <Popup>{branch.name}</Popup>
-                </Marker>
-              ))}
-            </MapContainer>
-          </div>
+          <MapContainer center={[10.3588, 106.3679]} zoom={12} className="h-[500px] rounded-lg">
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            />
+            {branches.map((branch) => (
+              <Marker key={branch.name} position={branch.coords} icon={customIcon}>
+                <Popup>{branch.name}</Popup>
+              </Marker>
+            ))}
+          </MapContainer>
         )}
       </div>
     </div>
