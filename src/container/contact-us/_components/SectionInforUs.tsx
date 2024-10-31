@@ -15,7 +15,6 @@ import L from 'leaflet';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-// Import dynamic components from react-leaflet and disable SSR
 const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
   ssr: false,
 });
@@ -24,7 +23,6 @@ const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { 
 const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), {
   ssr: false,
 });
-
 const SectionInforUs: React.FC = () => {
   const [activeBranch, setActiveBranch] = useState<Branch | null>(null);
   const [isClient, setIsClient] = useState(false);
@@ -216,10 +214,7 @@ const SectionInforUs: React.FC = () => {
             zoom={12}
             className="h-[400px] rounded-lg md:h-[500px]"
           >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
+            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             {branches.map((branch) => (
               <Marker key={branch.name} position={branch.coords} icon={customIcon}>
                 <Popup>{branch.address}</Popup>
