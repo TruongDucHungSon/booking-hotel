@@ -6,8 +6,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 const SectionCustomer = () => {
   return (
     <section className="container py-20">
-      <div className="flex items-center justify-between gap-8">
-        <div className="w-[42%]">
+      <div className="flex flex-col items-center justify-between gap-8 lg:flex-row">
+        <div className="w-full lg:w-[42%]">
           <h6 className="flex gap-3 font-wylie text-3xl">
             Khách hàng nói về Bloom massage
             <svg
@@ -69,7 +69,7 @@ const SectionCustomer = () => {
         </div>
 
         {/* Swiper for Customer Images */}
-        <div className="grid w-[60%] grid-cols-6 gap-5">
+        <div className="grid w-full grid-cols-3 gap-5 md:grid-cols-4 lg:w-[60%] lg:grid-cols-6">
           <CustomImage
             width={500}
             height={500}
@@ -140,6 +140,17 @@ const SectionCustomer = () => {
           spaceBetween={30}
           className="mt-12"
           pagination={{ clickable: true }}
+          breakpoints={{
+            380: {
+              slidesPerView: 1,
+            },
+            768: {
+              slidesPerView: 2,
+            },
+            1024: {
+              slidesPerView: 3.5,
+            },
+          }}
         >
           {Array(6)
             .fill(null)
@@ -202,8 +213,8 @@ const SectionCustomer = () => {
                         alt={`customer-`}
                       />
                       <div>
-                        <h6 className="text-base font-semibold">Anh Thanh Nam</h6>
-                        <p className="text-sm text-[#4F4F4F]">Vĩnh Long</p>
+                        <h6 className="text-sm font-semibold lg:text-base">Anh Thanh Nam</h6>
+                        <p className="text-xs text-[#4F4F4F]">Vĩnh Long</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 rounded-[7px] bg-[#FBF3EA] px-[10px] py-[7px]">

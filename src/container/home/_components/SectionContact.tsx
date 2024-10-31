@@ -1,9 +1,9 @@
 import Link from 'next/link';
 const SectionContact = () => {
   return (
-    <section className="bg-contact container mb-20 rounded-xl pt-20">
-      <div className="flex items-start justify-between gap-8 px-[87px] py-[49px]">
-        <div className="w-[45%] text-white">
+    <section className="bg-contact container mb-20 rounded-xl lg:pt-20">
+      <div className="flex items-start justify-between gap-8 py-8 lg:px-[87px] lg:py-[49px]">
+        <div className="hidden w-[45%] text-white lg:block">
           <h6 className="flex gap-3 font-wylie text-3xl text-white">
             Khách hàng nói về Bloom massage
             <svg
@@ -105,37 +105,37 @@ const SectionContact = () => {
           </div>
         </div>
         {/* form */}
-        <form action="" className="w-[52%]">
-          <div className="grid grid-cols-2 gap-4">
+        <form action="" className="w-full lg:w-[52%]">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <div className="flex flex-col text-white">
-              <label htmlFor="name" className="mb-3 text-base font-medium">
+              <label htmlFor="name" className="mb-3 text-sm font-medium lg:text-base">
                 Tên của bạn
               </label>
               <input
                 type="text"
-                className="w-full rounded-xl border-none bg-white px-4 py-2 text-[#4F4F4F80] outline-none"
+                className="w-full rounded-xl border-none bg-white px-4 py-3 text-sm text-[#4F4F4F80] outline-none lg:placeholder:text-base"
                 id="name"
                 placeholder="Nhập tên của bạn"
               />
             </div>
             <div className="flex flex-col text-white">
-              <label htmlFor="phone" className="mb-3 text-base font-medium">
+              <label htmlFor="phone" className="mb-3 text-sm font-medium lg:text-base">
                 Số điện thoại
               </label>
               <input
                 type="text"
-                className="w-full rounded-xl border-none bg-white px-4 py-2 text-[#4F4F4F80] outline-none"
+                className="w-full rounded-xl border-none bg-white px-4 py-3 text-sm text-[#4F4F4F80] outline-none lg:placeholder:text-base"
                 id="phone"
                 placeholder="Nhập số điện thoại của bạn"
               />
             </div>
           </div>
           <div className="mt-4 flex w-full flex-col text-white">
-            <label htmlFor="phone" className="mb-3 text-base font-medium">
+            <label htmlFor="phone" className="mb-3 text-sm font-medium lg:text-base">
               Nội dung
             </label>
             <textarea
-              className="h-[100px] w-full rounded-xl border-none bg-white px-4 py-2 text-[#4F4F4F80] outline-none"
+              className="h-[100px] w-full rounded-xl border-none bg-white px-4 py-3 text-sm text-[#4F4F4F80] outline-none lg:placeholder:text-base"
               id="phone"
               placeholder="Nhập lời nhắn"
             />
@@ -143,7 +143,7 @@ const SectionContact = () => {
           <div className="flex items-center justify-center">
             <button
               type="submit"
-              className="mt-4 transform rounded-[10px] border border-white px-6 py-2 text-center text-white transition duration-300 ease-in-out hover:bg-white hover:text-black hover:shadow-lg"
+              className="mt-4 transform rounded-[10px] border border-white px-6 py-3 text-center text-sm text-white transition duration-300 ease-in-out hover:bg-white hover:text-black hover:shadow-lg lg:placeholder:text-base"
             >
               Gửi cho chúng tôi
             </button>

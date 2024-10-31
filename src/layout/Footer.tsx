@@ -13,12 +13,12 @@ const Footer = () => {
           className="abs-center z-40 h-[118px] w-[166px]"
         />
       </div>
-      <div className="flex h-10 items-center justify-between bg-custom-gradient text-white">
-        <div className="container flex items-center justify-between">
+      <div className="flex h-fit flex-col items-center justify-between bg-custom-gradient py-0 text-white lg:py-3">
+        <div className="container flex flex-col items-start justify-between gap-2 py-6 lg:flex-row lg:items-center lg:py-0">
           <div className="flex items-center gap-3">
             <svg
-              width="16"
-              height="17"
+              width="20"
+              height="20"
               viewBox="0 0 16 17"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -43,8 +43,8 @@ const Footer = () => {
           </div>
           <div className="flex items-center gap-3">
             <svg
-              width="16"
-              height="17"
+              width="24"
+              height="24 "
               viewBox="0 0 16 17"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -61,8 +61,8 @@ const Footer = () => {
           </div>
           <div className="flex items-center gap-3">
             <svg
-              width="16"
-              height="17"
+              width="20"
+              height="20"
               viewBox="0 0 16 17"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"

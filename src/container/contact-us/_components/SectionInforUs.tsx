@@ -15,7 +15,7 @@ import L from 'leaflet';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
-// Dynamically import react-leaflet components with SSR disabled
+// Import dynamic components from react-leaflet and disable SSR
 const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
   ssr: false,
 });
@@ -32,7 +32,7 @@ const SectionInforUs: React.FC = () => {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Client-side only code
+      // Check if window is available
       setIsClient(true);
       const icon = L.icon({
         iconUrl: locationIc.src,
@@ -44,24 +44,28 @@ const SectionInforUs: React.FC = () => {
     }
   }, []);
 
+  if (!isClient) return null;
+  // Handle branch selection
   const handleBranchClick = (branch: Branch) => {
     setActiveBranch(branch);
   };
 
   return (
-    <div className="container py-20">
+    <div className="container py-10 lg:py-20">
       <Title>Liên hệ với chúng tôi</Title>
-      <div className="mt-8 h-fit space-y-6 rounded-lg bg-white">
+      <div className="mt-4 h-fit space-y-6 rounded-lg bg-white md:mt-8">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-[1.2fr,1fr]">
           {/* Branch List */}
-          <div className="rounded-xl border border-[#E8E8E8] p-6">
-            <h3 className="mb-4 text-lg font-semibold text-[#18181B]">Chi Nhánh Của Chúng Tôi</h3>
+          <div className="rounded-xl border border-[#E8E8E8] p-4 md:p-6">
+            <h3 className="mb-4 text-base font-semibold text-[#18181B] md:text-lg">
+              Chi Nhánh Của Chúng Tôi
+            </h3>
             <ul className="sidebar-scroll h-[530px] space-y-4 overflow-y-scroll">
               {branches.map((branch) => (
                 <li
                   key={branch.name}
                   onClick={() => handleBranchClick(branch)}
-                  className={`mr-2 cursor-pointer rounded-lg border p-4 ${
+                  className={`mr-2 cursor-pointer rounded-lg border p-4 text-sm md:text-base ${
                     activeBranch?.name === branch.name
                       ? 'bg-[#3A449B] text-white'
                       : 'border-gray-200'
@@ -69,7 +73,7 @@ const SectionInforUs: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="mb-[6px] text-lg font-semibold">{branch.name}</p>
+                      <p className="mb-[6px] text-base font-semibold md:text-lg">{branch.name}</p>
                       <div className="flex items-center gap-2">
                         <CustomImage
                           width={18}
@@ -100,10 +104,14 @@ const SectionInforUs: React.FC = () => {
 
           {/* Customer Information Form */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-[#18181B]">Thông Tin Khách Hàng</h3>
+            <h3 className="mb-4 text-base font-semibold text-[#18181B] md:text-lg">
+              Thông Tin Khách Hàng
+            </h3>
             <form className="space-y-4">
               <div>
-                <label className="block text-base font-medium text-[#18181b]">Họ và tên</label>
+                <label className="block text-sm font-medium text-[#18181b] md:text-base">
+                  Họ và tên
+                </label>
                 <div className="mt-[10px] flex items-center gap-2 rounded-xl border border-[#E8E8E8] px-4 py-[14px]">
                   <CustomImage width={18} height={18} src={UseIc} alt="User" />
                   <input
@@ -115,7 +123,7 @@ const SectionInforUs: React.FC = () => {
               </div>
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <label className="block text-base font-medium text-[#18181b]">
+                  <label className="block text-sm font-medium text-[#18181b] md:text-base">
                     Số điện thoại
                   </label>
                   <div className="mt-[10px] flex items-center gap-2 rounded-xl border border-[#E8E8E8] px-4 py-[14px]">
@@ -123,53 +131,77 @@ const SectionInforUs: React.FC = () => {
                     <input
                       type="number"
                       placeholder="Nhập số điện thoại của bạn"
-                      className="w-full rounded-lg outline-none"
+                      className="w-full rounded-lg text-sm outline-none md:text-base"
                     />
                   </div>
                 </div>
                 <div className="flex-1">
-                  <label className="block text-base font-medium text-[#18181b]">Giới tính</label>
+                  <label className="block text-sm font-medium text-[#18181b] md:text-base">
+                    Giới tính
+                  </label>
                   <div className="mt-[10px] flex gap-2">
                     <label className="flex items-center">
-                      <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Nam
+                      <input
+                        type="radio"
+                        name="gender"
+                        className="mr-1 text-sm accent-[#3A449B] md:text-base"
+                      />{' '}
+                      Nam
                     </label>
                     <label className="flex items-center">
-                      <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Nữ
+                      <input
+                        type="radio"
+                        name="gender"
+                        className="mr-1 text-sm accent-[#3A449B] md:text-base"
+                      />{' '}
+                      Nữ
                     </label>
                     <label className="flex items-center">
-                      <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Khác
+                      <input
+                        type="radio"
+                        name="gender"
+                        className="mr-1 text-sm accent-[#3A449B] md:text-base"
+                      />{' '}
+                      Khác
                     </label>
                   </div>
                 </div>
               </div>
               <div>
-                <label className="block text-base font-medium text-[#18181b]">Email</label>
+                <label className="block text-sm font-medium text-[#18181b] md:text-base">
+                  Email
+                </label>
                 <div className="mt-[10px] flex items-center gap-2 rounded-xl border border-[#E8E8E8] px-4 py-[14px]">
                   <CustomImage width={18} height={18} src={mailIc} alt="Email" />
                   <input
                     type="email"
                     placeholder="abc@gmail.com"
-                    className="w-full rounded-lg outline-none"
+                    className="w-full rounded-lg text-sm outline-none md:text-base"
                   />
                 </div>
               </div>
               <div>
-                <label htmlFor="service" className="block text-base font-medium text-[#18181b]">
+                <label
+                  htmlFor="service"
+                  className="block text-sm font-medium text-[#18181b] md:text-base"
+                >
                   Dịch vụ
                 </label>
                 <select
                   id="service"
-                  className="mt-[10px] w-full rounded-lg border border-[#E8E8E8] px-4 py-[14px]"
+                  className="mt-[10px] w-full rounded-lg border border-[#E8E8E8] px-4 py-[14px] text-sm md:text-base"
                 >
                   <option>Massage tại cửa hàng</option>
                   <option>Massage tại nhà</option>
                 </select>
               </div>
               <div>
-                <label className="block text-base font-medium text-[#18181b]">Ghi chú</label>
+                <label className="block text-sm font-medium text-[#18181b] md:text-base">
+                  Ghi chú
+                </label>
                 <textarea
                   placeholder="VD: liên hệ cho tôi ngay"
-                  className="mt-[10px] w-full rounded-lg border border-gray-300 p-2"
+                  className="mt-[10px] w-full rounded-lg border border-gray-300 p-2 text-sm md:text-base"
                   rows={3}
                 ></textarea>
               </div>
@@ -179,14 +211,18 @@ const SectionInforUs: React.FC = () => {
 
         {/* Interactive Map */}
         {isClient && customIcon && (
-          <MapContainer center={[10.3588, 106.3679]} zoom={12} className="h-[500px] rounded-lg">
+          <MapContainer
+            center={[10.3588, 106.3679]}
+            zoom={12}
+            className="h-[400px] rounded-lg md:h-[500px]"
+          >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
             {branches.map((branch) => (
               <Marker key={branch.name} position={branch.coords} icon={customIcon}>
-                <Popup>{branch.name}</Popup>
+                <Popup>{branch.address}</Popup>
               </Marker>
             ))}
           </MapContainer>

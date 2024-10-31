@@ -8,9 +8,9 @@ import CustomImage from '@/components/CustomImage';
 import Title from '../../../components/Title/Title';
 const SectionIntroduce = () => {
   return (
-    <section className="container py-20">
+    <section className="container py-10 lg:py-20">
       <Title>BLoom massage</Title>
-      <p className="mt-[10px] text-center text-base text-primary">
+      <p className="mt-1 text-center text-sm text-primary lg:mt-[10px] lg:text-base">
         BLOOM MASAGE là thương hiệu spa được thành lập từ năm 2009. Kiến trúc theo phong cách Á Đông
         hiện đại kết hợp với nội thất trang trí tinh tế mang đến không gian hài hòa, ấm cúng. Trong
         một bản nhạc du dương, nhẹ nhàng, được phục vụ bởi đội ngũ nhân viên tận tình, giúp bạn thư
@@ -23,25 +23,25 @@ const SectionIntroduce = () => {
         alt={'introduce'}
         className="mx-auto my-[56px] max-h-[822px] max-w-[618px]"
       />
-      <p className="mb-8 text-center text-base font-medium">
+      <p className="mb-8 text-center text-sm font-medium lg:text-base">
         Hành trình phát triển thương hiệu 2015 – 8 năm tại Hà Nội
       </p>
 
       {/* list */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="flex flex-col gap-6">
-          <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
-            <div className="h-[68px] w-[68px]">
+          <div className="flex flex-col items-start gap-4 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000] lg:flex-row lg:gap-8">
+            <div className="size-11 lg:size-[68px]">
               <CustomImage
                 width={68}
                 height={68}
                 src={Ic1.src}
                 alt={'introduce'}
-                className="h-[68px] w-[68px]"
+                className="size-11 lg:size-[68px]"
               />
             </div>
             <div>
-              <h6 className="mb-2 text-base font-semibold capitalize">
+              <h6 className="mb-2 text-sm font-semibold capitalize lg:text-base">
                 Đội ngũ chuyên gia và kỹ thuật viên giàu kinh nghiệm
               </h6>
               <p className="text-sm text-primary">
@@ -52,18 +52,18 @@ const SectionIntroduce = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
-            <div className="h-[68px] w-[68px]">
+          <div className="flex flex-col items-start gap-4 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000] lg:flex-row lg:gap-8">
+            <div className="size-11 lg:size-[68px]">
               <CustomImage
                 width={68}
                 height={68}
                 src={Ic2.src}
                 alt={'introduce'}
-                className="h-[68px] w-[68px]"
+                className="size-11 lg:size-[68px]"
               />
             </div>
             <div>
-              <h6 className="mb-2 text-base font-semibold capitalize">Tầm nhìn</h6>
+              <h6 className="mb-2 text-sm font-semibold capitalize lg:text-base">Tầm nhìn</h6>
               <p className="text-sm text-primary">
                 Thông qua những giá trị tiền đề, không ngừng nỗ lực để trở thành hệ thống spa  chuẩn
                 Nhật hàng đầu Việt Nam với tiêu chuẩn và tinh hoa đặc sắc quy tụ từ Nhật Bản, đem
@@ -76,18 +76,18 @@ const SectionIntroduce = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
-            <div className="h-[68px] w-[68px]">
+          <div className="flex flex-col items-start gap-4 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000] lg:flex-row lg:gap-8">
+            <div className="size-11 lg:size-[68px]">
               <CustomImage
                 width={68}
                 height={68}
                 src={Ic3.src}
                 alt={'introduce'}
-                className="h-[68px] w-[68px]"
+                className="size-11 lg:size-[68px]"
               />
             </div>
             <div>
-              <h6 className="mb-2 text-base font-semibold capitalize">Sứ mệnh</h6>
+              <h6 className="mb-2 text-sm font-semibold capitalize lg:text-base">Sứ mệnh</h6>
               <p className="text-sm text-primary">
                 Bloom Spa cung cấp những giải pháp và dịch vụ làm đẹp chuẩn Nhật Bản giúp người phụ
                 nữ sở hữu “ sắc vóc như hoa, khí chất như ngọc”, tự tin và hưởng trọn sự viên mãn
@@ -99,18 +99,18 @@ const SectionIntroduce = () => {
           </div>
         </div>
         <div className="flex flex-col gap-6">
-          <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
-            <div className="h-[68px] w-[68px]">
+          <div className="flex flex-col items-start gap-4 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000] lg:flex-row lg:gap-8">
+            <div className="size-11 lg:size-[68px]">
               <CustomImage
                 width={68}
                 height={68}
                 src={Ic4.src}
                 alt={'introduce'}
-                className="h-[68px] w-[68px]"
+                className="size-11 lg:size-[68px]"
               />
             </div>
             <div>
-              <h6 className="mb-2 text-base font-semibold capitalize">
+              <h6 className="mb-2 text-sm font-semibold capitalize lg:text-base">
                 Dịch vụ chăm sóc khách hàng tốt nhất
               </h6>
               <p className="text-sm text-primary">
@@ -121,18 +121,20 @@ const SectionIntroduce = () => {
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
+          <div className="flex flex-col items-start gap-4 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000] lg:flex-row lg:gap-8">
             <div className="w-[44%]">
               <CustomImage
                 width={68}
                 height={68}
                 src={Ic5.src}
                 alt={'introduce'}
-                className="h-[68px] w-[68px]"
+                className="size-11 lg:size-[68px]"
               />
             </div>
             <div>
-              <h6 className="mb-2 text-base font-semibold capitalize">Giá trị cốt lõi</h6>
+              <h6 className="mb-2 text-sm font-semibold capitalize lg:text-base">
+                Giá trị cốt lõi
+              </h6>
               <ul className="text-sm tracking-tighter text-primary">
                 <li className="list-disc">
                   Niềm tin: Bloom Spa luôn tạo lập niềm tin đến với quý khách hàng và tập thể nhân

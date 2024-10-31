@@ -167,7 +167,7 @@ const ProductDetailPage = () => {
     <main>
       <div className="container py-20">
         {/* Breadcrumb */}
-        <div className="mb-4 flex items-center gap-2 text-sm text-gray-500">
+        <div className="mb-4 flex items-center gap-2 text-xs text-gray-500 lg:text-sm">
           <Link href="/" className="hover:text-[#3A449B] hover:underline">
             Trang Chủ
           </Link>
@@ -181,7 +181,7 @@ const ProductDetailPage = () => {
         {/* Main Content */}
         <div className="flex flex-col gap-10 lg:flex-row">
           {/* Image Gallery */}
-          <div className="w-[45%] flex-1">
+          <div className="w-full flex-1 lg:w-[45%]">
             <Swiper
               modules={[Navigation, Pagination, Thumbs]}
               thumbs={{ swiper: thumbsSwiper }}
@@ -193,13 +193,13 @@ const ProductDetailPage = () => {
             >
               {product.thumbnails.map((src, index) => (
                 <SwiperSlide key={index}>
-                  <div className="relative h-[568px] rounded-[32px] border border-[#E3E3E3]">
+                  <div className="relative h-[300px] rounded-[32px] border border-[#E3E3E3] md:h-[500px] lg:h-[568px]">
                     <CustomImage
                       src={src.src}
                       alt={`Calci K-2 Image ${index + 1}`}
                       width={2000}
                       height={1000}
-                      className="abs-center h-[358px]"
+                      className="abs-center"
                       classNameImg="rounded-[60px]"
                     />
                   </div>
@@ -211,10 +211,20 @@ const ProductDetailPage = () => {
             <Swiper
               onSwiper={setThumbsSwiper}
               spaceBetween={10}
-              slidesPerView={5}
               freeMode
               watchSlidesProgress
               className="thumbSwiper mt-4"
+              breakpoints={{
+                330: {
+                  slidesPerView: 3.5,
+                },
+                768: {
+                  slidesPerView: 5.5,
+                },
+                1024: {
+                  slidesPerView: 5.5,
+                },
+              }}
             >
               {product.thumbnails.map((src, index) => (
                 <SwiperSlide key={index}>
@@ -223,7 +233,7 @@ const ProductDetailPage = () => {
                     alt={`Thumbnail ${index + 1}`}
                     width={120}
                     height={120}
-                    className={`h-[100px] w-[100px] cursor-pointer rounded-[32px] border ${
+                    className={`h-20 cursor-pointer rounded-[32px] border md:h-[100px] ${
                       activeSlideIndex === index
                         ? 'border-[#3A449B]' // Apply active border when thumbnail is active
                         : 'border-[#E3E3E3]'
@@ -237,30 +247,30 @@ const ProductDetailPage = () => {
 
           {/* Product Information */}
           <div className="flex-1">
-            <div className="mb-4 flex items-center justify-between text-sm text-[#B9BBBF]">
+            <div className="mb-4 flex flex-col items-start justify-between gap-1 text-xs text-[#B9BBBF] md:text-sm lg:flex-row lg:items-center">
               <span>
-                Mã sản phẩm: <span className="text-[#3A449B]">{product.sku}</span>
+                Mã sản phẩm: <span className="font-medium text-[#3A449B]">{product.sku}</span>
               </span>
               <span>
-                Thương hiệu: <span className="text-[#3A449B]">{product.brand}</span>
+                Thương hiệu: <span className="font-medium text-[#3A449B]">{product.brand}</span>
               </span>
             </div>
-            <h1 className="mb-2 text-[26px] font-bold leading-8">{product.name}</h1>
-            <div className="mt-3 border-b border-b-[#E4E4E4] pb-4 text-3xl font-bold text-[#3A449B]">
+            <h1 className="mb-2 text-[26px] text-xl font-bold leading-8">{product.name}</h1>
+            <div className="mt-3 border-b border-b-[#E4E4E4] pb-4 text-2xl font-bold text-[#3A449B] lg:text-3xl">
               {product.price} <span className="ml-1 font-normal">/ hộp</span>
             </div>
 
             {/* Product Description */}
-            <div className="mt-4 flex flex-col gap-1 text-[16px] leading-9">
+            <div className="mt-4 flex flex-col gap-1 text-[16px] text-xs leading-9 md:gap-4 md:text-base">
               <div className="flex items-center gap-2">
-                <p className="w-[150px]">Chọn đơn vị tính</p>
-                <span className="flex h-8 w-[73px] items-center justify-center rounded-[100px] border border-[#E3E3E3/80] bg-[#f9faff] text-base text-[#626A6B]">
+                <p className="w-[150px] font-semibold">Chọn đơn vị tính</p>
+                <span className="flex h-6 w-[73px] items-center justify-center rounded-[100px] border border-[#E3E3E3/80] bg-[#f9faff] text-sm text-[#626A6B] md:h-8 md:text-base">
                   Hộp
                 </span>
               </div>
               {product.description.map((description) => (
                 <div className="flex gap-3" key={description.title}>
-                  <p className="w-[150px]">{description.title}</p>
+                  <p className="w-[150px] font-semibold">{description.title}</p>
                   <p className="w-[450px]">{description.text}</p>
                 </div>
               ))}
@@ -268,10 +278,10 @@ const ProductDetailPage = () => {
 
             {/* Purchase Options */}
             <div className="mb-5 mt-4 flex items-center gap-2">
-              <label htmlFor="quantity" className="w-[150px] text-base">
+              <label htmlFor="quantity" className="w-[150px] text-xs font-semibold md:text-base">
                 Số lượng:
               </label>
-              <div className="shadow-quality flex h-[50px] w-[130px] items-center justify-center gap-7 rounded-full border border-[#D0D3E1] py-2 text-2xl font-bold">
+              <div className="shadow-quality flex h-10 w-[130px] items-center justify-center gap-7 rounded-full border border-[#D0D3E1] py-2 text-lg font-bold md:h-[50px] md:text-2xl">
                 <button
                   type="button"
                   className={`text-[${quantity === 1 ? '#D0D3E1' : '#3A449B'}]`}
@@ -287,10 +297,10 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-            <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="mt-5 grid grid-cols-1 gap-3 text-sm md:grid-cols-2 md:text-base">
               <button
                 type="button"
-                className="flex h-[60px] items-center justify-center gap-3 rounded-[22px] border-2 border-[#3A449B] bg-[#3A449B] px-4 py-[10px] font-semibold text-white transition-all duration-300 ease-in-out hover:bg-blue-900"
+                className="flex h-12 items-center justify-center gap-3 rounded-[22px] border-2 border-[#3A449B] bg-[#3A449B] px-4 py-[10px] font-semibold text-white transition-all duration-300 ease-in-out hover:bg-blue-900 md:h-[60px]"
               >
                 <CustomImage
                   src={bag.src}
@@ -303,7 +313,7 @@ const ProductDetailPage = () => {
               </button>
               <button
                 type="button"
-                className="flex items-center justify-center gap-3 rounded-[22px] border-2 border-[#3A449B] px-4 py-2 font-semibold text-[#3A449B] transition-all duration-300 ease-in-out"
+                className="flex h-12 items-center justify-center gap-3 rounded-[22px] border-2 border-[#3A449B] px-4 py-2 font-semibold text-[#3A449B] transition-all duration-300 ease-in-out md:h-[60px]"
               >
                 <CustomImage
                   src={cart.src}
@@ -319,14 +329,14 @@ const ProductDetailPage = () => {
         </div>
         {/* details product */}
         <div className="mt-[56px] rounded-3xl border border-[#E8E8E8] text-base">
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
             {/* Sidebar */}
-            <div className="col-span-1 border-r border-r-[#E0E0E0] p-6">
+            <div className="col-span-1 hidden border-r border-r-[#E0E0E0] p-6 md:block">
               <ul>
                 {productData.details.map((section) => (
                   <li
                     key={section.id}
-                    className={`cursor-pointer rounded-2xl px-6 py-3 text-[17px] font-semibold ${
+                    className={`cursor-pointer rounded-2xl px-6 py-3 text-sm font-semibold md:text-base lg:text-[17px] ${
                       activeSectionId === section.id
                         ? 'bg-gray-100 font-bold text-[#3A449B]'
                         : 'text-gray-400'
@@ -356,14 +366,17 @@ const ProductDetailPage = () => {
                   className={`mt-[14px] ${activeSectionId === section.id ? 'text-[#3A449B]' : ''}`} // Add active-section class conditionally
                 >
                   <h2
-                    className={`sticky left-0 right-0 top-0 h-full w-full bg-white pb-2 pt-10 text-base font-semibold text-[#344054]`}
+                    className={`sticky left-0 right-0 top-0 mt-5 h-full w-full bg-white pb-2 text-base font-semibold text-[#344054] md:pt-10`}
                     data-id={section.id}
                   >
                     {section.title}
                   </h2>
                   <ul>
                     {section.items.map((item, itemIndex) => (
-                      <li key={itemIndex} className="mt-[14px] text-gray-600">
+                      <li
+                        key={itemIndex}
+                        className="mt-2 text-sm text-gray-600 md:mt-[14px] md:text-base"
+                      >
                         <CustomImage
                           src={check.src}
                           alt="check"

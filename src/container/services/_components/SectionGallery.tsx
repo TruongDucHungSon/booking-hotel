@@ -13,7 +13,7 @@ const SectionGallery = () => {
   return (
     <section className="pb-20">
       <Title>Phòng trưng bày</Title>
-      <div className="mt-8 grid grid-cols-4 gap-4">
+      <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         <CustomImage
           width={1200}
           height={1000}

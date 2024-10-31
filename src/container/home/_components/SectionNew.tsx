@@ -8,7 +8,7 @@ const SectionNew = () => {
   return (
     <section className="container py-20">
       <Title>Tin tức</Title>
-      <div className="place-center mt-8 grid grid-cols-2 gap-6 lg:grid-cols-4">
+      <div className="place-center mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {map(NEW, (item) => (
           <div
             className="group cursor-pointer overflow-hidden rounded-3xl bg-[#f3f3f3] p-4"

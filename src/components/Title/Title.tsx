@@ -8,7 +8,7 @@ const Title = ({ children, className, type = 'primary' }: Title) => {
   return (
     <div className={`${type === 'primary' ? `bg-[#ffffff]` : `bg-[#f5f6fa]`}`}>
       <h4
-        className={`mx-auto flex w-full justify-center gap-[10px] text-center font-wylie text-[28px] font-normal capitalize leading-[41.86px] text-black lg:w-[500px] ${className} relative`}
+        className={`mx-auto flex w-full justify-center gap-[10px] text-center font-wylie text-[24px] font-normal capitalize leading-[41.86px] text-black lg:w-[500px] lg:text-[28px] ${className} relative`}
       >
         <svg
           width="16"

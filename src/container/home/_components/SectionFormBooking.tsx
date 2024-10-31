@@ -16,7 +16,7 @@ const SectionFormBooking = () => {
   const router = useRouter();
 
   const handleNavigate = () => {
-    router.push('/dat-lich');
+    router.push('/dich-vu');
   };
 
   const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
@@ -70,18 +70,18 @@ const SectionFormBooking = () => {
   };
 
   return (
-    <section className="sticky top-0 z-[9999] mx-auto bg-[#ffffff]">
-      <div className="container bg-[#ffff] px-8 py-6">
-        <Title type="primary">Đặt lịch massage</Title>
+    <section className="container top-0 z-[9999] mx-auto rounded-3xl bg-[#f5f6fa]">
+      <div className="px-8 py-6">
+        <Title type="secondary">Đặt lịch massage</Title>
 
         <form onSubmit={handleSubmit}>
-          <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-center">
+          <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-center">
             {/* Location Dropdown */}
-            <div className="relative w-full md:w-1/3">
+            <div className="relative w-full lg:w-1/3">
               <button
                 type="button"
                 onClick={() => toggleDropdown('location')}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none"
+                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none lg:text-base"
               >
                 <CustomImage width={18} height={18} src={LocationIc} alt="Arrow Down" />
                 {serviceLocation}
@@ -99,7 +99,7 @@ const SectionFormBooking = () => {
                     <li
                       key={location}
                       onClick={() => handleSelect('location', location)}
-                      className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
+                      className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
                     >
                       {location}
                     </li>
@@ -109,11 +109,11 @@ const SectionFormBooking = () => {
             </div>
 
             {/* Store Dropdown */}
-            <div className="relative w-full md:w-1/3">
+            <div className="relative w-full lg:w-1/3">
               <button
                 type="button"
                 onClick={() => toggleDropdown('store')}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none"
+                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
               >
                 <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
                 {store}
@@ -131,7 +131,7 @@ const SectionFormBooking = () => {
                     <li
                       key={storeOption}
                       onClick={() => handleSelect('store', storeOption)}
-                      className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
+                      className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
                     >
                       {storeOption}
                     </li>
@@ -141,23 +141,24 @@ const SectionFormBooking = () => {
             </div>
 
             {/* Date and Time Pickers */}
-            <div className="flex w-full items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white px-2 text-base font-medium text-[#B9B9B9] lg:w-[42%]">
-              <div className="relative flex w-full items-center justify-center gap-2 px-2">
+            <div className="flex w-full flex-col items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white text-base font-medium text-[#B9B9B9] lg:w-[42%] lg:flex-row lg:px-2">
+              <div className="relative flex w-full items-center justify-center gap-2 px-4 lg:px-0">
                 <CustomImage
                   width={18}
                   height={18}
                   src={DateIc}
-                  alt="Arrow Down"
+                  alt="Date Icon"
                   className="h-6 w-6"
                 />
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => date && setStartDate(date)}
                   dateFormat="dd/MM/yyyy"
-                  className="w-full rounded-2xl bg-white py-[10px] text-base font-medium text-black focus:outline-none"
+                  className="w-full rounded-2xl bg-white py-[10px] text-center text-sm font-medium text-black focus:outline-none lg:text-base"
                   placeholderText="Chọn ngày"
                   locale={vi}
                   popperPlacement="bottom"
+                  wrapperClassName="w-full"
                 />
                 <CustomImage
                   width={18}
@@ -168,8 +169,8 @@ const SectionFormBooking = () => {
                 />
               </div>
 
-              <span>|</span>
-              <div className="relative flex w-full items-center justify-between">
+              <span className="hidden lg:block">|</span>
+              <div className="relative flex w-full items-center justify-between px-4 lg:px-0">
                 <CustomImage
                   width={50}
                   height={50}
@@ -180,7 +181,7 @@ const SectionFormBooking = () => {
                 <button
                   type="button"
                   onClick={() => toggleDropdown('time')}
-                  className="w-full cursor-pointer rounded-md border-none bg-transparent px-2 py-2 text-left text-base font-medium text-primary focus:border-[#3A449B] focus:outline-none"
+                  className="w-full cursor-pointer rounded-md border-none bg-transparent px-2 py-2 text-center text-sm font-medium text-primary focus:border-[#3A449B] focus:outline-none lg:text-base"
                 >
                   {selectedTime || 'Chọn giờ'}
                 </button>
@@ -192,12 +193,12 @@ const SectionFormBooking = () => {
                   className="h-6 w-6"
                 />
                 {dropdowns.time && (
-                  <ul className="sidebar-scroll absolute top-12 z-10 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
+                  <ul className="sidebar-scroll absolute left-0 top-12 z-10 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
                     {availableTimes.map((time) => (
                       <li
                         key={time}
                         onClick={() => handleSelect('time', time)}
-                        className="cursor-pointer rounded-xl px-4 py-[10px] transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
+                        className="cursor-pointer rounded-xl px-4 py-[10px] text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
                       >
                         {time}
                       </li>
@@ -209,15 +210,15 @@ const SectionFormBooking = () => {
 
             {/* Submit Button */}
           </div>
-          <div className="mt-4 flex w-full items-center justify-between">
-            <p className="text-base text-primary">
+          <div className="mt-4 flex w-full flex-col-reverse items-center justify-between gap-4 lg:flex-row">
+            <p className="text-xs text-primary md:text-sm lg:text-base">
               Chương trình Săn Code Ưu Đãi độc quyền tại Bloom Massage, diễn ra vào thứ Hai, thứ Tư,
               thứ Sáu và Chủ Nhật hàng tuần!
             </p>
             <button
               type="submit"
               onClick={handleNavigate}
-              className="w-full rounded-2xl bg-[#3A449B] px-4 py-2 text-base font-medium text-white shadow-sm transition-all duration-300 ease-in-out hover:bg-[#2c3568] focus:outline-none lg:w-[260px]"
+              className="w-full rounded-2xl bg-[#3A449B] px-4 py-2 text-sm font-medium text-white shadow-sm transition-all duration-300 ease-in-out hover:bg-[#2c3568] focus:outline-none lg:w-[260px] lg:text-base"
             >
               Đặt lịch ngay
             </button>

@@ -1,25 +1,23 @@
 'use client';
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-// Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/autoplay'; // Import autoplay styles
+import 'swiper/css/autoplay';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
-import SlideSrc1 from '../../../assets/images/slider/slide1.png';
-import SlideSrc2 from '../../../assets/images/slider/slide2.png';
-import SlideSrc3 from '../../../assets/images/slider/slide3.png';
-import CustomImage from '../../../components/CustomImage/index';
-// import required modules
 import { Autoplay, Pagination } from 'swiper/modules';
+import SlideSrc1 from '../../../assets/images/slider/slide1.png';
+import CustomImage from '../../../components/CustomImage/index';
+
 const SectionBanner = () => {
   return (
-    <section className="mb-20 bg-gradient py-8">
-      {/* header banner */}
-      <div className="mx-auto w-full pl-5 pr-10 text-center text-white lg:w-[1212px]">
-        <div className="flex justify-between">
+    <section className="-z-20 mb-5 bg-gradient py-8 lg:mb-20">
+      {/* Header Banner */}
+      <div className="mx-auto w-full px-5 text-center text-white lg:w-[1212px]">
+        <div className="flex flex-col items-center lg:flex-row lg:justify-between">
           <svg
+            className="hidden lg:block"
             width="83"
             height="82"
             viewBox="0 0 83 82"
@@ -37,11 +35,12 @@ const SectionBanner = () => {
             />
           </svg>
 
-          <h2 className="font-wylie text-[64px] leading-[64px]">
+          <h2 className="font-wylie text-[40px] leading-[48px] lg:text-[64px] lg:leading-[64px]">
             Thư giãn cơ thể - tái tạo năng lượng
           </h2>
 
           <svg
+            className="hidden lg:block"
             width="62"
             height="91"
             viewBox="0 0 62 91"
@@ -59,101 +58,53 @@ const SectionBanner = () => {
             />
           </svg>
         </div>
-        <p className="text-20 mt-2 font-varela font-normal uppercase leading-[20px] tracking-[0.3em]">
+        <p className="mt-4 font-varela text-[16px] font-normal uppercase leading-[20px] tracking-[0.3em] lg:mt-2 lg:text-[20px]">
           Massage cho bạn khoảnh khắc bình yên
         </p>
       </div>
 
-      {/* slider banner */}
-      <div className="container z-50 mt-8 h-[350px]">
+      {/* Slider Banner */}
+      <div className="container mt-8 h-[350px]">
         <Swiper
           spaceBetween={2}
+          slidesPerGroup={3}
           pagination={{
             dynamicBullets: true,
             clickable: true,
           }}
           autoplay={{
-            delay: 3000, // Delay in milliseconds for autoplay
-            disableOnInteraction: false, // Keeps autoplay active after interaction
+            delay: 3000,
+            disableOnInteraction: false,
           }}
-          speed={1000} // Speed for smooth transitions in milliseconds
-          modules={[Pagination, Autoplay]} // Include the Autoplay module
+          speed={1000}
+          modules={[Pagination, Autoplay]}
+          breakpoints={{
+            640: {
+              slidesPerView: 1, // Mobile: 1 slide
+            },
+            768: {
+              slidesPerView: 2, // Tablet: 2 slides
+            },
+            1024: {
+              slidesPerView: 3, // Desktop: 3 slides
+            },
+          }}
         >
-          <SwiperSlide>
-            <div className="flex items-center justify-center gap-6 pb-8">
-              <CustomImage
-                src={SlideSrc1.src}
-                alt="Slide 1"
-                width={1000}
-                height={1000}
-                className="w-[421.33px] rounded-tl-[14px]"
-              />
-              <CustomImage
-                src={SlideSrc2.src}
-                alt="Slide 1"
-                width={1000}
-                height={1000}
-                className="w-[421.33px] rounded-tl-[14px]"
-              />
-              <CustomImage
-                src={SlideSrc3.src}
-                alt="Slide 1"
-                width={1000}
-                height={1000}
-                className="w-[421.33px] rounded-tl-[14px]"
-              />
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="flex items-center justify-center gap-6 pb-8">
-              <CustomImage
-                src={SlideSrc1.src}
-                alt="Slide 1"
-                width={1000}
-                height={1000}
-                className="w-[421.33px] rounded-tl-[14px]"
-              />
-              <CustomImage
-                src={SlideSrc2.src}
-                alt="Slide 1"
-                width={1000}
-                height={1000}
-                className="w-[421.33px] rounded-tl-[14px]"
-              />
-              <CustomImage
-                src={SlideSrc3.src}
-                alt="Slide 1"
-                width={1000}
-                height={1000}
-                className="w-[421.33px] rounded-tl-[14px]"
-              />
-            </div>
-          </SwiperSlide>
-          <SwiperSlide>
-            <div className="flex items-center justify-center gap-6 pb-8">
-              <CustomImage
-                src={SlideSrc1.src}
-                alt="Slide 1"
-                width={1000}
-                height={1000}
-                className="w-[421.33px] rounded-tl-[14px]"
-              />
-              <CustomImage
-                src={SlideSrc2.src}
-                alt="Slide 1"
-                width={1000}
-                height={1000}
-                className="w-[421.33px] rounded-tl-[14px]"
-              />
-              <CustomImage
-                src={SlideSrc3.src}
-                alt="Slide 1"
-                width={1000}
-                height={1000}
-                className="w-[421.33px] rounded-tl-[14px]"
-              />
-            </div>
-          </SwiperSlide>
+          {Array(6)
+            .fill(null)
+            .map((_, index) => (
+              <SwiperSlide key={index}>
+                <div className="flex items-center justify-center gap-6 pb-8 lg:gap-12">
+                  <CustomImage
+                    src={SlideSrc1.src}
+                    alt={`Slide ${index + 1}`}
+                    width={1000}
+                    height={1000}
+                    className="w-full max-w-[421.33px] rounded-tl-[14px] lg:max-w-[421.33px]"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
         </Swiper>
       </div>
     </section>

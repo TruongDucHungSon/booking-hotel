@@ -7,8 +7,8 @@ const SectionListNews = () => {
   return (
     <section>
       <Title>Tin tức</Title>
-      <div className="mt-6">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-3 md:mt-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {newsArticles.map((article, index) => (
             <div key={index} className="rounded-3xl border border-[#E8E8E8] bg-white">
               <CustomImage
@@ -19,18 +19,18 @@ const SectionListNews = () => {
                 className="h-[200px] w-full object-cover"
                 classNameImg="rounded-tl-3xl rounded-tr-3xl"
               />
-              <div className="p-4">
-                <Link href={'/tin-tuc/1'} className="text-base font-semibold">
+              <div className="p-3 md:p-4">
+                <Link href={'/tin-tuc/1'} className="text-sm font-semibold md:text-base">
                   {article.title}
                 </Link>
-                <p className="mb-4 mt-2 line-clamp-3 text-sm text-[#343434]">
+                <p className="mb-2 mt-1 line-clamp-3 text-xs text-[#343434] md:mb-4 md:mt-2 md:text-sm">
                   {article.description}
                 </p>
                 <div className="flex items-center justify-between">
                   <p className="text-xs text-[#343434]">{article.date}</p>
                   <Link
                     href={'/tin-tuc/1'}
-                    className="group flex items-center justify-center gap-2 font-medium text-[#3A449B] hover:underline"
+                    className="group flex items-center justify-center gap-2 text-sm font-medium text-[#3A449B] hover:underline md:text-base"
                   >
                     Xem Thêm
                     <span className="transition-all duration-300 group-hover:translate-x-2">

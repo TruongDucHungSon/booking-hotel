@@ -7,15 +7,15 @@ import Title from '../../components/Title/Title';
 const ProductPage = () => {
   return (
     <main className="w-full bg-[#f5f6fa]">
-      <div className="container py-20">
+      <div className="container py-10 lg:py-20">
         <Title type="secondary" className="mb-8">
           sản phẩm nổi bật
         </Title>
         {/* list products */}
-        <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
           {products.map((product) => (
             <div
-              className="group max-w-sm transform rounded-2xl bg-white p-4 transition-all duration-300 hover:shadow-lg"
+              className="group w-full transform rounded-2xl bg-white p-4 transition-all duration-300 hover:shadow-lg"
               key={product.id}
             >
               <div className="flex justify-center overflow-hidden rounded-xl">

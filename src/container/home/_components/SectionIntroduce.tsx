@@ -7,7 +7,7 @@ const SectionIntroduce = () => {
       <div className="container">
         <Title>Giới thiệu BLoom massage</Title>
         <div className="mb-8">
-          <p className="mx-auto mt-4 w-full text-center text-black lg:w-[962px]">
+          <p className="mx-auto mt-4 w-full text-center text-sm text-black lg:w-[962px] lg:text-base">
             BLOOM MASAGE là thương hiệu spa được thành lập từ năm 2009. Kiến trúc theo phong cách Á
             Đông hiện đại kết hợp với nội thất trang trí tinh tế mang đến không gian hài hòa, ấm
             cúng. Trong một bản nhạc du dương, nhẹ nhàng, được phục vụ bởi đội ngũ nhân viên tận
@@ -15,16 +15,16 @@ const SectionIntroduce = () => {
             bộn bề của cuộc sống.
           </p>
         </div>
-        <div className="flex items-center justify-between gap-8">
+        <div className="flex flex-col items-center justify-between gap-8 lg:flex-row">
           <CustomImage
             width={1000}
             height={588}
             src={IntroduceSrc.src}
             alt="Banner Introduce"
-            className="w-[750px]"
+            className="w-[80%] md:w-[50%] lg:h-[600px] lg:w-[750px]"
           />
           <div className="w-full text-black lg:max-w-[756px]">
-            <h4 className="mb-8 text-base font-medium">
+            <h4 className="mb-8 text-sm font-medium lg:text-base">
               Chúng tôi luôn mong muốn mang đến dịch vụ tốt nhất cho khách hàng, sự hài lòng của bạn
               là mục tiêu của chúng tôi. Hãy để bản thân được nâng niu và yêu thương bản thân mình
               hơn!
@@ -71,7 +71,7 @@ const SectionIntroduce = () => {
                   </svg>
                 </div>
                 <div>
-                  <h6 className="mb-2 text-base font-semibold capitalize">ra mắt</h6>
+                  <h6 className="mb-2 text-sm font-semibold capitalize lg:text-base">ra mắt</h6>
                   <p className="text-sm">
                     Bloom Massage được chính thức đưa vào hoạt động ngày 13/11/2023. Đến nay đã trở
                     thành một trong những cửa hàng massage được yêu thích nhất
@@ -125,7 +125,9 @@ const SectionIntroduce = () => {
                   </svg>
                 </div>
                 <div>
-                  <h6 className="mb-2 text-base font-semibold capitalize">Tự tin tỏa sáng</h6>
+                  <h6 className="mb-2 text-sm font-semibold capitalize lg:text-base">
+                    Tự tin tỏa sáng
+                  </h6>
                   <p className="text-sm">
                     Bloom Massage mong rằng có thể đồng hành cùng bạn trong quá trình chăm sóc và
                     làm đẹp cho bản thân, giúp bạn tự tin và tốt hơn mỗi ngày
@@ -184,7 +186,7 @@ const SectionIntroduce = () => {
                   </svg>
                 </div>
                 <div>
-                  <h6 className="mb-2 text-base font-semibold capitalize">Cam kết</h6>
+                  <h6 className="mb-2 text-sm font-semibold capitalize lg:text-base">Cam kết</h6>
                   <p className="text-sm">
                     Bloom Massage cam kết mang đến cho bạn không gian mua sắm và những trải nghiệm
                     thật tốt khi đến với chúng mình
@@ -229,7 +231,9 @@ const SectionIntroduce = () => {
                   </svg>
                 </div>
                 <div>
-                  <h6 className="mb-2 text-base font-semibold capitalize">100% chính hãng</h6>
+                  <h6 className="mb-2 text-sm font-semibold capitalize lg:text-base">
+                    100% chính hãng
+                  </h6>
                   <p className="text-sm">
                     Các sản phẩm tại Bloom Massage đều có hóa đơn, chứng từ từ hãng sản xuất đảm bảo
                     100% chính hãng
