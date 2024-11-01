@@ -13,8 +13,18 @@ import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { Branch, branches } from '@/utils/constants';
 import L from 'leaflet';
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+
+// Dynamically import react-leaflet components to avoid SSR issues
+const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
+  ssr: false,
+});
+const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), {
+  ssr: false,
+});
+const Marker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
 
 // Custom marker icon setup
 const customMarkerIcon = new L.Icon({
@@ -174,23 +184,25 @@ const SectionInforUs: React.FC = () => {
         </div>
 
         {/* Interactive Map */}
-        <div className="mt-6 h-[400px] w-full overflow-hidden rounded-lg">
-          <MapContainer center={[10.7769, 106.7009]} zoom={13} className="h-full w-full">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            />
-            {branches.map((branch) => (
-              <Marker key={branch.name} position={branch.coords} icon={customMarkerIcon}>
-                <Popup>
-                  <strong>{branch.name}</strong>
-                  <br />
-                  {branch.address}
-                </Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-        </div>
+        {typeof window !== 'undefined' && (
+          <div className="mt-6 h-[400px] w-full overflow-hidden rounded-lg">
+            <MapContainer center={[10.7769, 106.7009]} zoom={13} className="h-full w-full">
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              />
+              {branches.map((branch) => (
+                <Marker key={branch.name} position={branch.coords} icon={customMarkerIcon}>
+                  <Popup>
+                    <strong>{branch.name}</strong>
+                    <br />
+                    {branch.address}
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          </div>
+        )}
       </div>
     </div>
   );
