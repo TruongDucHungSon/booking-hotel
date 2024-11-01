@@ -76,7 +76,7 @@ const DefaultLayout = () => {
           {/* Mobile Navigation Drawer */}
 
           <div
-            className={`fixed left-0 top-[76px] z-[1000] w-full bg-white ${isMenuOpen ? 'visible translate-x-0' : 'invisible'} translate-x-[-100%] transition-all duration-300 ease-in-out`}
+            className={`fixed top-[76px] z-[1000] w-full bg-white ${isMenuOpen === true ? 'visible left-0' : 'invisible left-[-1000px]'} transition-all duration-300 ease-in-out`}
           >
             <ul className="flex flex-col items-start space-y-4 px-4 pb-4 pt-6 text-primary">
               {Navigation.map((item: NavigationProps) => (
