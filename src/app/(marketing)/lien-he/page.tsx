@@ -1,5 +1,6 @@
-import ContactPage from '../../../container/contact-us';
+import dynamic from 'next/dynamic';
 
+const ContactPage = dynamic(() => import('../../../container/contact-us'), { ssr: false });
 const page = () => {
   return <ContactPage />;
 };

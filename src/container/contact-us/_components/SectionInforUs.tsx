@@ -14,7 +14,7 @@ import Title from '@/components/Title/Title';
 import { Branch, branches } from '@/utils/constants';
 import L from 'leaflet';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // Dynamically import react-leaflet components to avoid SSR issues
 const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
@@ -34,10 +34,13 @@ const customMarkerIcon = new L.Icon({
 
 const SectionInforUs: React.FC = () => {
   const [activeBranch, setActiveBranch] = useState<Branch | null>(null);
-
+  const [isClient, setIsClient] = useState(false);
   const handleBranchClick = (branch: Branch) => {
     setActiveBranch(branch);
   };
+  useEffect(() => {
+    setIsClient(true); // Ensure component only mounts on the client
+  }, []);
 
   return (
     <div className="container py-10 lg:py-20">
@@ -184,7 +187,7 @@ const SectionInforUs: React.FC = () => {
         </div>
 
         {/* Interactive Map */}
-        {typeof window !== 'undefined' && (
+        {isClient && typeof window !== 'undefined' && (
           <div className="mt-6 h-[400px] w-full overflow-hidden rounded-lg">
             <MapContainer center={[10.7769, 106.7009]} zoom={13} className="h-full w-full">
               <TileLayer
