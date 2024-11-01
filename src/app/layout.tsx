@@ -19,9 +19,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${plus_jakarta_sans.className}`}>
-        <DefaultLayout />
-        {children}
-        <Footer />
+        <main className="relative">
+          <DefaultLayout />
+          {children}
+          <Footer />
+        </main>
       </body>
     </html>
   );

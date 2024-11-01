@@ -1,8 +1,8 @@
+import cartIc from '@/assets/svgs/introduce/cart.svg';
+import CustomImage from '@/components/CustomImage';
+import Title from '@/components/Title/Title';
 import { products } from '@/utils/constants';
 import Link from 'next/link';
-import cartIc from '../../assets/svgs/introduce/cart.svg';
-import CustomImage from '../../components/CustomImage';
-import Title from '../../components/Title/Title';
 
 const ProductPage = () => {
   return (

@@ -40,6 +40,7 @@ html {
 }
 
 .bg-gradient {
+  z-index: -1;
   background: linear-gradient(90deg, #3a449b -22.88%, #ef5f5f 130.34%);
 }
 

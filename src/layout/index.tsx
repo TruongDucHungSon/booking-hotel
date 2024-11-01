@@ -14,9 +14,9 @@ const DefaultLayout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-gradient">
-      <div className="pb-8 lg:px-0 lg:py-8">
-        <div className="container sticky top-0 flex h-[76px] items-center justify-between rounded-3xl border border-[#F3F3F3] bg-white/65 px-4 backdrop-blur-6 md:px-8 lg:static lg:px-0">
+    <header className="relative bg-gradient">
+      <div className="pb-8 lg:px-5 lg:py-8">
+        <div className="container sticky top-0 flex h-[76px] items-center justify-between rounded-3xl border border-[#F3F3F3] bg-white/65 px-4 backdrop-blur-6 md:px-8 lg:static lg:px-5">
           {/* Logo */}
           <div>
             <Link href={'/'}>

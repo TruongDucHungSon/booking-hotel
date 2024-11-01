@@ -1,7 +1,6 @@
 'use client';
 
 import addressIc from '@/assets/svgs/contact/address.svg';
-import locationIc from '@/assets/svgs/contact/location.svg';
 import mailIc from '@/assets/svgs/contact/mail.svg';
 import phoneIc from '@/assets/svgs/contact/phone.svg';
 import UseIc from '@/assets/svgs/contact/user.svg';
@@ -11,38 +10,11 @@ import WhiteDrIc from '@/assets/svgs/contact/white_dr.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { Branch, branches } from '@/utils/constants';
-import L from 'leaflet';
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
-  ssr: false,
-});
-const Marker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
-const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
-const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), {
-  ssr: false,
-});
 const SectionInforUs: React.FC = () => {
   const [activeBranch, setActiveBranch] = useState<Branch | null>(null);
-  const [isClient, setIsClient] = useState(false);
-  const [customIcon, setCustomIcon] = useState<L.Icon<L.IconOptions> | null>(null);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Check if window is available
-      setIsClient(true);
-      const icon = L.icon({
-        iconUrl: locationIc.src,
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-      });
-      setCustomIcon(icon);
-    }
-  }, []);
-
-  if (!isClient) return null;
   // Handle branch selection
   const handleBranchClick = (branch: Branch) => {
     setActiveBranch(branch);
@@ -138,29 +110,14 @@ const SectionInforUs: React.FC = () => {
                     Giới tính
                   </label>
                   <div className="mt-[10px] flex gap-2">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="gender"
-                        className="mr-1 text-sm accent-[#3A449B] md:text-base"
-                      />{' '}
-                      Nam
+                    <label className="flex items-center text-sm md:text-base">
+                      <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Nam
                     </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="gender"
-                        className="mr-1 text-sm accent-[#3A449B] md:text-base"
-                      />{' '}
-                      Nữ
+                    <label className="flex items-center text-sm md:text-base">
+                      <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Nữ
                     </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="gender"
-                        className="mr-1 text-sm accent-[#3A449B] md:text-base"
-                      />{' '}
-                      Khác
+                    <label className="a flex items-center text-sm md:text-base">
+                      <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Khác
                     </label>
                   </div>
                 </div>
@@ -208,20 +165,6 @@ const SectionInforUs: React.FC = () => {
         </div>
 
         {/* Interactive Map */}
-        {isClient && customIcon && (
-          <MapContainer
-            center={[10.3588, 106.3679]}
-            zoom={12}
-            className="h-[400px] rounded-lg md:h-[500px]"
-          >
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {branches.map((branch) => (
-              <Marker key={branch.name} position={branch.coords} icon={customIcon}>
-                <Popup>{branch.address}</Popup>
-              </Marker>
-            ))}
-          </MapContainer>
-        )}
       </div>
     </div>
   );

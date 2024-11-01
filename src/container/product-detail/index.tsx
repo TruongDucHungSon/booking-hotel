@@ -1,5 +1,11 @@
 'use client';
 
+import bag from '@/assets/svgs/arrow/bag.svg';
+import cart from '@/assets/svgs/arrow/cart.svg';
+import check from '@/assets/svgs/arrow/check.svg';
+import pr1 from '@/assets/svgs/introduce/pr1.jpg';
+import CustomImage from '@/components/CustomImage/index';
+import SectionProducts from '@/components/SectionProducts/SectionProducts';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import SwiperCore from 'swiper';
@@ -8,12 +14,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import { Navigation, Pagination, Thumbs } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import bag from '../../assets/svgs/arrow/bag.svg';
-import cart from '../../assets/svgs/arrow/cart.svg';
-import check from '../../assets/svgs/arrow/check.svg';
-import pr1 from '../../assets/svgs/introduce/pr1.jpg';
-import CustomImage from '../../components/CustomImage/index';
-import SectionProducts from '../../components/SectionProducts/SectionProducts';
 
 const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState<number>(1);
