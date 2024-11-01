@@ -3,7 +3,7 @@ import SectionFormBookingAtHome from './_components/SectionFormBookingAtHome';
 
 const BookingAtHomePage = () => {
   return (
-    <main className="container pt-20">
+    <main className="container pt-10 lg:pt-20">
       <SectionFormBookingAtHome />
       <SectionProducts />
     </main>

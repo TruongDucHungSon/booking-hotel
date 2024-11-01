@@ -165,7 +165,7 @@ const ProductDetailPage = () => {
 
   return (
     <main>
-      <div className="container py-20">
+      <div className="container py-10 lg:py-20">
         {/* Breadcrumb */}
         <div className="mb-4 flex items-center gap-2 text-xs text-gray-500 lg:text-sm">
           <Link href="/" className="hover:text-[#3A449B] hover:underline">

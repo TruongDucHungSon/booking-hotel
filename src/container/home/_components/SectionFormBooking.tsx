@@ -7,6 +7,7 @@ import TimeIc from '@/assets/svgs/arrow/time.svg';
 import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
+import { stores } from '@/container/booking/_components/SectionFormBooking';
 import { vi } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -19,7 +20,7 @@ const SectionFormBooking = () => {
     router.push('/dich-vu');
   };
 
-  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
+  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm ');
   const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
   const [selectedTime, setSelectedTime] = useState('');
   const [startDate, setStartDate] = useState(new Date());
@@ -42,14 +43,6 @@ const SectionFormBooking = () => {
     if (type === 'time') setSelectedTime(value);
     toggleDropdown(type); // Close dropdown after selecting
   };
-
-  const stores = [
-    'Bloom Massage Hoàn Kiếm Hà Nội',
-    'Bloom Massage Cầu Giấy',
-    'Bloom Massage Đống Đa',
-    'Bloom Massage Tây Hồ',
-    'Bloom Massage Ba Đình',
-  ];
 
   const availableTimes = Array.from({ length: 48 }, (_, index) => {
     const hour = String(Math.floor(index / 2)).padStart(2, '0');

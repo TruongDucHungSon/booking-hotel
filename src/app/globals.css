@@ -40,7 +40,6 @@ html {
 }
 
 .bg-gradient {
-  z-index: -1;
   background: linear-gradient(90deg, #3a449b -22.88%, #ef5f5f 130.34%);
 }
 
@@ -224,4 +223,8 @@ html {
 .swiper-button-next:after {
   font-size: 24px !important;
   color: #000 !important;
+}
+
+.z-banner {
+  z-index: 1 !important;
 }

@@ -77,7 +77,7 @@ const servicesDetails = [
 ] as const;
 
 const SectionFormBooking = () => {
-  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
+  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm ');
   const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
   const [selectedTime, setSelectedTime] = useState('');
   const [startDate, setStartDate] = useState(new Date());
@@ -102,7 +102,7 @@ const SectionFormBooking = () => {
   };
 
   const stores = [
-    'Bloom Massage Hoàn Kiếm Hà Nội',
+    'Bloom Massage Hoàn Kiếm',
     'Bloom Massage Cầu Giấy',
     'Bloom Massage Đống Đa',
     'Bloom Massage Tây Hồ',
@@ -354,7 +354,7 @@ const SectionFormBooking = () => {
                     </p>
 
                     <Link
-                      href={'#'}
+                      href={'/dat-lich'}
                       className="group flex items-center gap-2 text-sm text-[#3A449B] hover:underline md:text-base"
                     >
                       Đặt lịch ngay

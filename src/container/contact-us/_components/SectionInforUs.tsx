@@ -1,3 +1,5 @@
+// File: SectionInforUs.tsx
+
 'use client';
 
 import addressIc from '@/assets/svgs/contact/address.svg';
@@ -10,12 +12,19 @@ import WhiteDrIc from '@/assets/svgs/contact/white_dr.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { Branch, branches } from '@/utils/constants';
+import L from 'leaflet';
 import { useState } from 'react';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+
+// Custom marker icon setup
+const customMarkerIcon = new L.Icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png', // Adjust path if necessary
+  iconSize: [32, 32],
+});
 
 const SectionInforUs: React.FC = () => {
   const [activeBranch, setActiveBranch] = useState<Branch | null>(null);
 
-  // Handle branch selection
   const handleBranchClick = (branch: Branch) => {
     setActiveBranch(branch);
   };
@@ -116,7 +125,7 @@ const SectionInforUs: React.FC = () => {
                     <label className="flex items-center text-sm md:text-base">
                       <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Nữ
                     </label>
-                    <label className="a flex items-center text-sm md:text-base">
+                    <label className="flex items-center text-sm md:text-base">
                       <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Khác
                     </label>
                   </div>
@@ -165,6 +174,23 @@ const SectionInforUs: React.FC = () => {
         </div>
 
         {/* Interactive Map */}
+        <div className="mt-6 h-[400px] w-full overflow-hidden rounded-lg">
+          <MapContainer center={[10.7769, 106.7009]} zoom={13} className="h-full w-full">
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            />
+            {branches.map((branch) => (
+              <Marker key={branch.name} position={branch.coords} icon={customMarkerIcon}>
+                <Popup>
+                  <strong>{branch.name}</strong>
+                  <br />
+                  {branch.address}
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        </div>
       </div>
     </div>
   );

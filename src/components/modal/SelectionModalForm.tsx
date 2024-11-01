@@ -34,15 +34,15 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
-      <div className="w-[90%] rounded-3xl bg-white px-12 py-6 shadow-lg">
+      <div className="sidebar-scroll h-[70%] w-[90%] overflow-y-scroll rounded-3xl bg-white px-12 py-6 shadow-lg">
         <Title>{title}</Title>
-        <p className="mb-6 mt-[10px] flex flex-wrap items-center justify-center gap-2 text-center text-base font-semibold text-[#1B1B1B]">
+        <p className="mb-6 mt-[10px] flex flex-wrap items-center justify-center gap-2 text-center text-xs font-semibold text-[#1B1B1B] md:text-base">
           {sutTitle1}
           <span className="text-[#EF5F5F]">{sutTitle2}</span>
           và
           <span className="text-[#EF5F5F]">{sutTitle3}</span>
         </p>
-        <div className="grid-col1 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid-col1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {rooms.map((room) => (
             <div
               key={room.name}
@@ -58,7 +58,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
                 classNameImg="rounded-3xl"
               />
               <p
-                className={`mt-2 text-center ${selectedRoom?.name === room.name ? 'text-[#3A449B]' : 'group-hover:text-[#3A449B]'}`}
+                className={`mt-2 text-center text-sm md:text-base ${selectedRoom?.name === room.name ? 'text-[#3A449B]' : 'group-hover:text-[#3A449B]'}`}
               >
                 {room.name}
               </p>
@@ -69,7 +69,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
         <div className="mt-4 flex flex-col gap-2">
           <button
             type="button"
-            className={`mx-auto w-[220px] rounded-3xl bg-[#3A449B] px-6 py-2 text-white ${!selectedRoom ? 'cursor-not-allowed opacity-50' : ''}`}
+            className={`*: mx-auto w-[220px] rounded-3xl bg-[#3A449B] px-6 py-2 text-sm text-white md:text-base ${!selectedRoom ? 'cursor-not-allowed opacity-50' : ''}`}
             onClick={() => {
               if (selectedRoom) {
                 onSelectRoom(selectedRoom); // Call the select room function with bed count

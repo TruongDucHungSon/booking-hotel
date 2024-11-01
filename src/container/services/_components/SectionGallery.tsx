@@ -11,7 +11,7 @@ import Title from '../../../components/Title/Title';
 
 const SectionGallery = () => {
   return (
-    <section className="pb-20">
+    <section className="py-10 lg:pb-20">
       <Title>Phòng trưng bày</Title>
       <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         <CustomImage

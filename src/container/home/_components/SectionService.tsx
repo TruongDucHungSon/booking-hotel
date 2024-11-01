@@ -9,7 +9,7 @@ import Title from '../../../components/Title/Title';
 
 const SectionService = () => {
   return (
-    <section className="pb-20">
+    <section className="pb-10 lg:pb-20">
       <Title className="mb-8">Dịch vụ Nổi bật tại bloom massage</Title>
       <div className="custom-swiper container">
         <Swiper
@@ -41,12 +41,12 @@ const SectionService = () => {
                   />
                 </div>
                 <div className="mt-4 text-center">
-                  <h3 className="mb-2 text-base font-semibold uppercase text-primary">
+                  <h3 className="mb-2 text-sm font-semibold uppercase text-primary md:text-base">
                     {service.title}
                   </h3>
                   <Link
                     href={service.path}
-                    className="group flex items-center justify-center gap-2 font-medium text-[#3A449B] hover:underline"
+                    className="group flex items-center justify-center gap-2 text-sm font-medium text-[#3A449B] hover:underline md:text-base"
                   >
                     Đặt lịch ngay
                     <span className="transition-all duration-300 group-hover:translate-x-2">
@@ -84,7 +84,7 @@ const SectionService = () => {
         <div className="mt-8">
           <Link
             href="/dich-vu"
-            className="group mx-auto flex w-[260px] items-center justify-center gap-2 rounded-2xl bg-[#3A449B] px-6 py-[12px] font-medium text-white"
+            className="group mx-auto flex w-[260px] items-center justify-center gap-2 rounded-2xl bg-[#3A449B] px-6 py-[12px] text-sm font-medium text-white md:text-base"
           >
             Xem tất cả
             <span className="transition-all duration-300 group-hover:translate-x-2">

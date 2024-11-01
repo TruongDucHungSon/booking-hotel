@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 const SectionCustomer = () => {
   return (
-    <section className="container py-20">
+    <section className="container py-10 lg:py-20">
       <div className="flex flex-col items-center justify-between gap-8 lg:flex-row">
         <div className="w-full lg:w-[42%]">
           <h6 className="flex gap-3 font-wylie text-3xl">

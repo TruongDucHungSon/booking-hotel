@@ -3,20 +3,21 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { HiMenuAlt3 } from 'react-icons/hi';
+import { IoCloseOutline } from 'react-icons/io5';
 import LogoSrc from '../assets/images/logo/logo.png';
 import CallSvg from '../assets/svgs/call/call.svg';
 import SearchIcon from '../assets/svgs/search/ri_search-line.svg';
 import CustomImage from '../components/CustomImage/index';
 import { Navigation, NavigationProps } from '../utils/constants';
-
 const DefaultLayout = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="relative bg-gradient">
-      <div className="pb-8 lg:px-5 lg:py-8">
-        <div className="container sticky top-0 flex h-[76px] items-center justify-between rounded-3xl border border-[#F3F3F3] bg-white/65 px-4 backdrop-blur-6 md:px-8 lg:static lg:px-5">
+    <header className="shadow-light-100 sticky left-0 right-0 top-0 z-[1000] bg-gradient lg:static">
+      <div className="lg:px-5 lg:py-8 lg:pb-8">
+        <div className="container flex h-[76px] items-center justify-between bg-white px-4 shadow-sm md:px-8 lg:rounded-3xl lg:border lg:border-[#F3F3F3] lg:bg-white/65 lg:px-5 lg:backdrop-blur-6">
           {/* Logo */}
           <div>
             <Link href={'/'}>
@@ -47,47 +48,64 @@ const DefaultLayout = () => {
           </ul>
 
           {/* Mobile Menu Button */}
-          <div className="flex items-center gap-4 lg:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-[24px] text-[#3A449B]"
-            >
-              ☰
-            </button>
+          <div className="absolute right-6 lg:hidden">
+            <div className="flex cursor-pointer items-center gap-3">
+              <CustomImage
+                width={50}
+                height={50}
+                src={SearchIcon}
+                alt="search-icon"
+                className="size-8 cursor-pointer lg:size-10"
+              />
+              {isMenuOpen ? (
+                <IoCloseOutline
+                  size={28}
+                  className="text-primary"
+                  onClick={() => setIsMenuOpen(false)}
+                />
+              ) : (
+                <HiMenuAlt3
+                  size={28}
+                  className="text-primary"
+                  onClick={() => setIsMenuOpen(true)}
+                />
+              )}
+            </div>
           </div>
 
           {/* Mobile Navigation Drawer */}
-          {isMenuOpen && (
-            <div className="fixed left-0 top-0 z-[999] h-full w-full bg-gray-800 bg-opacity-90 lg:hidden">
-              <div className="flex items-center justify-between bg-white p-4">
-                <Link href={'/'}>
+
+          <div
+            className={`fixed left-0 top-[76px] z-[1000] w-full bg-white ${isMenuOpen ? 'visible translate-x-0' : 'invisible'} translate-x-[-100%] transition-all duration-300 ease-in-out`}
+          >
+            <ul className="flex flex-col items-start space-y-4 px-4 pb-4 pt-6 text-primary">
+              {Navigation.map((item: NavigationProps) => (
+                <li key={item.name}>
+                  <Link
+                    href={item.link}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`${pathname === item.link ? 'text-[#3A449B]' : 'text-primary hover:text-[#3A449B]'} text-[16px] font-medium leading-[20.16px]`}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="items-center gap-4 px-3 pb-6 lg:flex">
+              <div className="flex h-10 w-fit cursor-pointer items-center justify-center rounded-[12px] bg-[#3A449B] px-6 py-2 text-[16px] text-sm font-medium leading-[16.8px] text-white hover:opacity-80 md:text-base">
+                <button type="button" className="flex w-fit items-center gap-2">
                   <CustomImage
-                    src={LogoSrc.src}
-                    alt="Logo"
-                    width={100}
-                    height={100}
-                    className="h-[60px] w-[84px] bg-transparent"
+                    className="h-4 w-4"
+                    src={CallSvg}
+                    alt="call-icons"
+                    width={16}
+                    height={16}
                   />
-                </Link>
-                <button onClick={() => setIsMenuOpen(false)} className="text-[24px] text-[#3A449B]">
-                  ✕
+                  Đặt lịch: 1900 1234
                 </button>
               </div>
-              <ul className="z-[999] flex flex-col items-start space-y-4 bg-white px-4 py-6 text-primary">
-                {Navigation.map((item: NavigationProps) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.link}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={`${pathname === item.link ? 'text-[#3A449B]' : 'text-primary hover:text-[#3A449B]'} text-[16px] font-medium leading-[20.16px]`}
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
             </div>
-          )}
+          </div>
 
           {/* Action Buttons */}
           <div className="hidden items-center gap-4 lg:flex">
@@ -98,7 +116,7 @@ const DefaultLayout = () => {
               alt="search-icon"
               className="h-10 w-10 cursor-pointer"
             />
-            <div className="font-gilroy tracking-tightest flex h-10 cursor-pointer items-center justify-center rounded-[12px] bg-[#3A449B] px-6 py-2 text-left text-[16px] font-medium leading-[16.8px] text-white transition-opacity duration-500 hover:opacity-80">
+            <div className="flex h-10 cursor-pointer items-center justify-center rounded-[12px] bg-[#3A449B] px-6 py-2 text-[16px] font-medium leading-[16.8px] text-white hover:opacity-80">
               <button type="button" className="flex items-center gap-2">
                 <CustomImage
                   className="h-4 w-4"

@@ -8,7 +8,7 @@ const SectionBanner = () => {
         height={1000}
         src={BannerIntroduce.src}
         alt={'banner'}
-        className="container z-50 h-[250px] max-w-full lg:max-h-[400px]"
+        className="container z-50 h-[300px] max-w-full lg:h-[400px]"
         classNameImg="rounded-[14px]"
       />
     </section>

@@ -12,9 +12,9 @@ import CustomImage from '../../../components/CustomImage/index';
 
 const SectionBanner = () => {
   return (
-    <section className="-z-20 mb-5 bg-gradient py-8 lg:mb-20">
+    <section className="-z-50 mb-5 bg-gradient py-4 lg:mb-20 lg:py-8">
       {/* Header Banner */}
-      <div className="mx-auto w-full px-5 text-center text-white lg:w-[1212px]">
+      <div className="z-banner mx-auto w-full px-5 text-center text-white lg:w-[1212px]">
         <div className="flex flex-col items-center lg:flex-row lg:justify-between">
           <svg
             className="hidden lg:block"
@@ -64,7 +64,7 @@ const SectionBanner = () => {
       </div>
 
       {/* Slider Banner */}
-      <div className="container mt-8 h-[350px]">
+      <div className="z-banner container mt-8 lg:h-[350px]">
         <Swiper
           spaceBetween={2}
           slidesPerGroup={3}

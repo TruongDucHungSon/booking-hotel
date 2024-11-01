@@ -12,7 +12,7 @@ const SectionSale = () => {
           alt="sale"
           className="h-[350px] w-full lg:h-[500px]"
         />
-        <div className="-translate-y-1/ absolute left-[36%] top-[20%] z-50 -translate-x-1/2 lg:left-[29%] lg:top-1/2">
+        <div className="-translate-y-1/ absolute left-[36%] top-[14%] z-50 -translate-x-1/2 lg:left-[29%] lg:top-1/2">
           <h5 className="hover-gradient pb-3 font-wylie text-4xl lg:text-[48px] lg:leading-[46px]">
             Khuyến mãi đặc biệt của bloom massage
           </h5>

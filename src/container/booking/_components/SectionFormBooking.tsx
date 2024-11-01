@@ -57,7 +57,7 @@ export const bedsData: RoomProps[] = [
 ];
 
 export const stores = [
-  'Bloom Massage Hoàn Kiếm Hà Nội',
+  'Bloom Massage Hoàn Kiếm ',
   'Bloom Massage Cầu Giấy',
   'Bloom Massage Đống Đa',
   'Bloom Massage Tây Hồ',
@@ -65,7 +65,7 @@ export const stores = [
 ];
 
 const SectionFormBooking = () => {
-  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
+  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm');
   const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
   const [dropdowns, setDropdowns] = useState({
     store: false,
@@ -148,24 +148,24 @@ const SectionFormBooking = () => {
   };
 
   return (
-    <section>
+    <section className="mb-5 md:mb-10">
       {/* heading */}
       <Title>thông tin đặt chỗ</Title>
-      <p className="mt-[10px] text-center text-base text-[#1B1B1B]">
+      <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
         Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi chỉ chấp nhận đặt phòng sau một tuần và
         chỉ có thể đặt tối đa hai người cùng một lúc.
       </p>
       {/* form */}
-      <div className="my-[56px] flex space-x-8">
+      <div className="my-[14px] flex flex-col md:my-[28px] md:space-x-8 lg:my-[56px] lg:flex-row">
         {/* Left Side: Customer Information */}
-        <div className="w-[533px]">
+        <div className="w-full lg:w-[533px]">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mb-6 rounded-3xl bg-[#F1F1F4] p-4">
-              <div className="relative mb-6 w-full">
+            <div className="mb-5 rounded-3xl bg-[#F1F1F4] p-4 md:mb-6">
+              <div className="relative mb-3 w-full md:mb-6">
                 <button
                   type="button"
                   onClick={() => toggleDropdown('location')}
-                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none"
+                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none md:text-base"
                 >
                   <CustomImage width={18} height={18} src={LocationIc} alt="Location Icon" />
                   {serviceLocation}
@@ -178,7 +178,7 @@ const SectionFormBooking = () => {
                   />
                 </button>
                 {dropdowns.location && (
-                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
+                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
                     {['Massage tại cửa hàng', 'Massage tại nhà'].map((location) => (
                       <li
                         key={location}
@@ -196,7 +196,7 @@ const SectionFormBooking = () => {
                 <button
                   type="button"
                   onClick={() => toggleDropdown('store')}
-                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none"
+                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
                 >
                   <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
                   {store}
@@ -209,7 +209,7 @@ const SectionFormBooking = () => {
                   />
                 </button>
                 {dropdowns.store && (
-                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
+                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
                     {stores.map((storeOption) => (
                       <li
                         key={storeOption}
@@ -223,31 +223,39 @@ const SectionFormBooking = () => {
                 )}
               </div>
             </div>
-            <h2 className="mb-4 text-xl font-semibold text-[#18181B]">THÔNG TIN KHÁCH HÀNG</h2>
+            <h2 className="mb-2 text-lg font-semibold text-[#18181B] md:mb-4 md:text-xl">
+              THÔNG TIN KHÁCH HÀNG
+            </h2>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="mb-4">
-                <label className="block text-base font-medium text-black">Họ và tên</label>
+                <label className="block text-sm font-medium text-black md:text-base">
+                  Họ và tên
+                </label>
                 <input
                   type="text"
                   {...register('fullName')}
-                  className="mt-2 w-full rounded-xl border px-4 py-[10px]"
+                  className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
                 />
               </div>
 
               <div className="mb-4">
-                <label className="block text-base font-medium text-black">Số điện thoại</label>
+                <label className="block text-sm font-medium text-black md:text-base">
+                  Số điện thoại
+                </label>
                 <input
                   type="text"
                   {...register('phoneNumber')}
-                  className="mt-2 w-full rounded-xl border px-4 py-[10px] focus:border-[#3A449B]"
+                  className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm focus:border-[#3A449B] md:text-base"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="mb-4">
-                <label className="block text-base font-medium text-black">Giới tính</label>
+                <label className="block text-sm font-medium text-black md:text-base">
+                  Giới tính
+                </label>
                 <div className="mt-2 flex space-x-4">
                   <label className="flex items-center">
                     <input
@@ -256,7 +264,7 @@ const SectionFormBooking = () => {
                       value="Nam"
                       {...register('gender')}
                     />
-                    <span className="ml-2">Nam</span>
+                    <span className="ml-2 text-sm md:text-base">Nam</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -265,7 +273,7 @@ const SectionFormBooking = () => {
                       className="accent-[#3A449B]"
                       {...register('gender')}
                     />
-                    <span className="ml-2">Nữ</span>
+                    <span className="ml-2 text-sm md:text-base">Nữ</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -274,20 +282,28 @@ const SectionFormBooking = () => {
                       className="accent-[#3A449B]"
                       {...register('gender')}
                     />
-                    <span className="ml-2">Khác</span>
+                    <span className="ml-2 text-sm md:text-base">Khác</span>
                   </label>
                 </div>
               </div>
 
               <div className="mb-4">
-                <label className="block text-base font-medium text-black">Số lượng người</label>
+                <label className="block text-sm font-medium text-black md:text-base">
+                  Số lượng người
+                </label>
                 <select
                   {...register('numPeople')}
                   className="mt-2 w-full rounded-xl border px-4 py-[10px]"
                 >
-                  <option value="1">1 người</option>
-                  <option value="2">2 người</option>
-                  <option value="3">3 người</option>
+                  <option value="1" className="text-sm md:text-base">
+                    1 người
+                  </option>
+                  <option value="2" className="text-sm md:text-base">
+                    2 người
+                  </option>
+                  <option value="3" className="text-sm md:text-base">
+                    3 người
+                  </option>
                   {/* Add more options as needed */}
                 </select>
               </div>
@@ -295,20 +311,22 @@ const SectionFormBooking = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="mb-4">
-                <label className="block text-base font-medium text-black">Ngày đến</label>
+                <label className="block text-sm font-medium text-black md:text-base">
+                  Ngày đến
+                </label>
                 <input
                   type="date"
                   {...register('arrivalDate')}
-                  className="mt-2 w-full rounded-xl border px-4 py-[10px]"
+                  className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
                 />
               </div>
 
               <div className="mb-4">
-                <label className="block text-base font-medium text-black">Giờ đến</label>
+                <label className="block text-sm font-medium text-black md:text-base">Giờ đến</label>
                 <input
                   type="time"
                   {...register('arrivalTime')}
-                  className="mt-2 w-full rounded-xl border px-4 py-[10px]"
+                  className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
                 />
               </div>
             </div>
@@ -317,13 +335,13 @@ const SectionFormBooking = () => {
               <button
                 type="button"
                 onClick={openModalRoom}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium focus:border-[#3A449B] focus:outline-none"
+                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base"
               >
                 Phòng massage
                 <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
               </button>
               {/* Display selected room */}
-              <div className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] font-medium leading-4 text-black/85">
+              <div className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] text-xs font-medium leading-4 text-black/85 md:text-base">
                 {selectedRoom}
               </div>
             </div>
@@ -343,7 +361,7 @@ const SectionFormBooking = () => {
               <button
                 type="button"
                 onClick={openModalBed}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium focus:border-[#3A449B] focus:outline-none"
+                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base"
               >
                 Giường massage
                 <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
@@ -354,9 +372,12 @@ const SectionFormBooking = () => {
                 bed ? (
                   <div
                     key={bed}
-                    className="mt-2 flex w-fit items-center justify-between rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] font-medium leading-4 text-black/85"
+                    className="mt-2 flex w-fit items-center justify-between rounded-xl border bg-[#f1f1f4] px-4 py-2 text-xs font-medium leading-4 text-black/85 md:text-[13px]"
                   >
-                    <div onClick={() => handleBedRemove(bed)} className="flex items-center gap-2">
+                    <div
+                      onClick={() => handleBedRemove(bed)}
+                      className="flex items-center gap-2 text-xs md:text-base"
+                    >
                       <CustomImage
                         width={18}
                         height={18}
@@ -387,7 +408,7 @@ const SectionFormBooking = () => {
               <button
                 type="button"
                 onClick={handleOpenModalService}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base font-medium focus:border-[#3A449B] focus:outline-none"
+                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base"
               >
                 Dịch vụ
                 <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
@@ -421,7 +442,7 @@ const SectionFormBooking = () => {
                           alt="Arrow Down"
                           className="h-[14px] w-[14px]"
                         />
-                        <p key={serviceId} className="">
+                        <p key={serviceId} className="text-xs md:text-base">
                           {quantity} {service.name}
                         </p>
                       </div>
@@ -432,10 +453,10 @@ const SectionFormBooking = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-base font-medium text-black">Ghi chú</label>
+              <label className="block text-sm font-medium text-black md:text-base">Ghi chú</label>
               <textarea
                 {...register('note')}
-                className="mt-2 w-full rounded-xl border px-4 py-[10px]"
+                className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
                 rows={3}
                 placeholder="Tôi có thể đến muộn 10p"
               ></textarea>
@@ -444,34 +465,38 @@ const SectionFormBooking = () => {
         </div>
 
         {/* Right Side: Service Details */}
-        <div className="h-min w-[calc(100%-(533px+32px))] rounded-3xl bg-[#F1F1F4] p-6">
-          <div className="flex items-center justify-center gap-6">
+        <div className="w-full rounded-3xl bg-[#F1F1F4] p-4 md:p-6 lg:h-min lg:w-[calc(100%-(533px+32px))]">
+          <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-6">
             <CustomImage
               width={1200}
               height={1000}
               src={RoomSrc1.src}
               alt="Gói trị liệu"
-              className="h-[137px] w-[270px] rounded-[20px] border border-[#E7E7E7] bg-white p-2"
+              className="w-full rounded-[20px] border border-[#E7E7E7] bg-white p-2 md:h-[137px] md:w-[270px]"
               classNameImg="rounded-[16px]"
             />
-            <div className="mb-4 w-[calc(100%-270px)]">
-              <h3 className="text-xl font-semibold">Gói trị liệu phòng chung</h3>
+            <div className="mb-4 w-full md:w-[calc(100%-270px)]">
+              <h3 className="text-sm font-semibold md:text-base lg:text-xl">
+                Gói trị liệu phòng chung
+              </h3>
               <p className="mt-1">
-                Giá: <span className="text-base font-bold text-[#EF5F5F]">350.000</span> VND / Lần
+                Giá: <span className="text-sm font-bold text-[#EF5F5F] md:text-base">350.000</span>{' '}
+                VND / Lần
               </p>
               <p className="mt-1">
-                Thời gian: <span className="text-base font-bold text-[#EF5F5F]">60</span> phút
+                Thời gian: <span className="text-sm font-bold text-[#EF5F5F] md:text-base">60</span>{' '}
+                phút
               </p>
               <button
                 type="button"
-                className="text-medium mt-4 flex h-12 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-[#3A449B]"
+                className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
               >
                 Chọn lại dịch vụ
               </button>
             </div>
           </div>
 
-          <div className="my-6 grid grid-cols-2 gap-4">
+          <div className="my-3 grid grid-cols-2 gap-4 text-sm md:my-6 md:text-base">
             <button
               type="button"
               className="flex items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-3 text-[#3A449B]"
@@ -487,7 +512,7 @@ const SectionFormBooking = () => {
             </button>
           </div>
 
-          <div className="flex flex-col gap-4 border-b pb-4 text-base text-black/85">
+          <div className="flex flex-col gap-4 border-b pb-4 text-sm text-black/85 md:text-base">
             <p className="flex justify-between">
               <p className="flex items-center gap-2">
                 <CustomImage
@@ -557,7 +582,7 @@ const SectionFormBooking = () => {
           </div>
 
           <div className="mb-6 mt-4">
-            <div className="flex items-center justify-between text-xl font-semibold">
+            <div className="flex items-center justify-between text-base font-semibold md:text-xl">
               <p> Tổng thanh toán:</p> <p className="text-[#3A449B]">900.000 VND</p>
             </div>
             <p className="text-right text-[13px] font-medium leading-4 text-[#DA0000]">
@@ -566,29 +591,29 @@ const SectionFormBooking = () => {
           </div>
           <button
             type="button"
-            className="text-medium mt-4 flex h-12 w-full items-center justify-center rounded-2xl border bg-[#3A449B] text-center text-white transition duration-300 ease-in-out hover:bg-blue-900"
+            className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border bg-[#3A449B] text-center text-base text-white transition duration-300 ease-in-out hover:bg-blue-900 md:h-12"
           >
             Thanh toán
           </button>
           <div className="mt-6">
-            <div className="mb-4 flex items-center gap-2 text-base font-semibold">
+            <div className="mb-4 flex items-center gap-2 text-sm font-semibold md:text-base">
               <CustomImage src={ArrowIc} alt="payment" width={18} height={18} className="h-3 w-6" />
               Thông tin gói dịch vụ
             </div>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-sm text-[#18181B]">
+              <div className="flex items-center gap-2 text-xs text-[#18181B] md:text-sm">
                 <CustomImage src={check} alt="payment" width={18} height={18} className="h-6 w-6" />
                 Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa
               </div>
-              <div className="flex items-center gap-2 text-sm text-[#18181B]">
+              <div className="flex items-center gap-2 text-xs text-[#18181B] md:text-sm">
                 <CustomImage src={check} alt="payment" width={18} height={18} className="h-6 w-6" />
                 Xông hơi ướt với lá xông theo mùa, ngâm chân muối thảo dược
               </div>
-              <div className="flex items-center gap-2 text-sm text-[#18181B]">
+              <div className="flex items-center gap-2 text-xs text-[#18181B] md:text-sm">
                 <CustomImage src={check} alt="payment" width={18} height={18} className="h-6 w-6" />
                 Chăm sóc toàn thân với kem Ngải Diệp hoặc kem Gừng
               </div>
-              <div className="flex items-center gap-2 text-sm text-[#18181B]">
+              <div className="flex items-center gap-2 text-xs text-[#18181B] md:text-sm">
                 <CustomImage src={check} alt="payment" width={18} height={18} className="h-6 w-6" />
                 Ăn nhẹ với cháo dưỡng sinh, nước uống thảo dược và hoa quả
               </div>

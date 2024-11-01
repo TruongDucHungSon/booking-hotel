@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const SectionNew = () => {
   return (
-    <section className="container py-20">
+    <section className="container py-10 lg:py-20">
       <Title>Tin tức</Title>
       <div className="place-center mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {map(NEW, (item) => (

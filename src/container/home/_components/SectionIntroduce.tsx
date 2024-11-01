@@ -3,7 +3,7 @@ import CustomImage from '@/components/CustomImage';
 import Title from '../../../components/Title/Title';
 const SectionIntroduce = () => {
   return (
-    <section className="h-full bg-white py-20">
+    <section className="h-full bg-white py-10 lg:py-20">
       <div className="container">
         <Title>Giới thiệu BLoom massage</Title>
         <div className="mb-8">
@@ -33,6 +33,7 @@ const SectionIntroduce = () => {
               <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
                 <div className="h-[68px] w-[68px]">
                   <svg
+                    className="size-[50px] lg:size-[68px]"
                     strokeLinejoin="round"
                     width="68"
                     height="69"
@@ -79,8 +80,9 @@ const SectionIntroduce = () => {
                 </div>
               </div>
               <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
-                <div className="h-[68px] w-[68px]">
+                <div className="size-[50px] lg:size-[68px]">
                   <svg
+                    className="size-[50px] lg:size-[68px]"
                     width="69"
                     height="69"
                     strokeLinejoin="round"
@@ -137,6 +139,7 @@ const SectionIntroduce = () => {
               <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
                 <div className="h-[68px] w-[68px]">
                   <svg
+                    className="size-[50px] lg:size-[68px]"
                     width="68"
                     height="69"
                     viewBox="0 0 68 69"
@@ -196,6 +199,7 @@ const SectionIntroduce = () => {
               <div className="flex items-start gap-8 rounded-[40px] border border-[#f1f1f4] p-6 text-[#000]">
                 <div className="h-[68px] w-[68px]">
                   <svg
+                    className="size-[50px] lg:size-[68px]"
                     width="69"
                     height="69"
                     viewBox="0 0 69 69"
