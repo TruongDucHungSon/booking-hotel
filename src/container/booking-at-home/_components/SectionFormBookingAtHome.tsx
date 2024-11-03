@@ -143,7 +143,7 @@ const SectionFormBookingAtHome = () => {
         chỉ có thể đặt tối đa hai người cùng một lúc.
       </p>
       {/* form */}
-      <div className="my-[28px] flex flex-col lg:my-[56px] lg:flex-row">
+      <div className="my-[28px] flex flex-col gap-6 lg:my-[56px] lg:flex-row">
         {/* Left Side: Customer Information */}
         <div className="w-full lg:w-[533px]">
           <form onSubmit={handleSubmit(onSubmit)}>
