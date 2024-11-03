@@ -90,7 +90,7 @@ const SectionFormBookingAtHome = () => {
   };
 
   const [employee, setEmployee] = useState('Nguyễn Văn A');
-  const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
+  const [serviceLocation, setServiceLocation] = useState('Massage tại nhà');
   const [dropdowns, setDropdowns] = useState({
     store: false,
     location: false,
