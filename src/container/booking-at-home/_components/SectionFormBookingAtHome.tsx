@@ -71,6 +71,7 @@ export const servicesData: Service[] = [
   },
   // Add more services as needed
 ];
+export const employees = ['Nguyễn Văn A', 'Trần Thị B', 'Phạm Văn C', 'Lê Thị D', 'Hoàng Văn E'];
 
 const SectionFormBookingAtHome = () => {
   const stores = [
@@ -95,8 +96,6 @@ const SectionFormBookingAtHome = () => {
   const handleSelectServices = (selected: { [key: string]: number }) => {
     setSelectedServices(selected);
   };
-
-  const employees = ['Nguyễn Văn A', 'Trần Thị B', 'Phạm Văn C', 'Lê Thị D', 'Hoàng Văn E'];
 
   const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
   const [employee, setEmployee] = useState('Nguyễn Văn A');

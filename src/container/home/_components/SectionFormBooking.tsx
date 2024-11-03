@@ -7,6 +7,7 @@ import TimeIc from '@/assets/svgs/arrow/time.svg';
 import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
+import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
 import { stores } from '@/container/booking/_components/SectionFormBooking';
 import { vi } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
@@ -17,17 +18,20 @@ const SectionFormBooking = () => {
   const router = useRouter();
 
   const handleNavigate = () => {
-    router.push('/dich-vu');
+    const destination = serviceLocation === 'Massage tại nhà' ? '/dat-lich-tai-nha' : '/dich-vu';
+    router.push(destination);
   };
 
-  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm ');
+  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm');
   const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
+  const [selectedStaff, setSelectedStaff] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [dropdowns, setDropdowns] = useState({
     store: false,
     location: false,
     time: false,
+    staff: false,
   });
 
   const toggleDropdown = (type: string) => {
@@ -39,8 +43,14 @@ const SectionFormBooking = () => {
 
   const handleSelect = (type: string, value: string) => {
     if (type === 'store') setStore(value);
-    if (type === 'location') setServiceLocation(value);
+    if (type === 'location') {
+      setServiceLocation(value);
+      if (value === 'Massage tại nhà') {
+        setStore('');
+      }
+    }
     if (type === 'time') setSelectedTime(value);
+    if (type === 'staff') setSelectedStaff(value);
     toggleDropdown(type); // Close dropdown after selecting
   };
 
@@ -56,10 +66,11 @@ const SectionFormBooking = () => {
       store,
       serviceLocation,
       selectedTime,
+      selectedStaff,
       startDate,
     };
     console.log('Booking Data:', bookingData);
-    // You can send the bookingData to your server or handle it as needed
+    handleNavigate();
   };
 
   return (
@@ -102,36 +113,69 @@ const SectionFormBooking = () => {
             </div>
 
             {/* Store Dropdown */}
-            <div className="relative w-full lg:w-1/3">
-              <button
-                type="button"
-                onClick={() => toggleDropdown('store')}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
-              >
-                <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
-                {store}
-                <CustomImage
-                  width={18}
-                  height={18}
-                  src={ArrowIc}
-                  alt="Arrow Down"
-                  className={`transition-all duration-300 ${dropdowns.store ? 'rotate-180' : ''}`}
-                />
-              </button>
-              {dropdowns.store && (
-                <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                  {stores.map((storeOption) => (
-                    <li
-                      key={storeOption}
-                      onClick={() => handleSelect('store', storeOption)}
-                      className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
-                    >
-                      {storeOption}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            {serviceLocation === 'Massage tại cửa hàng' ? (
+              <div className="relative w-full lg:w-1/3">
+                <button
+                  type="button"
+                  onClick={() => toggleDropdown('store')}
+                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
+                >
+                  <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
+                  {store || 'Chọn cửa hàng'}
+                  <CustomImage
+                    width={18}
+                    height={18}
+                    src={ArrowIc}
+                    alt="Arrow Down"
+                    className={`transition-all duration-300 ${dropdowns.store ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                {dropdowns.store && (
+                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
+                    {stores.map((storeOption) => (
+                      <li
+                        key={storeOption}
+                        onClick={() => handleSelect('store', storeOption)}
+                        className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
+                      >
+                        {storeOption}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ) : (
+              <div className="relative w-full lg:w-1/3">
+                <button
+                  type="button"
+                  onClick={() => toggleDropdown('staff')}
+                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
+                >
+                  <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
+                  {selectedStaff || 'Chọn nhân viên'}
+                  <CustomImage
+                    width={18}
+                    height={18}
+                    src={ArrowIc}
+                    alt="Arrow Down"
+                    className={`transition-all duration-300 ${dropdowns.staff ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                {dropdowns.staff && (
+                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
+                    {employees.map((staffOption) => (
+                      <li
+                        key={staffOption}
+                        onClick={() => handleSelect('staff', staffOption)}
+                        className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
+                      >
+                        {staffOption}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
 
             {/* Date and Time Pickers */}
             <div className="flex w-full flex-col items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white text-base font-medium text-[#B9B9B9] lg:w-[42%] lg:flex-row lg:px-2">
