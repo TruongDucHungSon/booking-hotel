@@ -74,14 +74,6 @@ export const servicesData: Service[] = [
 export const employees = ['Nguyễn Văn A', 'Trần Thị B', 'Phạm Văn C', 'Lê Thị D', 'Hoàng Văn E'];
 
 const SectionFormBookingAtHome = () => {
-  const stores = [
-    'Bloom Massage Hoàn Kiếm Hà Nội',
-    'Bloom Massage Cầu Giấy',
-    'Bloom Massage Đống Đa',
-    'Bloom Massage Tây Hồ',
-    'Bloom Massage Ba Đình',
-  ];
-
   const [isModalOpenService, setIsModalOpenService] = useState(false);
   const [selectedServices, setSelectedServices] = useState<{ [key: string]: number }>({});
 
@@ -97,7 +89,6 @@ const SectionFormBookingAtHome = () => {
     setSelectedServices(selected);
   };
 
-  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm Hà Nội');
   const [employee, setEmployee] = useState('Nguyễn Văn A');
   const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
   const [dropdowns, setDropdowns] = useState({
@@ -122,7 +113,6 @@ const SectionFormBookingAtHome = () => {
   };
 
   const handleSelect = (type: keyof typeof dropdowns, value: string) => {
-    if (type === 'store') setStore(value);
     if (type === 'location') setServiceLocation(value);
     if (type === 'employee') setEmployee(value);
     toggleDropdown(type); // Close dropdown after selecting
@@ -179,36 +169,6 @@ const SectionFormBookingAtHome = () => {
                 )}
               </div>
 
-              <div className="relative w-full">
-                <button
-                  type="button"
-                  onClick={() => toggleDropdown('store')}
-                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
-                >
-                  <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
-                  {store}
-                  <CustomImage
-                    width={18}
-                    height={18}
-                    src={ArrowIc}
-                    alt="Arrow Down"
-                    className={`transition-all duration-300 ${dropdowns.store ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                {dropdowns.store && (
-                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
-                    {stores.map((storeOption) => (
-                      <li
-                        key={storeOption}
-                        onClick={() => handleSelect('store', storeOption)}
-                        className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
-                      >
-                        {storeOption}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
               {/* Employee Dropdown */}
               <div className="relative mt-3 w-full md:mt-6">
                 <button
