@@ -384,7 +384,7 @@ const SectionFormBookingAtHome = () => {
 
         {/* Right Side: Service Details */}
         <div className="w-full rounded-3xl bg-[#F1F1F4] p-4 md:p-6 lg:h-min lg:w-[calc(100%-(533px+32px))]">
-          <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-6">
+          <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row md:gap-6">
             {/* <CustomImage
               width={1200}
               height={1000}
@@ -412,7 +412,7 @@ const SectionFormBookingAtHome = () => {
                 Chọn lại dịch vụ
               </button>
             </div> */}
-            <div className="flex flex-col">
+            <div className="flex w-full flex-col">
               <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
                 Để được đặt dịch vụ nhanh chóng quý khách vui lòng liên hệ đến
                 <span className="ml-1 font-semibold">Hotline: 1900 1234</span>

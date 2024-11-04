@@ -55,9 +55,17 @@ const SectionFormBooking = () => {
   };
 
   const availableTimes = Array.from({ length: 48 }, (_, index) => {
-    const hour = String(Math.floor(index / 2)).padStart(2, '0');
-    const minute = index % 2 === 0 ? '00' : '30';
+    const hour = String(Math.floor(index / 2) + 8); // Start from 8 AM
+    const minute = index % 2 === 0 ? '30' : '00';
     return `${hour}:${minute}`;
+  });
+
+  // Filter to include only times from 8:30 AM to 10:00 PM
+  const filteredAvailableTimes = availableTimes.filter((time) => {
+    const [hour, minute] = time.split(':').map(Number);
+    return (
+      (hour > 8 || (hour === 8 && minute === 30)) && (hour < 22 || (hour === 22 && minute === 0))
+    );
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -231,7 +239,7 @@ const SectionFormBooking = () => {
                 />
                 {dropdowns.time && (
                   <ul className="sidebar-scroll absolute left-0 top-12 z-10 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
-                    {availableTimes.map((time) => (
+                    {filteredAvailableTimes.map((time) => (
                       <li
                         key={time}
                         onClick={() => handleSelect('time', time)}

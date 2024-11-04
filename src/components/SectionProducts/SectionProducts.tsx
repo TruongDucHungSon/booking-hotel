@@ -1,4 +1,5 @@
 import { products } from '@/utils/constants';
+import Link from 'next/link';
 import CustomImage from '../CustomImage';
 import Title from '../Title/Title';
 
@@ -13,16 +14,18 @@ const SectionProducts = () => {
             className="flex gap-4 rounded-3xl border border-[#E8E8E8] bg-white p-4"
             key={product.id}
           >
-            <CustomImage
-              src={product.image.src}
-              width={300}
-              height={300}
-              alt={product.name}
-              className="mb-4 h-20 w-20"
-            />
+            <Link href={'/san-pham/san-pham-tot'}>
+              <CustomImage
+                src={product.image.src}
+                height={300}
+                width={300}
+                alt={product.name}
+                className="mb-4 h-20 w-20"
+              />
+            </Link>
             <div>
               <h2 className="mb-[10px] text-base font-semibold text-[#253D4E] lg:text-lg">
-                {product.name}
+                <Link href="/san-pham/san-pham-tot">{product.name}</Link>
               </h2>
               <div className="mb-2 flex items-center gap-3">
                 <span className="text-gradient-hover text-sm font-bold lg:text-base">

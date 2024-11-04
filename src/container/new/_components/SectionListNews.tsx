@@ -11,14 +11,17 @@ const SectionListNews = () => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {newsArticles.map((article, index) => (
             <div key={index} className="rounded-3xl border border-[#E8E8E8] bg-white">
-              <CustomImage
-                src={article.image}
-                alt={article.title}
-                width={200}
-                height={200}
-                className="h-[200px] w-full object-cover"
-                classNameImg="rounded-tl-3xl rounded-tr-3xl"
-              />
+              <Link href={'/tin-tuc/1'} className="text-sm font-semibold md:text-base">
+                <CustomImage
+                  src={article.image}
+                  alt={article.title}
+                  width={200}
+                  height={200}
+                  className="h-[200px] w-full object-cover"
+                  classNameImg="rounded-tl-3xl rounded-tr-3xl"
+                />
+              </Link>
+
               <div className="p-3 md:p-4">
                 <Link href={'/tin-tuc/1'} className="text-sm font-semibold md:text-base">
                   {article.title}
