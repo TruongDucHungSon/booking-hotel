@@ -16,11 +16,11 @@ import { Navigation, Pagination, Thumbs } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ProductDetailPage = () => {
-  const [quantity, setQuantity] = useState<number>(1);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]); // Keep refs for sections
   const [activeSectionId, setActiveSectionId] = useState<number>(1);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const [quantity, setQuantity] = useState<number>(1);
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev));
 

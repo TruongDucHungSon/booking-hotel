@@ -1,25 +1,25 @@
 'use client';
 
+import bed from '@/assets/svgs/arrow/bed.svg';
+import BoxIc from '@/assets/svgs/arrow/box.svg';
+import box1 from '@/assets/svgs/arrow/box1.svg';
+import check from '@/assets/svgs/arrow/check1.svg';
+import deleteIc from '@/assets/svgs/arrow/delete.svg';
+import ArrowIc from '@/assets/svgs/arrow/down.svg';
+import massa from '@/assets/svgs/arrow/massa.svg';
+import SaleIc from '@/assets/svgs/arrow/sale.svg';
+import service from '@/assets/svgs/arrow/service.svg';
+import StoreIc from '@/assets/svgs/arrow/store.svg';
+import addIc from '@/assets/svgs/search/add.svg';
+import useIc from '@/assets/svgs/search/use.svg';
 import ServiceSelectionModal, { Service } from '@/components/modal/ModalServicer';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import RoomSrc1 from '../../../assets/images/room/r1.png';
-import bed from '../../../assets/svgs/arrow/bed.svg';
-import BoxIc from '../../../assets/svgs/arrow/box.svg';
-import box1 from '../../../assets/svgs/arrow/box1.svg';
-import check from '../../../assets/svgs/arrow/check1.svg';
-import deleteIc from '../../../assets/svgs/arrow/delete.svg';
-import ArrowIc from '../../../assets/svgs/arrow/down.svg';
-import LocationIc from '../../../assets/svgs/arrow/location.svg';
-import massa from '../../../assets/svgs/arrow/massa.svg';
-import SaleIc from '../../../assets/svgs/arrow/sale.svg';
-import service from '../../../assets/svgs/arrow/service.svg';
-import StoreIc from '../../../assets/svgs/arrow/store.svg';
 
-import voucher from '../../../assets/svgs/arrow/voucher.svg';
-import downBlue from '../../../assets/svgs/search/dropdowBlu.svg';
-import CustomImage from '../../../components/CustomImage';
-import Title from '../../../components/Title/Title';
+import voucher from '@/assets/svgs/arrow/voucher.svg';
+import downBlue from '@/assets/svgs/search/dropdowBlu.svg';
+import CustomImage from '@/components/CustomImage';
+import Title from '@/components/Title/Title';
 type FormValues = {
   fullName: string;
   phoneNumber: string;
@@ -129,8 +129,8 @@ const SectionFormBookingAtHome = () => {
       {/* heading */}
       <Title>thông tin đặt chỗ</Title>
       <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
-        Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi chỉ chấp nhận đặt phòng sau một tuần và
-        chỉ có thể đặt tối đa hai người cùng một lúc.
+        Để được đặt dịch vụ nhanh chóng quý khách vui lòng liên hệ đến
+        <span className="ml-1 font-semibold">Hotline: 1900 1234</span>
       </p>
       {/* form */}
       <div className="my-[28px] flex flex-col gap-6 lg:my-[56px] lg:flex-row">
@@ -144,7 +144,7 @@ const SectionFormBookingAtHome = () => {
                   onClick={() => toggleDropdown('location')}
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none md:text-base"
                 >
-                  <CustomImage width={18} height={18} src={LocationIc} alt="Location Icon" />
+                  <CustomImage width={18} height={18} src={StoreIc} alt="Location Icon" />
                   {serviceLocation}
                   <CustomImage
                     width={18}
@@ -168,6 +168,21 @@ const SectionFormBookingAtHome = () => {
                   </ul>
                 )}
               </div>
+              <div className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base">
+                <CustomImage width={18} height={18} src={addIc} alt="Location Icon" />
+                <input
+                  placeholder="Nhập địa chỉ"
+                  type="text"
+                  className="w-full border-none text-center outline-none"
+                />
+                <CustomImage
+                  width={18}
+                  height={18}
+                  src={ArrowIc}
+                  alt="Arrow Down"
+                  className={`transition-all duration-300`}
+                />
+              </div>
 
               {/* Employee Dropdown */}
               <div className="relative mt-3 w-full md:mt-6">
@@ -176,7 +191,7 @@ const SectionFormBookingAtHome = () => {
                   onClick={() => toggleDropdown('employee')}
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
                 >
-                  <CustomImage width={18} height={18} src={StoreIc} alt="Employee Icon" />
+                  <CustomImage width={18} height={18} src={useIc} alt="Employee Icon" />
                   {employee}
                   <CustomImage
                     width={18}
@@ -370,15 +385,15 @@ const SectionFormBookingAtHome = () => {
         {/* Right Side: Service Details */}
         <div className="w-full rounded-3xl bg-[#F1F1F4] p-4 md:p-6 lg:h-min lg:w-[calc(100%-(533px+32px))]">
           <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-6">
-            <CustomImage
+            {/* <CustomImage
               width={1200}
               height={1000}
               src={RoomSrc1.src}
               alt="Gói trị liệu"
               className="w-full rounded-[20px] border border-[#E7E7E7] bg-white p-2 md:h-[137px] md:w-[270px]"
               classNameImg="rounded-[16px]"
-            />
-            <div className="mb-4 w-full md:w-[calc(100%-270px)]">
+            /> */}
+            {/* <div className="mb-4 w-full md:w-[calc(100%-270px)]">
               <h3 className="text-sm font-semibold md:text-base lg:text-xl">
                 Gói trị liệu phòng chung
               </h3>
@@ -395,6 +410,18 @@ const SectionFormBookingAtHome = () => {
                 className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
               >
                 Chọn lại dịch vụ
+              </button>
+            </div> */}
+            <div className="flex flex-col">
+              <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
+                Để được đặt dịch vụ nhanh chóng quý khách vui lòng liên hệ đến
+                <span className="ml-1 font-semibold">Hotline: 1900 1234</span>
+              </p>
+              <button
+                type="button"
+                className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
+              >
+                Chọn dịch vụ
               </button>
             </div>
           </div>

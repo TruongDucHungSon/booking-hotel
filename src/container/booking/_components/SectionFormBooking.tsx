@@ -26,6 +26,7 @@ import SelectionModalForm, { RoomProps } from '@/components/modal/SelectionModal
 import { servicesData } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+
 type FormValues = {
   fullName: string;
   phoneNumber: string;

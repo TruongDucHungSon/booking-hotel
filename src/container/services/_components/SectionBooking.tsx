@@ -1,24 +1,24 @@
 'use client';
 
+import sv1 from '@/assets/images/new/sv1.png';
+import sv2 from '@/assets/images/new/sv2.png';
+import sv3 from '@/assets/images/new/sv3.png';
+import sv4 from '@/assets/images/new/sv4.png';
+import sv5 from '@/assets/images/new/sv5.png';
+import sv6 from '@/assets/images/new/sv6.png';
+import DateIc from '@/assets/svgs/arrow/date.svg';
+import ArrowIc from '@/assets/svgs/arrow/down.svg';
+import LocationIc from '@/assets/svgs/arrow/location.svg';
+import StoreIc from '@/assets/svgs/arrow/store.svg';
+import TimeIc from '@/assets/svgs/arrow/time.svg';
+import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
+import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { vi } from 'date-fns/locale';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import sv1 from '../../../assets/images/new/sv1.png';
-import sv2 from '../../../assets/images/new/sv2.png';
-import sv3 from '../../../assets/images/new/sv3.png';
-import sv4 from '../../../assets/images/new/sv4.png';
-import sv5 from '../../../assets/images/new/sv5.png';
-import sv6 from '../../../assets/images/new/sv6.png';
-import DateIc from '../../../assets/svgs/arrow/date.svg';
-import ArrowIc from '../../../assets/svgs/arrow/down.svg';
-import LocationIc from '../../../assets/svgs/arrow/location.svg';
-import StoreIc from '../../../assets/svgs/arrow/store.svg';
-import TimeIc from '../../../assets/svgs/arrow/time.svg';
-import downBLue from '../../../assets/svgs/search/dropdowBlu.svg';
-import CustomImage from '../../../components/CustomImage';
 
 export const services = [
   {

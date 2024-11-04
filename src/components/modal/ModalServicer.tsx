@@ -85,9 +85,9 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
                 <div className="mt-2 flex flex-col items-center justify-center gap-2 text-center text-sm text-gray-700 group-hover:text-[#3A449B] md:flex-row md:gap-5 md:text-base">
                   <p>{service.name}</p>
                   {selectedServices[service.id] && (
-                    <p className="text-center text-xs font-medium text-[#3A449B] md:text-sm">
+                    <span className="text-center text-xs font-medium text-[#3A449B] md:text-sm">
                       Đã chọn: {selectedServices[service.id]}
-                    </p>
+                    </span>
                   )}
                 </div>
               </div>

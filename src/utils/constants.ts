@@ -24,6 +24,10 @@ export const Navigation = [
     link: '/san-pham',
   },
   {
+    name: 'Giỏ hàng',
+    link: '/gio-hang',
+  },
+  {
     name: 'Tin tức',
     link: '/tin-tuc',
   },
