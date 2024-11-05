@@ -1,4 +1,5 @@
 import pr1 from '@/assets/svgs/introduce/pr1.jpg';
+import { Service } from '@/components/modal/ModalServicer';
 import New1 from '../assets/images/new/new1.png';
 import Service1 from '../assets/images/service/sv1.png';
 import Service2 from '../assets/images/service/sv2.png';
@@ -390,3 +391,323 @@ export const products = [
     image: pr1,
   },
 ] as const;
+
+export const ServicesBooking = [
+  {
+    categoryId: 0,
+    categoryTitle: 'Gói trị liệu phòng chung',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+    services: [
+      {
+        id: 0,
+        title: 'Gói trị liệu phòng chung 60p',
+        duration: '60',
+        price: '900.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+      {
+        id: 1,
+        title: 'Gói trị liệu phòng chung 90p',
+        duration: '90',
+        price: '1.200.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+        ],
+      },
+      {
+        id: 2,
+        title: 'Gói trị liệu phòng chung 120p',
+        duration: ' 20',
+        price: '1.600.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+          'Ăn nhẹ với cháo dưỡng sinh, trứng ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+    ],
+  },
+  {
+    categoryId: 1,
+    categoryTitle: 'Gói trị liệu phòng VIP',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+    services: [
+      {
+        id: 0,
+        title: 'Gói dịch vụ toàn thân 60p',
+        duration: '60',
+        price: '900.000',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+      {
+        id: 1,
+        title: 'Gói dịch vụ toàn thân 90p',
+        duration: '90',
+        price: '1.200.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+        ],
+      },
+      {
+        id: 2,
+        title: 'Gói dịch vụ toàn thân 120p',
+        duration: ' 20',
+        price: '1.600.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+          'Ăn nhẹ với cháo dưỡng sinh, trứng ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+    ],
+  },
+  {
+    categoryId: 2,
+    categoryTitle: 'Gói trị liệu truyền thống',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+    services: [
+      {
+        id: 0,
+        title: 'Gói trị liệu truyền thống 60p',
+        duration: '60',
+        price: '900.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+      {
+        id: 1,
+        title: 'Gói trị liệu truyền thống 90p',
+        duration: '90',
+        price: '1.200.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+        ],
+      },
+      {
+        id: 2,
+        title: 'Gói trị liệu truyền thống 120p',
+        duration: ' 20',
+        price: '1.600.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+          'Ăn nhẹ với cháo dưỡng sinh, trứng ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+    ],
+  },
+  {
+    categoryId: 3,
+    categoryTitle: 'Gói trị liệu nâng cao',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+    services: [
+      {
+        id: 0,
+        title: 'Gói trị liệu nâng cao 60p',
+        duration: '60',
+        price: '900.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+      {
+        id: 1,
+        title: 'Gói trị liệu nâng cao 90p',
+        duration: '90',
+        price: '1.200.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+        ],
+      },
+      {
+        id: 2,
+        title: 'Gói trị liệu nâng cao 120p',
+        duration: ' 20',
+        price: '1.600.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+          'Ăn nhẹ với cháo dưỡng sinh, trứng ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+    ],
+  },
+  {
+    categoryId: 4,
+    categoryTitle: 'Gói trị liệu chuyên sâu',
+    image:
+      'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGludGVyaW9yJTIwZGVzaWdufGVufDB8fDB8fHww',
+    services: [
+      {
+        id: 0,
+        title: 'Gói trị liệu chuyên sâu 60p',
+        duration: '60',
+        price: '900.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+      {
+        id: 1,
+        title: 'Gói trị liệu chuyên sâu 90p',
+        duration: '90',
+        price: '1.200.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+        ],
+      },
+      {
+        id: 2,
+        title: 'Gói trị liệu chuyên sâu 120p',
+        duration: ' 20',
+        price: '1.600.000 ',
+        description: [
+          'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+          'Xông hơi ướt với lá xông theo mùa, ngâm chân với thảo dược',
+          'Mát xa với chào dưỡng sinh, trà ngải cứu, nước uống thảo dược và hoa quả',
+          'Chăm sóc toàn thân với kem Ngải Diệp/ kem Gừng và phương pháp chườm ngải cứu nóng',
+          'Ăn nhẹ với cháo dưỡng sinh, trứng ngải cứu, nước uống thảo dược và hoa quả',
+        ],
+      },
+    ],
+  },
+];
+
+export const servicesData: Service[] = [
+  {
+    id: '1',
+    name: 'Service A',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '2',
+    name: 'Service B',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '3',
+    name: 'Service C',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '4',
+    name: 'Service D',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '5',
+    name: 'Service E',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  {
+    id: '6',
+    name: 'Service S',
+    image:
+      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+  },
+  // Add more services as needed
+];
+
+export const vouchers = [
+  { discount: '5', minimum: '500K', validDate: '15/10/2024' },
+  { discount: '10', minimum: '1.000K', validDate: '15/10/2024' },
+  { discount: '15', minimum: '1.500K', validDate: '15/10/2024' },
+];
+
+export const productsBooking = [
+  {
+    id: '0',
+    name: 'Sản phẩm 1',
+    price: 100.0,
+    originalPrice: 200.0,
+    imageUrl:
+      'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D',
+  },
+  {
+    id: '1',
+    name: 'Sản phẩm 2',
+    price: 100.0,
+    originalPrice: 200.0,
+    imageUrl:
+      'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D',
+  },
+  {
+    id: '2',
+    name: 'Sản phẩm 3',
+    price: 100.0,
+    originalPrice: 200.0,
+    imageUrl:
+      'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D',
+  },
+  {
+    id: '3',
+    name: 'Sản phẩm 4',
+    price: 100.0,
+    originalPrice: 200.0,
+    imageUrl:
+      'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D',
+  },
+  {
+    id: '4',
+    name: 'Sản phẩm 5',
+    price: 100.0,
+    originalPrice: 200.0,
+    imageUrl:
+      'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D',
+  },
+  {
+    id: '6',
+    name: 'Sản phẩm 6',
+    price: 100.0,
+    originalPrice: 200.0,
+    imageUrl:
+      'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D',
+  },
+];

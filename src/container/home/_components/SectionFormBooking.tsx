@@ -189,17 +189,17 @@ const SectionFormBooking = () => {
             <div className="flex w-full flex-col items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white text-base font-medium text-[#B9B9B9] lg:w-[42%] lg:flex-row lg:px-2">
               <div className="relative flex w-full items-center justify-center gap-2 px-4 lg:px-0">
                 <CustomImage
-                  width={18}
-                  height={18}
+                  width={24}
+                  height={24}
                   src={DateIc}
                   alt="Date Icon"
-                  className="h-6 w-6"
+                  className="h-7 w-7"
                 />
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => date && setStartDate(date)}
                   dateFormat="dd/MM/yyyy"
-                  className="w-full rounded-2xl bg-white py-[10px] text-center text-sm font-medium text-black focus:outline-none lg:text-base"
+                  className="w-full rounded-2xl bg-white py-[10px] text-center text-sm font-medium text-black focus:outline-none lg:w-[95%] lg:text-base"
                   placeholderText="Chọn ngày"
                   locale={vi}
                   popperPlacement="bottom"

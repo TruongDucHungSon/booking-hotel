@@ -21,9 +21,14 @@ import voucher from '@/assets/svgs/arrow/voucher.svg';
 import downBlue from '@/assets/svgs/search/dropdowBlu.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
+import ProductModal, { Product } from '@/components/modal/ModalProduct';
+import ModalServiceBooking, {
+  SelectedServiceBooking,
+} from '@/components/modal/ModalServiceBooking';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
+import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm, { RoomProps } from '@/components/modal/SelectionModalForm';
-import { servicesData } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
+import { ServicesBooking, productsBooking, servicesData, vouchers } from '@/utils/constants';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -77,7 +82,33 @@ const SectionFormBooking = () => {
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
   const openModalRoom = () => setModalOpenRoom(true);
   const closeModalRoom = () => setModalOpenRoom(false);
+  const [isModalOpenServiceBooking, setModalOpenServiceBooking] = useState(false);
+  const [selectedServicesBooking, setSelectedServiceBooking] = useState<SelectedServiceBooking[]>(
+    [],
+  );
 
+  const [isProductModalOpen, setProductModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const handleSelectProduct = (product: Product) => {
+    setSelectedProduct(product);
+    console.log('Selected Product:', product);
+  };
+
+  const [selectedVoucher, setSelectedVoucher] = useState<string | null>(null);
+
+  const [isModalOpenVoucher, setIsModalOpenVoucher] = useState(false);
+  const toggleModalVoucher = () => {
+    setIsModalOpenVoucher(!isModalOpenVoucher);
+  };
+
+  const handleVoucherSelect = (voucher: string) => {
+    setSelectedVoucher(voucher);
+    setIsModalOpenVoucher(false); // Close modal after selection
+  };
+
+  const handleSelectServicesBooking = (services: SelectedServiceBooking[]) => {
+    setSelectedServiceBooking(services);
+  };
   const [selectedBed, setSelectedBed] = useState<string[]>([]);
   const [isModalOpenBed, setModalOpenBed] = useState(false);
   const openModalBed = () => setModalOpenBed(true);
@@ -466,51 +497,107 @@ const SectionFormBooking = () => {
         </div>
 
         {/* Right Side: Service Details */}
-        <div className="w-full rounded-3xl bg-[#F1F1F4] p-4 md:p-6 lg:h-min lg:w-[calc(100%-(533px+32px))]">
-          <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:gap-6">
-            <CustomImage
-              width={1200}
-              height={1000}
-              src={RoomSrc1.src}
-              alt="Gói trị liệu"
-              className="w-full rounded-[20px] border border-[#E7E7E7] bg-white p-2 md:h-[137px] md:w-[270px]"
-              classNameImg="rounded-[16px]"
-            />
-            <div className="mb-4 w-full md:w-[calc(100%-270px)]">
-              <h3 className="text-sm font-semibold md:text-base lg:text-xl">
-                Gói trị liệu phòng chung
-              </h3>
-              <p className="mt-1">
-                Giá: <span className="text-sm font-bold text-[#EF5F5F] md:text-base">350.000</span>{' '}
-                VND / Lần
-              </p>
-              <p className="mt-1">
-                Thời gian: <span className="text-sm font-bold text-[#EF5F5F] md:text-base">60</span>{' '}
-                phút
-              </p>
-              <button
-                type="button"
-                className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
+        <div className="w-full rounded-3xl bg-[#F1F1F4] p-4 md:p-6 lg:h-min lg:w-[calc(100%-(500px+32px))]">
+          <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row md:gap-6">
+            {/* Render selected services */}
+            {selectedServicesBooking?.map(({ service, category }) => (
+              <div
+                key={category?.categoryId}
+                className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"
               >
-                Chọn lại dịch vụ
-              </button>
-            </div>
+                <CustomImage
+                  width={1200}
+                  height={1000}
+                  src={category.image}
+                  alt="Gói trị liệu"
+                  className="w-full rounded-[20px] border border-[#E7E7E7] bg-white p-2 md:h-[137px] md:w-[270px]"
+                  classNameImg="rounded-[16px]"
+                />
+                <div className="flex w-full flex-col items-start lg:w-[365px]">
+                  <h3 className="text-sm font-semibold md:text-base lg:text-xl">
+                    {category?.categoryTitle || 'No Category'}
+                  </h3>
+                  <p className="mt-1 font-medium">
+                    Giá:{' '}
+                    <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
+                      {service.price}
+                    </span>
+                    <span> VND / Lần</span>
+                  </p>
+                  <p className="mt-1 font-medium">
+                    Thời gian:{' '}
+                    <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
+                      {service.duration}
+                    </span>
+                    <span> phút</span>
+                  </p>
+
+                  <div className="flex w-full flex-col">
+                    <button
+                      onClick={() => setModalOpenServiceBooking(true)}
+                      type="button"
+                      className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
+                    >
+                      Chọn lại dịch vụ
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Hide this button if there are selected services */}
+            {selectedServicesBooking.length === 0 && (
+              <div className="flex w-full flex-col">
+                <button
+                  onClick={() => setModalOpenServiceBooking(true)}
+                  type="button"
+                  className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
+                >
+                  Chọn dịch vụ
+                </button>
+              </div>
+            )}
+
+            {/* Modal service booking */}
+            <ModalServiceBooking
+              isOpen={isModalOpenServiceBooking}
+              onClose={() => setModalOpenServiceBooking(false)}
+              servicesBooking={ServicesBooking}
+              onSelectServices={handleSelectServicesBooking}
+            />
           </div>
 
           <div className="my-3 grid grid-cols-2 gap-4 text-sm md:my-6 md:text-base">
             <button
               type="button"
+              onClick={toggleModalVoucher}
               className="flex items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-3 text-[#3A449B]"
             >
               Voucher giảm giá <CustomImage width={18} height={18} src={SaleIc} alt="Arrow Down" />
             </button>
+
+            <VoucherModal
+              isOpen={isModalOpenVoucher}
+              onClose={toggleModalVoucher}
+              onSelectVoucher={handleVoucherSelect}
+              selectedVoucher={selectedVoucher}
+              vouchers={vouchers}
+            />
             <button
               type="button"
+              onClick={() => setProductModalOpen(true)}
               className="ml-2 flex items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-2 text-[#3A449B]"
             >
               Sản phẩm mua kèm
               <CustomImage width={18} height={18} src={BoxIc} alt="Arrow Down" />
             </button>
+            <ProductModal
+              isOpen={isProductModalOpen}
+              onClose={() => setProductModalOpen(false)}
+              onSelectProduct={handleSelectProduct}
+              selectedProduct={selectedProduct}
+              products={productsBooking}
+            />
           </div>
 
           <div className="flex flex-col gap-4 border-b pb-4 text-sm text-black/85 md:text-base">
