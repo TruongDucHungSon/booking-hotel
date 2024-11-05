@@ -100,10 +100,10 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
         </p>
 
         {/* Category filter */}
-        <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+        <div className="sidebar-scroll mb-4 flex snap-x snap-mandatory gap-6 overflow-visible overflow-x-auto lg:grid-cols-5">
           {servicesBooking.map(({ categoryId, image, categoryTitle }) => (
             <div
-              className="flex cursor-pointer flex-col items-center gap-2 md:gap-4"
+              className="mb-2 flex min-w-[calc(23%-1rem)] flex-shrink-0 cursor-pointer snap-center flex-col items-center gap-2 md:gap-4"
               onClick={() => handleCategoryClick(categoryId)}
               key={categoryId}
             >
@@ -112,12 +112,18 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
                 width={200}
                 height={200}
                 alt="category service"
-                className={`rounded-[26px] border-2 transition-all duration-300 ease-in-out ${selectedCategory === categoryId ? 'border-[#3A449B] opacity-100' : 'border-transparent opacity-60'}`}
+                className={`rounded-[26px] border-2 transition-all duration-300 ease-in-out ${
+                  selectedCategory === categoryId
+                    ? 'border-[#3A449B] opacity-100'
+                    : 'border-transparent opacity-60'
+                }`}
                 classNameImg="rounded-[24px]"
               />
               <button className="text-center">
                 <p
-                  className={`text-center font-semibold transition-colors duration-300 ease-in-out ${selectedCategory === categoryId ? 'text-[#3A449B]' : 'text-[#18181B]'}`}
+                  className={`text-center font-semibold transition-colors duration-300 ease-in-out ${
+                    selectedCategory === categoryId ? 'text-[#3A449B]' : 'text-[#18181B]'
+                  }`}
                 >
                   {categoryTitle} phút
                 </p>
