@@ -1,3 +1,6 @@
+'use client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useLocationData } from '@/services/location/Location.Service';
 import SectionBanner from './_components/SectionBanner';
 import SectionContact from './_components/SectionContact';
 import SectionCustomer from './_components/SectionCustomer';
@@ -8,10 +11,13 @@ import SectionSale from './_components/SectionSale';
 import SectionService from './_components/SectionService';
 
 const HomePage = () => {
+  const { data: DATA_LOCATIONS } = useLocationData();
+  const LOCATIONS: any = DATA_LOCATIONS || [];
+
   return (
     <main className="relative">
       <SectionBanner />
-      <SectionFormBooking />
+      <SectionFormBooking LOCATIONS={LOCATIONS} />
       <SectionIntroduce />
       <SectionService />
       <SectionSale />

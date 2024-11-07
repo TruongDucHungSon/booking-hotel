@@ -77,6 +77,26 @@ const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> =>
   return { data: responseBody as T };
 };
 
+// Function to add timeout to fetch
+const fetchWithTimeout = (
+  url: string,
+  options: RequestInit = {},
+  timeout = 5000,
+): Promise<Response> => {
+  return new Promise<Response>((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Request timed out')), timeout);
+    fetch(url, options)
+      .then((response) => {
+        clearTimeout(timer);
+        resolve(response);
+      })
+      .catch((err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+  });
+};
+
 // Refresh token function
 const refreshToken = async (): Promise<void> => {
   const refreshToken = getRefreshToken();
@@ -98,7 +118,7 @@ const refreshToken = async (): Promise<void> => {
   setRefreshToken(refresh_token);
 };
 
-// Fetch utility function with automatic token handling and refresh logic
+// Fetch utility function with automatic token handling, refresh logic, and timeout
 const apiFetch = async <T>(path: string, options: FetchOptions = {}): Promise<ApiResponse<T>> => {
   const { queryParams, headers, ...rest } = options;
   const url = buildUrl(path, queryParams);
@@ -111,18 +131,20 @@ const apiFetch = async <T>(path: string, options: FetchOptions = {}): Promise<Ap
   };
 
   try {
-    const response = await fetch(url, {
+    // First attempt to fetch with timeout
+    const response = await fetchWithTimeout(url, {
       ...rest,
       headers: { ...defaultHeaders, ...headers },
     });
 
+    // If unauthorized, try to refresh token and retry
     if (response.status === 401) {
-      // If 401, try to refresh the token
+      console.warn('Unauthorized request, attempting token refresh');
       await refreshToken();
       token = getToken();
       if (token) {
         // Retry the request with the new token
-        const retryResponse = await fetch(url, {
+        const retryResponse = await fetchWithTimeout(url, {
           ...rest,
           headers: { ...defaultHeaders, Authorization: `Bearer ${token}` },
         });
@@ -132,7 +154,16 @@ const apiFetch = async <T>(path: string, options: FetchOptions = {}): Promise<Ap
 
     return handleResponse<T>(response);
   } catch (error) {
-    console.error('API Fetch Error:', error);
+    if (error instanceof Error) {
+      console.error('API Fetch Error:', {
+        message: error.message,
+        stack: error.stack,
+        endpoint: url,
+        options,
+      });
+    } else {
+      console.error('Unknown error:', error);
+    }
     throw error;
   }
 };

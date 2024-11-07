@@ -10,7 +10,6 @@ import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
 import { setBookingData } from '@/redux/formBooking/slice';
-import { useLocationData } from '@/services/location/Location.Service';
 import { saveLocalStorageBookingData } from '@/utils/helpers';
 import { vi } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
@@ -18,12 +17,10 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch } from 'react-redux';
-const SectionFormBooking = () => {
+const SectionFormBooking = ({ LOCATIONS }: any) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { data: DATA_LOCATIONS } = useLocationData();
-  const LOCATIONS: any = DATA_LOCATIONS || [];
   const handleNavigate = () => {
     const destination = serviceLocation === 'Massage tại nhà' ? '/dat-lich-tai-nha' : '/dich-vu';
     router.push(destination);
@@ -137,7 +134,7 @@ const SectionFormBooking = () => {
                 <button
                   type="button"
                   onClick={() => toggleDropdown('store')}
-                  className="text- flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-sm"
+                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-sm"
                 >
                   <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
                   {store || 'Chọn cửa hàng'}
