@@ -375,7 +375,6 @@ const SectionFormBookingAtHome = () => {
             </div>
           </form>
         </div>
-
         {/* Right Side: Service Details */}
         <div className="w-full rounded-3xl bg-[#F1F1F4] p-4 md:p-6 lg:h-min lg:w-[calc(100%-(500px+32px))]">
           <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row md:gap-6">
