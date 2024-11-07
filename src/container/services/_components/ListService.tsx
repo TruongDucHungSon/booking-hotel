@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -6,7 +7,7 @@ import Title from '@/components/Title/Title';
 import { useServiceData } from '@/services/services/Services.Service';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 // Function to format the price with commas
 const formatPrice = (price: number) => {
@@ -15,7 +16,7 @@ const formatPrice = (price: number) => {
 
 const ListService = () => {
   const { data: DATA_SERVICES } = useServiceData();
-  const SERVICES: any = DATA_SERVICES || [];
+  const SERVICES: any = useMemo(() => DATA_SERVICES || [], [DATA_SERVICES]);
 
   // State to hold the selected package and its title
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
