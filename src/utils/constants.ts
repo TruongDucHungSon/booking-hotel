@@ -7,6 +7,12 @@ import Service3 from '../assets/images/service/sv3.png';
 import Service4 from '../assets/images/service/sv4.png';
 import Service5 from '../assets/images/service/sv5.png';
 
+import sv1 from '@/assets/images/new/sv1.png';
+import sv2 from '@/assets/images/new/sv2.png';
+import sv3 from '@/assets/images/new/sv3.png';
+import sv4 from '@/assets/images/new/sv4.png';
+import sv5 from '@/assets/images/new/sv5.png';
+
 export const Navigation = [
   {
     name: 'Trang chủ',
@@ -711,3 +717,70 @@ export const productsBooking = [
       'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D',
   },
 ];
+
+export const services = [
+  {
+    id: 1,
+    name: 'Gói trị liệu phòng chung',
+    image: sv1,
+  },
+  {
+    id: 2,
+    name: 'Gói trị liệu phòng VIP',
+    image: sv2,
+  },
+  {
+    id: 3,
+    name: 'Gói trị liệu truyền thống',
+    image: sv3,
+  },
+  {
+    id: 4,
+    name: 'Gói trị liệu nâng cao',
+    image: sv4,
+  },
+  {
+    id: 5,
+    name: 'Gói trị liệu chuyên sâu',
+    image: sv5,
+  },
+] as const;
+
+export const servicesDetails = [
+  {
+    title: 'Gói dịch vụ chung 60 phút',
+    duration: 'Thời gian: 60 phút',
+    price: '350,000 VND/Lần',
+    details: [
+      'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+      'Xông hơi ướt với lá xông theo mùa, ngâm chân muối thảo dược',
+      'Chăm sóc toàn thân với kem Ngải Diệp hoặc kem Gừng',
+      'Ăn nhẹ với cháo dưỡng sinh, nước uống thảo dược và hoa quả',
+    ],
+  },
+  {
+    title: 'Gói dịch vụ chung 105 phút',
+    duration: 'Thời gian: 105 phút',
+    price: '450,000 VND/Lần',
+    details: [
+      'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
+      'Xông hơi ướt với lá xông theo mùa, ngâm chân muối thảo dược',
+      'Ngâm bồn sục với thuốc tắm thảo dược',
+      'Tắm trắng ngũ hoa lá xông theo mùa',
+      'Đắp mặt nạ ngũ hoa',
+      'Chăm sóc toàn thân với kem Ngải Diệp/Gừng và phương pháp chườm ngải cứu nóng',
+      'Ăn nhẹ với cháo dưỡng sinh, nước uống thảo dược và hoa quả',
+    ],
+  },
+] as const;
+
+export const typeServices = [
+  {
+    id: 1,
+    type: 'Massage tại cửa hàng',
+  },
+  {
+    id: 2,
+    type: 'Massage tại nhà',
+  },
+] as const;

@@ -7,6 +7,11 @@ const nextConfig = {
         hostname: 'images.unsplash.com',
         pathname: '/**',
       },
+      {
+        protocol: 'http', // Assuming your URL is using http
+        hostname: '36.50.135.197',
+        pathname: '/storage/**',
+      },
     ],
   },
 };

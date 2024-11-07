@@ -1,7 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit'; // Import combineReducers from @reduxjs/toolkit
-
+import bookingReducer from '../redux/formBooking/slice';
 // Combine reducers from different slices into a single root reducer
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  booking: bookingReducer,
+});
 
 // Define type for the root reducer
 export type RootReducer = typeof rootReducer;

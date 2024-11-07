@@ -1,13 +1,13 @@
-import sv10 from '../../../assets/images/new/sv10.png';
-import sv11 from '../../../assets/images/new/sv11.png';
-import sv12 from '../../../assets/images/new/sv12.png';
-import sv13 from '../../../assets/images/new/sv13.png';
-import sv14 from '../../../assets/images/new/sv14.png';
-import sv7 from '../../../assets/images/new/sv7.png';
-import sv8 from '../../../assets/images/new/sv8.png';
-import sv9 from '../../../assets/images/new/sv9.png';
-import CustomImage from '../../../components/CustomImage';
-import Title from '../../../components/Title/Title';
+import sv10 from '@/assets/images/new/sv10.png';
+import sv11 from '@/assets/images/new/sv11.png';
+import sv12 from '@/assets/images/new/sv12.png';
+import sv13 from '@/assets/images/new/sv13.png';
+import sv14 from '@/assets/images/new/sv14.png';
+import sv7 from '@/assets/images/new/sv7.png';
+import sv8 from '@/assets/images/new/sv8.png';
+import sv9 from '@/assets/images/new/sv9.png';
+import CustomImage from '@/components/CustomImage';
+import Title from '@/components/Title/Title';
 
 const SectionGallery = () => {
   return (

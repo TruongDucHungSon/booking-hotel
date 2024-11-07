@@ -3,6 +3,7 @@ import { PUBLIC_ENDPOINT } from '../utils/endpoint';
 export const TOKEN_STORAGE_KEY = 'access_token';
 export const REFRESH_TOKEN_STORAGE_KEY = 'refresh_token';
 
+// Define API response type
 export interface ApiResponse<T> {
   data: T;
   message?: string;
@@ -18,6 +19,19 @@ interface RefreshTokenResponse {
   refresh_token: string;
 }
 
+// API Error class
+class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public responseBody: string,
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
+// Token storage functions
 const getToken = (): string | null => localStorage.getItem(TOKEN_STORAGE_KEY);
 const getRefreshToken = (): string | null => localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
 
@@ -30,6 +44,7 @@ const clearTokens = (): void => {
   localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
 };
 
+// URL building utility
 const buildUrl = (path: string, queryParams?: FetchOptions['queryParams']): string => {
   const url = new URL(`${PUBLIC_ENDPOINT}${path}`);
   if (queryParams) {
@@ -40,6 +55,7 @@ const buildUrl = (path: string, queryParams?: FetchOptions['queryParams']): stri
   return url.toString();
 };
 
+// Response handler with content type check
 const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> => {
   const contentType = response.headers.get('Content-Type');
   let responseBody: T | string;
@@ -51,12 +67,17 @@ const handleResponse = async <T>(response: Response): Promise<ApiResponse<T>> =>
   }
 
   if (!response.ok) {
-    throw new Error(typeof responseBody === 'string' ? responseBody : JSON.stringify(responseBody));
+    throw new ApiError(
+      typeof responseBody === 'string' ? responseBody : JSON.stringify(responseBody),
+      response.status,
+      typeof responseBody === 'string' ? responseBody : JSON.stringify(responseBody),
+    );
   }
 
   return { data: responseBody as T };
 };
 
+// Refresh token function
 const refreshToken = async (): Promise<void> => {
   const refreshToken = getRefreshToken();
   if (!refreshToken) throw new Error('No refresh token available');
@@ -77,6 +98,7 @@ const refreshToken = async (): Promise<void> => {
   setRefreshToken(refresh_token);
 };
 
+// Fetch utility function with automatic token handling and refresh logic
 const apiFetch = async <T>(path: string, options: FetchOptions = {}): Promise<ApiResponse<T>> => {
   const { queryParams, headers, ...rest } = options;
   const url = buildUrl(path, queryParams);
@@ -95,9 +117,11 @@ const apiFetch = async <T>(path: string, options: FetchOptions = {}): Promise<Ap
     });
 
     if (response.status === 401) {
+      // If 401, try to refresh the token
       await refreshToken();
       token = getToken();
       if (token) {
+        // Retry the request with the new token
         const retryResponse = await fetch(url, {
           ...rest,
           headers: { ...defaultHeaders, Authorization: `Bearer ${token}` },

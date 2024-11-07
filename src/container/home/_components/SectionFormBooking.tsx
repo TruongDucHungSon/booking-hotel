@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import DateIc from '@/assets/svgs/arrow/date.svg';
 import ArrowIc from '@/assets/svgs/arrow/down.svg';
@@ -8,25 +9,34 @@ import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
-import { stores } from '@/container/booking/_components/SectionFormBooking';
+import { setBookingData } from '@/redux/formBooking/slice';
+import { useLocationData } from '@/services/location/Location.Service';
+import { saveLocalStorageBookingData } from '@/utils/helpers';
 import { vi } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useDispatch } from 'react-redux';
 const SectionFormBooking = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
 
+  const { data: DATA_LOCATIONS } = useLocationData();
+  const LOCATIONS: any = DATA_LOCATIONS || [];
   const handleNavigate = () => {
     const destination = serviceLocation === 'Massage tại nhà' ? '/dat-lich-tai-nha' : '/dich-vu';
     router.push(destination);
   };
 
-  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm');
+  // Load booking data from Redux
+
+  const [store, setStore] = useState(LOCATIONS?.data?.[0].name);
   const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
   const [selectedStaff, setSelectedStaff] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [startDate, setStartDate] = useState(new Date());
+
   const [dropdowns, setDropdowns] = useState({
     store: false,
     location: false,
@@ -77,7 +87,8 @@ const SectionFormBooking = () => {
       selectedStaff,
       startDate,
     };
-    console.log('Booking Data:', bookingData);
+    dispatch(setBookingData(bookingData));
+    saveLocalStorageBookingData(bookingData);
     handleNavigate();
   };
 
@@ -126,7 +137,7 @@ const SectionFormBooking = () => {
                 <button
                   type="button"
                   onClick={() => toggleDropdown('store')}
-                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
+                  className="text- flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-sm"
                 >
                   <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
                   {store || 'Chọn cửa hàng'}
@@ -140,13 +151,13 @@ const SectionFormBooking = () => {
                 </button>
                 {dropdowns.store && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                    {stores.map((storeOption) => (
+                    {LOCATIONS?.data?.map((location: any) => (
                       <li
-                        key={storeOption}
-                        onClick={() => handleSelect('store', storeOption)}
-                        className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
+                        key={location.id}
+                        onClick={() => handleSelect('store', location.name)}
+                        className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"
                       >
-                        {storeOption}
+                        {location.name}
                       </li>
                     ))}
                   </ul>
