@@ -1,21 +1,28 @@
-// axios
 import { getAccessToken } from '@/utils/cookieStorage';
 import axios, { AxiosInstance } from 'axios';
+import https from 'https';
 import { isEmpty } from 'lodash';
 
+// Create an httpsAgent for handling SSL certificate issues (disabling certificate verification for testing)
+const agent = new https.Agent({
+  rejectUnauthorized: false, // For testing only (disables SSL validation)
+});
+
+// Create the Axios instance with base URL and timeout
 const publicRequest: AxiosInstance = axios.create({
-  baseURL: 'https://36.50.135.197:8090',
+  baseURL: 'https://36.50.135.197:8090', // Using HTTPS, switch to HTTP for testing
   timeout: 10000,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
+  httpsAgent: agent, // Include the httpsAgent for SSL handling
 });
 
-// Change request data/error here
+// Request interceptor to attach Authorization token if present
 publicRequest.interceptors.request.use(
   (config) => {
-    if (typeof window === undefined) {
+    if (typeof window === 'undefined') {
       return config;
     }
     const token = getAccessToken();
@@ -27,10 +34,10 @@ publicRequest.interceptors.request.use(
   },
 );
 
+// Response interceptor to handle global error logging and response data
 publicRequest.interceptors.response.use(
   (response) => response?.data || response?.data?.data || response,
   (error) => {
-    // Handle errors globally (e.g., show a notification, redirect, etc.)
     console.error('Axios request failed:', error);
     return Promise.reject(error);
   },
