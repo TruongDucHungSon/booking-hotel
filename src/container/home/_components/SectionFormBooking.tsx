@@ -148,10 +148,10 @@ const SectionFormBooking = ({ LOCATIONS }: any, { STAFFS }: any) => {
                 </button>
                 {dropdowns.store && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                    {LOCATIONS?.data?.map((location: any) => (
+                    {LOCATIONS?.map((location: any) => (
                       <li
                         key={location.id}
-                        onClick={() => handleSelect('store', location.name)}
+                        onClick={() => handleSelect('store', location.id)}
                         className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"
                       >
                         {location.name}
@@ -179,7 +179,7 @@ const SectionFormBooking = ({ LOCATIONS }: any, { STAFFS }: any) => {
                 </button>
                 {dropdowns.staff && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                    {STAFFS?.data?.map((staffOption: any) => (
+                    {STAFFS?.map((staffOption: any) => (
                       <li
                         key={staffOption.id}
                         onClick={() => handleSelect('staff', staffOption.id)}
@@ -194,7 +194,7 @@ const SectionFormBooking = ({ LOCATIONS }: any, { STAFFS }: any) => {
             )}
 
             {/* Date and Time Pickers */}
-            <div className="flex w-full flex-col items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white text-base font-medium text-[#B9B9B9] lg:w-[42%] lg:flex-row lg:px-2">
+            <div className="flex w-full flex-col items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white text-base font-medium text-[#B9B9B9] lg:w-[45%] lg:flex-row lg:px-2">
               <div className="relative flex w-full items-center justify-center gap-2 px-4 lg:px-0">
                 <CustomImage
                   width={24}

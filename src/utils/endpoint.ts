@@ -1,5 +1,3 @@
-export const PUBLIC_ENDPOINT = 'http://36.50.135.197:8090';
-
 export const API_ENDPOINT = {
   LOGIN: '/auth/login',
   REFRESH: '/auth/refresh',
