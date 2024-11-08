@@ -212,7 +212,7 @@ const SectionFormBooking = () => {
                 <button
                   type="button"
                   onClick={() => toggleDropdown('time')}
-                  className="flex w-full items-center justify-between px-4 py-[10px] text-sm font-medium text-black focus:border-[#3A449B] focus:outline-none md:text-xs"
+                  className="flex w-full items-center justify-between px-4 py-[10px] text-sm font-medium text-black focus:border-[#3A449B] focus:outline-none md:text-base"
                 >
                   <CustomImage width={18} height={18} src={TimeIc} alt="Time Icon" />
                   {watch('selectedTime') || 'Chọn giờ'}
