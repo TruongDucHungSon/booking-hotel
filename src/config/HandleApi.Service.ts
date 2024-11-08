@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import { isEmpty } from 'lodash';
 
 const publicRequest: AxiosInstance = axios.create({
-  baseURL: 'http://36.50.135.197:8090',
+  baseURL: 'https://36.50.135.197:8090',
   timeout: 10000,
   headers: {
     Accept: 'application/json',

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import sv11 from '@/assets/images/new/sv11.png';
+import sv1 from '@/assets/images/new/sv1.png';
 import sv7 from '@/assets/images/new/sv6.png';
 import CustomImage from '@/components/CustomImage/index';
 import Title from '@/components/Title/Title';
@@ -10,12 +10,6 @@ import { useServiceData } from '@/services/services/Services.Service';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-
-// Function to format the price with commas
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('vi-VN').format(price);
-};
-
 const ListService = () => {
   const { data: DATA_SERVICES } = useServiceData();
   const SERVICES: any = useMemo(() => DATA_SERVICES || [], [DATA_SERVICES]);
@@ -35,6 +29,10 @@ const ListService = () => {
     setSelectedPackage(pkg);
   };
 
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('vi-VN').format(price);
+  };
+
   // Filter the services of the selected package
   const filteredServices = selectedPackage ? selectedPackage.services : [];
 
@@ -45,19 +43,32 @@ const ListService = () => {
         {SERVICES?.data?.map((pkg: any) => (
           <div
             key={pkg.id}
-            className="group max-w-sm transform cursor-pointer rounded-3xl"
+            className={`group max-w-sm transform cursor-pointer rounded-3xl transition-all duration-300`}
             onClick={() => handlePackageClick(pkg)} // Set selected package on click
           >
-            <div className="flex justify-center overflow-hidden rounded-xl">
+            <div
+              className={`flex justify-center overflow-hidden rounded-[28px] ${
+                selectedPackage?.id === pkg.id
+                  ? 'border-2 border-[#3a449b]' // Active style: border and text color
+                  : 'border-transparent' // Default style
+              } `}
+            >
               <CustomImage
-                src={sv11.src || pkg.image?.thumbnail}
+                src={sv1.src || pkg.image?.thumbnail}
                 alt="service"
                 width={500}
                 height={500}
                 className="max-h-[100px]"
+                classNameImg="rounded-3xl"
               />
             </div>
-            <h3 className="mt-2 text-center text-sm font-normal text-primary md:text-base lg:text-lg">
+            <h3
+              className={`mt-2 text-center text-sm font-normal md:text-base lg:text-lg ${
+                selectedPackage?.id === pkg.id
+                  ? 'text-[#3a449b]' // Active style: border and text color
+                  : 'border-transparent' // Default style
+              } `}
+            >
               {pkg.name}
             </h3>
           </div>
