@@ -14,6 +14,8 @@ import SectionService from './_components/SectionService';
 const HomePage = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
+  console.log(LOCATIONS);
+
   const { data: DATA_STAFFS } = useStaffData();
   const STAFFS: any = DATA_STAFFS || [];
 

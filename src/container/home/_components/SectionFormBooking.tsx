@@ -148,7 +148,7 @@ const SectionFormBooking = ({ LOCATIONS }: any, { STAFFS }: any) => {
                 </button>
                 {dropdowns.store && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                    {LOCATIONS?.map((location: any) => (
+                    {LOCATIONS?.data?.map((location: any) => (
                       <li
                         key={location.id}
                         onClick={() => handleSelect('store', location.id)}
