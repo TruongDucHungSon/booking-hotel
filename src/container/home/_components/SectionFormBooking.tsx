@@ -151,7 +151,7 @@ const SectionFormBooking = ({ LOCATIONS }: any, { STAFFS }: any) => {
                     {LOCATIONS?.data?.map((location: any) => (
                       <li
                         key={location.id}
-                        onClick={() => handleSelect('store', location.id)}
+                        onClick={() => handleSelect('store', location.name)}
                         className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"
                       >
                         {location.name}
