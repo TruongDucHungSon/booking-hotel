@@ -8,7 +8,6 @@ import CustomImage from '@/components/CustomImage/index';
 import Title from '@/components/Title/Title';
 import { useServiceData } from '@/services/services/Services.Service';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 const ListService = () => {
   const { data: DATA_SERVICES } = useServiceData();
@@ -37,42 +36,45 @@ const ListService = () => {
   const filteredServices = selectedPackage ? selectedPackage.services : [];
 
   return (
-    <>
+    <section className="mt-[28px] lg:mt-[56px]">
       {/* Display all packages initially */}
-      <div className="mt-6 grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-5">
-        {SERVICES?.data?.map((pkg: any) => (
-          <div
-            key={pkg.id}
-            className={`group max-w-sm transform cursor-pointer rounded-3xl transition-all duration-300`}
-            onClick={() => handlePackageClick(pkg)} // Set selected package on click
-          >
+      <div className="mt-6 w-full">
+        {/* Container with scrollable behavior */}
+        <div className="scroll-snap-x sidebar-scroll md:scroll-snap-x-start flex space-x-6 overflow-x-auto lg:w-full lg:space-x-8">
+          {SERVICES?.data?.map((pkg: any) => (
             <div
-              className={`flex justify-center overflow-hidden rounded-[28px] ${
-                selectedPackage?.id === pkg.id
-                  ? 'border-2 border-[#3a449b]' // Active style: border and text color
-                  : 'border-transparent' // Default style
-              } `}
+              key={pkg.id}
+              className={`scroll-snap-start group mb-4 max-w-sm transform cursor-pointer rounded-3xl transition-all duration-300`} // snap-align applied here
+              onClick={() => handlePackageClick(pkg)} // Set selected package on click
             >
-              <CustomImage
-                src={sv1.src || pkg.image?.thumbnail}
-                alt="service"
-                width={500}
-                height={500}
-                className="max-h-[100px]"
-                classNameImg="rounded-3xl"
-              />
+              <div
+                className={`flex justify-center overflow-hidden rounded-[28px] ${
+                  selectedPackage?.id === pkg.id
+                    ? 'border-2 border-[#3a449b]' // Active style: border and text color
+                    : 'border-transparent' // Default style
+                } `}
+              >
+                <CustomImage
+                  src={sv1.src || pkg.image?.thumbnail}
+                  alt="service"
+                  width={500}
+                  height={500}
+                  className="h-[100px] w-[250px] lg:w-[[calc(100%/20%)]]"
+                  classNameImg="rounded-3xl"
+                />
+              </div>
+              <h3
+                className={`mt-2 text-center text-sm font-medium md:text-base lg:text-lg ${
+                  selectedPackage?.id === pkg.id
+                    ? 'font-semibold text-[#3a449b]' // Active style: border and text color
+                    : 'border-transparent' // Default style
+                } `}
+              >
+                {pkg.name}
+              </h3>
             </div>
-            <h3
-              className={`mt-2 text-center text-sm font-normal md:text-base lg:text-lg ${
-                selectedPackage?.id === pkg.id
-                  ? 'text-[#3a449b]' // Active style: border and text color
-                  : 'border-transparent' // Default style
-              } `}
-            >
-              {pkg.name}
-            </h3>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Dynamically change title and services based on the selected package */}
@@ -91,7 +93,7 @@ const ListService = () => {
         <div className="mt-4 flex flex-col items-center justify-center lg:mt-8 lg:flex-row">
           {/* Left Section: Image */}
           <div className="flex w-[80%] justify-center md:w-[50%] lg:w-1/2">
-            <div className="relative lg:max-w-[530px]">
+            <div className="relative hidden md:block lg:max-w-[530px]">
               <CustomImage
                 src={sv7.src || selectedPackage?.image?.url || ''}
                 alt="massage"
@@ -165,10 +167,7 @@ const ListService = () => {
                       Giá chưa bao gồm VAT & TIP.
                     </p>
 
-                    <Link
-                      href="/dat-lich"
-                      className="group flex items-center gap-2 text-sm text-[#3A449B] hover:underline md:text-base"
-                    >
+                    <button className="group flex items-center gap-2 text-sm text-[#3A449B] hover:underline md:text-base">
                       Đặt lịch ngay
                       <span className="transition-all duration-300 group-hover:translate-x-2">
                         <svg
@@ -196,7 +195,7 @@ const ListService = () => {
                           </defs>
                         </svg>
                       </span>
-                    </Link>
+                    </button>
                   </div>
                 </div>
               ))}
@@ -204,7 +203,7 @@ const ListService = () => {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

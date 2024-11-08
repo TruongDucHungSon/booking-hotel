@@ -9,18 +9,19 @@ import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { setBookingData } from '@/redux/formBooking/slice';
-import { saveLocalStorageBookingData } from '@/utils/helpers';
+import { useStaffData } from '@/services/staff/Staff.service';
 import { vi } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch } from 'react-redux';
-const SectionFormBooking = ({ LOCATIONS }: any, { STAFFS }: any) => {
+const SectionFormBooking = ({ LOCATIONS }: any) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { data: DATA_STAFFS } = useStaffData();
+  const STAFFS: any = DATA_STAFFS || [];
   console.log(STAFFS);
-
   const handleNavigate = () => {
     const destination = serviceLocation === 'Massage tại nhà' ? '/dat-lich-tai-nha' : '/dich-vu';
     router.push(destination);
@@ -85,7 +86,6 @@ const SectionFormBooking = ({ LOCATIONS }: any, { STAFFS }: any) => {
       startDate,
     };
     dispatch(setBookingData(bookingData));
-    saveLocalStorageBookingData(bookingData);
     handleNavigate();
   };
 
@@ -178,11 +178,11 @@ const SectionFormBooking = ({ LOCATIONS }: any, { STAFFS }: any) => {
                   />
                 </button>
                 {dropdowns.staff && (
-                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                    {STAFFS?.map((staffOption: any) => (
+                  <ul className="sidebar-scroll absolute z-10 mt-2 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
+                    {STAFFS?.data?.map((staffOption: any) => (
                       <li
                         key={staffOption.id}
-                        onClick={() => handleSelect('staff', staffOption.id)}
+                        onClick={() => handleSelect('staff', staffOption.name)}
                         className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
                       >
                         {staffOption.name}

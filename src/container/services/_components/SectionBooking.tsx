@@ -17,6 +17,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import ListService from './ListService';
 
 const SectionFormBooking = () => {
   const dispatch = useDispatch();
@@ -24,6 +25,13 @@ const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
   const bookingDataFromRedux = useSelector((state: RootState) => state.booking.bookingData);
+  // Retrieve store value from localStorage
+  const initialStoreValue = bookingDataFromRedux?.store || LOCATIONS?.data?.[0].name;
+
+  // Parse and validate the startDate before setting it
+  const parsedStartDate = bookingDataFromRedux?.startDate || new Date();
+
+  // If the parsed date is invalid, use the current date as the default
 
   const {
     control,
@@ -33,11 +41,11 @@ const SectionFormBooking = () => {
     formState: { errors },
   } = useForm<any>({
     defaultValues: {
+      store: initialStoreValue,
       serviceLocation: bookingDataFromRedux?.serviceLocation || 'Massage tại cửa hàng',
-      store: bookingDataFromRedux?.store || LOCATIONS?.data?.[0].name,
       selectedStaff: bookingDataFromRedux?.selectedStaff || '',
       selectedTime: bookingDataFromRedux?.selectedTime || '',
-      startDate: bookingDataFromRedux?.startDate || new Date(),
+      startDate: parsedStartDate,
     },
   });
 
@@ -244,16 +252,18 @@ const SectionFormBooking = () => {
             </div>
           </div>
 
-          <div className="mt-4 flex justify-center lg:justify-end">
+          {/* <div className="mt-4 flex justify-center lg:justify-end">
             <button
               type="submit"
               className="w-[95%] rounded-2xl bg-[#3A449B] px-8 py-2 text-sm font-medium text-white transition-all duration-300 ease-in-out hover:bg-[#2B347E] md:w-[220px] lg:text-base"
             >
               Đặt lịch
             </button>
-          </div>
+          </div> */}
         </form>
       </div>
+
+      <ListService />
     </section>
   );
 };
