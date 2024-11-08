@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 
 // Create the Axios instance with base URL and timeout
 const publicRequest: AxiosInstance = axios.create({
-  baseURL: 'https://36.50.135.197:8090', // Switch to HTTP temporarily
+  baseURL: 'http://36.50.135.197:8090', // Switch to HTTP temporarily
   timeout: 10000,
   headers: {
     Accept: 'application/json',

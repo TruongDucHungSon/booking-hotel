@@ -8,7 +8,6 @@ import TimeIc from '@/assets/svgs/arrow/time.svg';
 import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
-import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
 import { setBookingData } from '@/redux/formBooking/slice';
 import { saveLocalStorageBookingData } from '@/utils/helpers';
 import { vi } from 'date-fns/locale';
@@ -17,9 +16,10 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch } from 'react-redux';
-const SectionFormBooking = ({ LOCATIONS }: any) => {
+const SectionFormBooking = ({ LOCATIONS }: any, { STAFFS }: any) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  console.log(STAFFS);
 
   const handleNavigate = () => {
     const destination = serviceLocation === 'Massage tại nhà' ? '/dat-lich-tai-nha' : '/dich-vu';
@@ -179,13 +179,13 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                 </button>
                 {dropdowns.staff && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                    {employees.map((staffOption) => (
+                    {STAFFS?.data?.map((staffOption: any) => (
                       <li
-                        key={staffOption}
-                        onClick={() => handleSelect('staff', staffOption)}
+                        key={staffOption.id}
+                        onClick={() => handleSelect('staff', staffOption.id)}
                         className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
                       >
-                        {staffOption}
+                        {staffOption.name}
                       </li>
                     ))}
                   </ul>
