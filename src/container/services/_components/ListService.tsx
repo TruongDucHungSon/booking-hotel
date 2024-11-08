@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import sv11 from '@/assets/images/new/sv11.png';
+import sv7 from '@/assets/images/new/sv6.png';
 import CustomImage from '@/components/CustomImage/index';
 import Title from '@/components/Title/Title';
 import { useServiceData } from '@/services/services/Services.Service';
@@ -48,7 +50,7 @@ const ListService = () => {
           >
             <div className="flex justify-center overflow-hidden rounded-xl">
               <CustomImage
-                src={pkg.image?.thumbnail || ''}
+                src={sv11.src || pkg.image?.thumbnail}
                 alt="service"
                 width={500}
                 height={500}
@@ -80,7 +82,7 @@ const ListService = () => {
           <div className="flex w-[80%] justify-center md:w-[50%] lg:w-1/2">
             <div className="relative lg:max-w-[530px]">
               <CustomImage
-                src={selectedPackage?.image?.url || ''}
+                src={sv7.src || selectedPackage?.image?.url || ''}
                 alt="massage"
                 width={500}
                 height={500}
