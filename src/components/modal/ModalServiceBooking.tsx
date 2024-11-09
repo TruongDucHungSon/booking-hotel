@@ -1,3 +1,4 @@
+'use client';
 import check from '@/assets/svgs/arrow/check1.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
@@ -48,8 +49,7 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
   }, [isOpen, servicesBooking]);
 
   const handleServiceClick = (categoryId: number, service: Service) => {
-    // Cập nhật selectedServices với dịch vụ mới
-    setSelectedServices({ [categoryId]: service }); // Thay thế dịch vụ cũ
+    setSelectedServices({ [categoryId]: service }); // Update selected service for the category
   };
 
   const handleCategoryClick = (categoryId: number) => {
@@ -136,7 +136,7 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
           {filteredServices?.map((service) => (
             <div
               key={service.id}
-              onClick={() => handleServiceClick(selectedCategory!, service)}
+              onClick={() => selectedCategory && handleServiceClick(selectedCategory, service)}
               className={`cursor-pointer rounded-3xl border p-5 transition-all duration-300 ease-in-out lg:p-6 ${selectedServices[selectedCategory!] === service ? 'border-[#3A449B]' : 'border-gray-200 opacity-100'}`}
             >
               <h3

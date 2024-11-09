@@ -7,11 +7,19 @@ import Service3 from '../assets/images/service/sv3.png';
 import Service4 from '../assets/images/service/sv4.png';
 import Service5 from '../assets/images/service/sv5.png';
 
+import RoomSrc1 from '@/assets/images/room/r1.png';
+import RoomSrc2 from '@/assets/images/room/r2.png';
+import RoomSrc3 from '@/assets/images/room/r3.png';
+import RoomSrc4 from '@/assets/images/room/r4.png';
+import RoomSrc5 from '@/assets/images/room/r5.png';
+import RoomSrc6 from '@/assets/images/room/r6.png';
+
 import sv1 from '@/assets/images/new/sv1.png';
 import sv2 from '@/assets/images/new/sv2.png';
 import sv3 from '@/assets/images/new/sv3.png';
 import sv4 from '@/assets/images/new/sv4.png';
 import sv5 from '@/assets/images/new/sv5.png';
+import { RoomProps } from '@/components/modal/SelectionModalForm';
 
 export const Navigation = [
   {
@@ -746,34 +754,6 @@ export const services = [
   },
 ] as const;
 
-export const servicesDetails = [
-  {
-    title: 'Gói dịch vụ chung 60 phút',
-    duration: 'Thời gian: 60 phút',
-    price: '350,000 VND/Lần',
-    details: [
-      'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
-      'Xông hơi ướt với lá xông theo mùa, ngâm chân muối thảo dược',
-      'Chăm sóc toàn thân với kem Ngải Diệp hoặc kem Gừng',
-      'Ăn nhẹ với cháo dưỡng sinh, nước uống thảo dược và hoa quả',
-    ],
-  },
-  {
-    title: 'Gói dịch vụ chung 105 phút',
-    duration: 'Thời gian: 105 phút',
-    price: '450,000 VND/Lần',
-    details: [
-      'Tắm sạch bằng bộ sản phẩm tắm gội thảo dược theo mùa',
-      'Xông hơi ướt với lá xông theo mùa, ngâm chân muối thảo dược',
-      'Ngâm bồn sục với thuốc tắm thảo dược',
-      'Tắm trắng ngũ hoa lá xông theo mùa',
-      'Đắp mặt nạ ngũ hoa',
-      'Chăm sóc toàn thân với kem Ngải Diệp/Gừng và phương pháp chườm ngải cứu nóng',
-      'Ăn nhẹ với cháo dưỡng sinh, nước uống thảo dược và hoa quả',
-    ],
-  },
-] as const;
-
 export const typeServices = [
   {
     id: 1,
@@ -784,3 +764,20 @@ export const typeServices = [
     type: 'Massage tại nhà',
   },
 ] as const;
+
+export const roomsData: RoomProps[] = [
+  { name: 'Phòng Luxury VIP 1 ', image: RoomSrc1 },
+  { name: 'Phòng Luxury VIP 2', image: RoomSrc2 },
+  { name: 'Phòng Luxury VIP 3', image: RoomSrc3 },
+  { name: 'Phòng Luxury VIP 4', image: RoomSrc4 },
+  { name: 'Phòng Luxury VIP 5', image: RoomSrc5 },
+  { name: 'Phòng Luxury VIP 6', image: RoomSrc6 },
+];
+export const bedsData: RoomProps[] = [
+  { name: 'Giường Luxury Thượng Hạng 1 ', image: RoomSrc1 },
+  { name: 'Giường Luxury Thượng Hạng 2', image: RoomSrc2 },
+  { name: 'Giường Luxury Thượng Hạng 3', image: RoomSrc3 },
+  { name: 'Giường Luxury Thượng Hạng 4', image: RoomSrc4 },
+  { name: 'Giường Luxury Thượng Hạng 5', image: RoomSrc5 },
+  { name: 'Giường Luxury Thượng Hạng 6', image: RoomSrc6 },
+];

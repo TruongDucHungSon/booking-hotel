@@ -1,11 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import RoomSrc1 from '@/assets/images/room/r1.png';
-import RoomSrc2 from '@/assets/images/room/r2.png';
-import RoomSrc3 from '@/assets/images/room/r3.png';
-import RoomSrc4 from '@/assets/images/room/r4.png';
-import RoomSrc5 from '@/assets/images/room/r5.png';
-import RoomSrc6 from '@/assets/images/room/r6.png';
 import bed from '@/assets/svgs/arrow/bed.svg';
 import BoxIc from '@/assets/svgs/arrow/box.svg';
 import box1 from '@/assets/svgs/arrow/box1.svg';
@@ -28,51 +23,37 @@ import ModalServiceBooking, {
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm, { RoomProps } from '@/components/modal/SelectionModalForm';
-import { ServicesBooking, productsBooking, servicesData, vouchers } from '@/utils/constants';
-import { useState } from 'react';
+import { RootState } from '@/redux/rootReducers';
+import { useLocationData } from '@/services/location/Location.Service';
+import {
+  ServicesBooking,
+  productsBooking,
+  roomsData,
+  servicesData,
+  typeServices,
+  vouchers,
+} from '@/utils/constants';
+import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
 
-type FormValues = {
-  fullName: string;
-  phoneNumber: string;
-  gender: string;
-  numPeople: number;
-  arrivalDate: string;
-  arrivalTime: string;
-  room: string; // Assuming you'll add more fields related to room and bed later
-  bed: string;
-  service: string[];
-  note: string;
-};
-
-export const roomsData: RoomProps[] = [
-  { name: 'Phòng Luxury VIP 1 ', image: RoomSrc1 },
-  { name: 'Phòng Luxury VIP 2', image: RoomSrc2 },
-  { name: 'Phòng Luxury VIP 3', image: RoomSrc3 },
-  { name: 'Phòng Luxury VIP 4', image: RoomSrc4 },
-  { name: 'Phòng Luxury VIP 5', image: RoomSrc5 },
-  { name: 'Phòng Luxury VIP 6', image: RoomSrc6 },
-];
-export const bedsData: RoomProps[] = [
-  { name: 'Giường Luxury Thượng Hạng 1 ', image: RoomSrc1 },
-  { name: 'Giường Luxury Thượng Hạng 2', image: RoomSrc2 },
-  { name: 'Giường Luxury Thượng Hạng 3', image: RoomSrc3 },
-  { name: 'Giường Luxury Thượng Hạng 4', image: RoomSrc4 },
-  { name: 'Giường Luxury Thượng Hạng 5', image: RoomSrc5 },
-  { name: 'Giường Luxury Thượng Hạng 6', image: RoomSrc6 },
-];
-
-export const stores = [
-  'Bloom Massage Hoàn Kiếm ',
-  'Bloom Massage Cầu Giấy',
-  'Bloom Massage Đống Đa',
-  'Bloom Massage Tây Hồ',
-  'Bloom Massage Ba Đình',
-];
+import { useServiceData } from '@/services/services/Services.Service';
+import { FormValues } from '@/utils/type';
+import { useRouter } from 'next/navigation';
 
 const SectionFormBooking = () => {
-  const [store, setStore] = useState('Bloom Massage Hoàn Kiếm');
+  const { data: DATA_LOCATIONS } = useLocationData();
+  const LOCATIONS: any = DATA_LOCATIONS || [];
+  const { data: DATA_SERVICES } = useServiceData();
+  const SERVICES: any = useMemo(() => DATA_SERVICES || [], [DATA_SERVICES]);
+  const router = useRouter();
+
+  const bookingDataFromRedux = useSelector((state: RootState) => state.booking.bookingData);
+  const serviceDataFromRedux = useSelector((state: RootState) => state.booking.selectedService);
+  console.log(serviceDataFromRedux);
+  const initialStoreValue = bookingDataFromRedux?.store || LOCATIONS?.data?.[0].name;
   const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
+  const [store, setStore] = useState(initialStoreValue || LOCATIONS?.data?.[0].name);
   const [dropdowns, setDropdowns] = useState({
     store: false,
     location: false,
@@ -109,35 +90,12 @@ const SectionFormBooking = () => {
   const handleSelectServicesBooking = (services: SelectedServiceBooking[]) => {
     setSelectedServiceBooking(services);
   };
-  const [selectedBed, setSelectedBed] = useState<string[]>([]);
-  const [isModalOpenBed, setModalOpenBed] = useState(false);
-  const openModalBed = () => setModalOpenBed(true);
-  const closeModalBed = () => setModalOpenBed(false);
 
   const handleRoomSelect = (room: RoomProps) => {
     setSelectedRoom(room.name); // Set the selected room name
     // Optionally, handle other actions (e.g., set room details)
   };
-  const handleBedSelect = (bed: RoomProps) => {
-    setSelectedBed((prevSelectedBeds) => {
-      // Check if the bed is already selected
-      const isSelected = prevSelectedBeds.includes(bed.name);
-      if (isSelected) {
-        // If selected, remove it
-        return prevSelectedBeds.filter((selectedBed: string) => selectedBed !== bed.name);
-      } else {
-        // If not selected, add it, but only if there are fewer than 2 already selected
-        if (prevSelectedBeds.length < 2) {
-          return [...prevSelectedBeds, bed.name];
-        }
-        return prevSelectedBeds; // Return current state if already 2 beds are selected
-      }
-    });
-  };
 
-  const handleBedRemove = (bedToRemove: string) => {
-    setSelectedBed((prevSelectedBeds) => prevSelectedBeds.filter((bed) => bed !== bedToRemove));
-  };
   const toggleDropdown = (type: keyof typeof dropdowns) => {
     setDropdowns((prev) => ({
       ...prev,
@@ -148,6 +106,14 @@ const SectionFormBooking = () => {
   const handleSelect = (type: keyof typeof dropdowns, value: string) => {
     if (type === 'store') setStore(value);
     if (type === 'location') setServiceLocation(value);
+
+    if (type === 'location') {
+      if (value === 'Massage tại cửa hàng') {
+        router.push('/dat-lich');
+      } else {
+        router.push('/dat-lich-tai-nha');
+      }
+    }
     toggleDropdown(type); // Close dropdown after selecting
   };
 
@@ -188,7 +154,7 @@ const SectionFormBooking = () => {
         chỉ có thể đặt tối đa hai người cùng một lúc.
       </p>
       {/* form */}
-      <div className="my-[14px] flex flex-col md:my-[28px] md:space-x-8 lg:my-[56px] lg:flex-row">
+      <div className="my-[14px] flex flex-col md:my-[28px] lg:my-[56px] lg:flex-row lg:space-x-8">
         {/* Left Side: Customer Information */}
         <div className="w-full lg:w-[533px]">
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -211,13 +177,13 @@ const SectionFormBooking = () => {
                 </button>
                 {dropdowns.location && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
-                    {['Massage tại cửa hàng', 'Massage tại nhà'].map((location) => (
+                    {typeServices.map((location: any) => (
                       <li
-                        key={location}
-                        onClick={() => handleSelect('location', location)}
+                        key={location.id}
+                        onClick={() => handleSelect('location', location.type)}
                         className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
                       >
-                        {location}
+                        {location.type}
                       </li>
                     ))}
                   </ul>
@@ -242,13 +208,13 @@ const SectionFormBooking = () => {
                 </button>
                 {dropdowns.store && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
-                    {stores.map((storeOption) => (
+                    {DATA_LOCATIONS?.data?.map((storeOption: any) => (
                       <li
-                        key={storeOption}
-                        onClick={() => handleSelect('store', storeOption)}
+                        key={storeOption.id}
+                        onClick={() => handleSelect('store', storeOption.name)}
                         className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
                       >
-                        {storeOption}
+                        {storeOption.name}
                       </li>
                     ))}
                   </ul>
@@ -362,6 +328,7 @@ const SectionFormBooking = () => {
                 />
               </div>
             </div>
+
             {/* Room choice */}
             <div className="relative mb-4 w-full">
               <button
@@ -383,53 +350,6 @@ const SectionFormBooking = () => {
               onClose={closeModalRoom}
               onSelectRoom={handleRoomSelect}
               rooms={roomsData}
-              title="Đặt phòng"
-              sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
-              sutTitle2="chỉ chấp nhận đặt phòng sau một tuần"
-              sutTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
-            />
-            {/* bed choice */}
-            <div className="relative mb-4 w-full">
-              <button
-                type="button"
-                onClick={openModalBed}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base"
-              >
-                Giường massage
-                <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
-              </button>
-
-              {/* Display selected beds */}
-              {selectedBed.map((bed) =>
-                bed ? (
-                  <div
-                    key={bed}
-                    className="mt-2 flex w-fit items-center justify-between rounded-xl border bg-[#f1f1f4] px-4 py-2 text-xs font-medium leading-4 text-black/85 md:text-[13px]"
-                  >
-                    <div
-                      onClick={() => handleBedRemove(bed)}
-                      className="flex items-center gap-2 text-xs md:text-base"
-                    >
-                      <CustomImage
-                        width={18}
-                        height={18}
-                        src={deleteIc}
-                        alt="Minus"
-                        className="h-[14px] w-[14px]"
-                      />
-                      {bed}
-                    </div>
-                  </div>
-                ) : null,
-              )}
-            </div>
-
-            {/* bed Selection Modal */}
-            <SelectionModalForm
-              isOpen={isModalOpenBed}
-              onClose={closeModalBed}
-              onSelectRoom={handleBedSelect}
-              rooms={bedsData}
               title="Đặt phòng"
               sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
               sutTitle2="chỉ chấp nhận đặt phòng sau một tuần"

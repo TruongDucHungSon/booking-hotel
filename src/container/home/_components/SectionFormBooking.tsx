@@ -18,10 +18,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch } from 'react-redux';
 const SectionFormBooking = ({ LOCATIONS }: any) => {
   const dispatch = useDispatch();
-  const router = useRouter();
   const { data: DATA_STAFFS } = useStaffData();
   const STAFFS: any = DATA_STAFFS || [];
   console.log(STAFFS);
+  const router = useRouter();
   const handleNavigate = () => {
     const destination = serviceLocation === 'Massage tại nhà' ? '/dat-lich-tai-nha' : '/dich-vu';
     router.push(destination);

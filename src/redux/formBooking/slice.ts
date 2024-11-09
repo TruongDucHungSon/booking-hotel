@@ -1,27 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface BookingData {
-  store?: string;
-  serviceLocation?: string;
-  selectedTime?: string;
-  selectedStaff?: string;
-  startDate?: Date;
-}
-
-interface BookingState {
-  bookingData: BookingData | null;
-}
-
 // Save booking data to localStorage
 // Save booking data to localStorage
-const saveLocalStorageBookingData = (data: BookingData) => {
+const saveLocalStorageBookingData = (data: any) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('bookingData', JSON.stringify(data));
   }
 };
 
 // Retrieve booking data from localStorage
-const getLocalStorageBookingData = (): BookingData | null => {
+const getLocalStorageBookingData = (): any => {
   if (typeof window !== 'undefined') {
     const storedData = localStorage.getItem('bookingData');
     return storedData ? JSON.parse(storedData) : null;
@@ -39,13 +28,20 @@ const clearLocalStorageBookingData = () => {
 const bookingSlice = createSlice({
   name: 'booking',
   initialState: {
-    bookingData: getLocalStorageBookingData() || null, // Initialize from localStorage if available
-  } as BookingState, // Explicitly define the state type here
+    bookingData: getLocalStorageBookingData() || null,
+    selectedService: null,
+  },
   reducers: {
-    setBookingData(state, action: PayloadAction<BookingData>) {
+    setBookingData(state, action: PayloadAction<any>) {
       state.bookingData = action.payload;
       saveLocalStorageBookingData(action.payload); // Save to localStorage when setting
     },
+
+    setSelectedService(state, action: PayloadAction<any>) {
+      state.selectedService = action.payload; // Save selected service to Redux
+      localStorage.setItem('selectedService', JSON.stringify(action.payload)); // Save to localStorage
+    },
+
     clearBookingData(state) {
       state.bookingData = null;
       clearLocalStorageBookingData(); // Clear from localStorage when clearing the data
@@ -53,5 +49,5 @@ const bookingSlice = createSlice({
   },
 });
 
-export const { setBookingData, clearBookingData } = bookingSlice.actions;
+export const { setBookingData, clearBookingData, setSelectedService } = bookingSlice.actions;
 export default bookingSlice.reducer;

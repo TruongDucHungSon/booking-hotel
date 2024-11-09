@@ -10,3 +10,16 @@ export type LocationData = {
   closing_time?: string;
   description?: string;
 };
+
+export type FormValues = {
+  fullName: string;
+  phoneNumber: string;
+  gender: string;
+  numPeople: number;
+  arrivalDate: string;
+  arrivalTime: string;
+  room: string; // Assuming you'll add more fields related to room and bed later
+  bed: string;
+  service: string[];
+  note: string;
+};

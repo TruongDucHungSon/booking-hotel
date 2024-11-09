@@ -10,6 +10,7 @@ import CustomImage from '@/components/CustomImage';
 import { setBookingData } from '@/redux/formBooking/slice';
 import { RootState } from '@/redux/rootReducers';
 import { useLocationData } from '@/services/location/Location.Service';
+import { useStaffData } from '@/services/staff/Staff.service';
 import { typeServices } from '@/utils/constants';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -24,6 +25,10 @@ const SectionFormBooking = () => {
   const router = useRouter();
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
+
+  const { data: DATA_STAFFS } = useStaffData();
+  const STAFFS: any = DATA_STAFFS || [];
+
   const bookingDataFromRedux = useSelector((state: RootState) => state.booking.bookingData);
   // Retrieve store value from localStorage
   const initialStoreValue = bookingDataFromRedux?.store || LOCATIONS?.data?.[0].name;
@@ -92,7 +97,7 @@ const SectionFormBooking = () => {
     if (isHomeService) {
       router.push('/dat-lich-tai-nha');
     } else {
-      router.push('/dat-lich');
+      router.push('/dich-vu');
     }
   };
 
@@ -172,24 +177,22 @@ const SectionFormBooking = () => {
                 </button>
               )}
               {dropdowns.store && (
-                <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                  {(isHomeService ? ['Staff 1', 'Staff 2', 'Staff 3'] : LOCATIONS?.data || []).map(
-                    (option: any) => (
-                      <li
-                        key={option.id || option}
-                        onClick={() => {
-                          setValue(
-                            isHomeService ? 'selectedStaff' : 'store',
-                            isHomeService ? option : option.name,
-                          );
-                          closeDropdown('store');
-                        }}
-                        className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"
-                      >
-                        {isHomeService ? option : option.name}
-                      </li>
-                    ),
-                  )}
+                <ul className="sidebar-scroll absolute z-10 mt-2 h-fit w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
+                  {(isHomeService ? STAFFS?.data : LOCATIONS?.data || []).map((option: any) => (
+                    <li
+                      key={option.id || option.id}
+                      onClick={() => {
+                        setValue(
+                          isHomeService ? 'selectedStaff' : 'store',
+                          isHomeService ? option.name : option.name,
+                        );
+                        closeDropdown('store');
+                      }}
+                      className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"
+                    >
+                      {isHomeService ? option.name : option.name}
+                    </li>
+                  ))}
                 </ul>
               )}
             </div>

@@ -53,7 +53,6 @@ const SectionFormBookingAtHome = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const handleSelectProduct = (product: Product) => {
     setSelectedProduct(product);
-    console.log('Selected Product:', product);
   };
 
   const [selectedVoucher, setSelectedVoucher] = useState<string | null>(null);

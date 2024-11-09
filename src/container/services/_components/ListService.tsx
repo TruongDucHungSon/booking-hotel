@@ -6,12 +6,19 @@ import sv1 from '@/assets/images/new/sv1.png';
 import sv7 from '@/assets/images/new/sv6.png';
 import CustomImage from '@/components/CustomImage/index';
 import Title from '@/components/Title/Title';
+import { setSelectedService } from '@/redux/formBooking/slice';
 import { useServiceData } from '@/services/services/Services.Service';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+
 const ListService = () => {
+  const router = useRouter();
   const { data: DATA_SERVICES } = useServiceData();
   const SERVICES: any = useMemo(() => DATA_SERVICES || [], [DATA_SERVICES]);
+
+  const dispatch = useDispatch();
 
   // State to hold the selected package and its title
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
@@ -35,12 +42,20 @@ const ListService = () => {
   // Filter the services of the selected package
   const filteredServices = selectedPackage ? selectedPackage.services : [];
 
+  // Handle the booking of a service
+  const handleBookNowClick = (service: any) => {
+    // Dispatch the action to save the selected service to Redux
+    dispatch(setSelectedService(service));
+    // Redirect to the booking page (e.g., '/dat-lich')
+    router.push('/dat-lich');
+  };
+
   return (
     <section className="mt-[28px] lg:mt-[56px]">
       {/* Display all packages initially */}
       <div className="mt-6 w-full">
-        {/* Container with scrollable behavior */}
-        <div className="scroll-snap-x sidebar-scroll md:scroll-snap-x-start flex space-x-6 overflow-x-auto lg:w-full lg:space-x-8">
+        {/* Container with scrollable behavior on smaller screens */}
+        <div className="scroll-snap-x sidebar-scroll md:scroll-snap-x-start lg:scroll-snap-none flex space-x-6 overflow-x-auto lg:space-x-8 lg:overflow-x-visible">
           {SERVICES?.data?.map((pkg: any) => (
             <div
               key={pkg.id}
@@ -68,7 +83,7 @@ const ListService = () => {
                   selectedPackage?.id === pkg.id
                     ? 'font-semibold text-[#3a449b]' // Active style: border and text color
                     : 'border-transparent' // Default style
-                } `}
+                }`}
               >
                 {pkg.name}
               </h3>
@@ -79,19 +94,17 @@ const ListService = () => {
 
       {/* Dynamically change title and services based on the selected package */}
       <div className="mx-auto mb-8 py-6 lg:mb-[56px] lg:py-12">
-        {/* Fade effect applied to the title */}
         <motion.div
-          key={selectedPackage?.id} // Ensure animation triggers when the package changes
+          key={selectedPackage?.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1 }} // Slower fade effect for the title
+          transition={{ duration: 1 }}
         >
           <Title>{selectedPackage ? selectedPackage.name : 'Gói Massage Thư Giãn'}</Title>
         </motion.div>
 
         <div className="mt-4 flex flex-col items-center justify-center lg:mt-8 lg:flex-row">
-          {/* Left Section: Image */}
           <div className="flex w-[80%] justify-center md:w-[50%] lg:w-1/2">
             <div className="relative hidden md:block lg:max-w-[530px]">
               <CustomImage
@@ -105,13 +118,12 @@ const ListService = () => {
 
           {/* Right Section: Services */}
           <div className="mt-4 w-full md:mt-8 lg:w-1/2">
-            {/* Fade effect applied to filtered services */}
             <motion.div
-              key={selectedPackage?.id} // Ensure animation triggers when the package changes
+              key={selectedPackage?.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 1 }} // Slower fade effect for the services
+              transition={{ duration: 1 }}
             >
               {filteredServices?.map((service: any) => (
                 <div key={service.id} className="mb-8 rounded-3xl border border-[#E4E4E7] p-6">
@@ -167,7 +179,10 @@ const ListService = () => {
                       Giá chưa bao gồm VAT & TIP.
                     </p>
 
-                    <button className="group flex items-center gap-2 text-sm text-[#3A449B] hover:underline md:text-base">
+                    <button
+                      className="group flex items-center gap-2 text-sm text-[#3A449B] hover:underline md:text-base"
+                      onClick={() => handleBookNowClick(service)}
+                    >
                       Đặt lịch ngay
                       <span className="transition-all duration-300 group-hover:translate-x-2">
                         <svg
@@ -179,18 +194,13 @@ const ListService = () => {
                         >
                           <g clipPath="url(#clip0_1166_21082)">
                             <path
-                              d="M10.5999 12.7117L9.65993 11.7717L12.7133 8.71172H1.93327V7.37839H12.7133L9.65327 4.31839L10.5999 3.37839L15.2666 8.04505L10.5999 12.7117Z"
+                              d="M10.5999 12.7117L9.65993 11.7717L12.7133 8.71172H1.93327V7.37839H12.7133L9.65327 4.31839L10.5999 3.37839L15.9333 8.71172L10.5999 12.7117Z"
                               fill="#3A449B"
                             />
                           </g>
                           <defs>
                             <clipPath id="clip0_1166_21082">
-                              <rect
-                                width="16"
-                                height="16"
-                                fill="white"
-                                transform="matrix(-1 0 0 1 16.5999 0.0450439)"
-                              />
+                              <rect width="17" height="17" fill="white" />
                             </clipPath>
                           </defs>
                         </svg>
