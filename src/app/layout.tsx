@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import DefaultLayout from '../../src/layout/';
 import './globals.css';
+import { BookingProvider } from '@/components/Providers';
 
 const plus_jakarta_sans = Plus_Jakarta_Sans({ subsets: ['latin'] });
 
@@ -23,9 +24,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="root">
           <ReactQueryProvider>
             <ReduxProvider>
-              <DefaultLayout />
-              {children}
-              <Footer />
+              <BookingProvider>
+                <DefaultLayout />
+                {children}
+                <Footer />
+              </BookingProvider>
             </ReduxProvider>
           </ReactQueryProvider>
         </main>

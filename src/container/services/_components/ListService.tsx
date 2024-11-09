@@ -6,19 +6,18 @@ import sv1 from '@/assets/images/new/sv1.png';
 import sv7 from '@/assets/images/new/sv6.png';
 import CustomImage from '@/components/CustomImage/index';
 import Title from '@/components/Title/Title';
-import { setSelectedService } from '@/redux/formBooking/slice';
 import { useServiceData } from '@/services/services/Services.Service';
 import { motion } from 'framer-motion';
+import { forEach } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useFormContext } from 'react-hook-form';
 
 const ListService = () => {
   const router = useRouter();
   const { data: DATA_SERVICES } = useServiceData();
   const SERVICES: any = useMemo(() => DATA_SERVICES || [], [DATA_SERVICES]);
-
-  const dispatch = useDispatch();
+  const methods = useFormContext();
 
   // State to hold the selected package and its title
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
@@ -43,10 +42,11 @@ const ListService = () => {
   const filteredServices = selectedPackage ? selectedPackage.services : [];
 
   // Handle the booking of a service
-  const handleBookNowClick = (service: any) => {
-    // Dispatch the action to save the selected service to Redux
-    dispatch(setSelectedService(service));
-    // Redirect to the booking page (e.g., '/dat-lich')
+  const handleBook = (service: any) => {
+    forEach(service, (value, key) => {
+      methods.setValue(key, value);
+    });
+
     router.push('/dat-lich');
   };
 
@@ -181,7 +181,7 @@ const ListService = () => {
 
                     <button
                       className="group flex items-center gap-2 text-sm text-[#3A449B] hover:underline md:text-base"
-                      onClick={() => handleBookNowClick(service)}
+                      onClick={() => handleBook(service)}
                     >
                       Đặt lịch ngay
                       <span className="transition-all duration-300 group-hover:translate-x-2">

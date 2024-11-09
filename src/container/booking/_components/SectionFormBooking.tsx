@@ -29,37 +29,44 @@ import {
   ServicesBooking,
   productsBooking,
   roomsData,
+  serviceLocations,
   servicesData,
   typeServices,
   vouchers,
 } from '@/utils/constants';
-import { useMemo, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useEffect, useMemo, useState } from 'react';
+import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
 import { useServiceData } from '@/services/services/Services.Service';
 import { FormValues } from '@/utils/type';
 import { useRouter } from 'next/navigation';
+import { useBoolean } from 'ahooks';
+import {
+  filter,
+  find,
+  forEach,
+  head,
+  isEmpty,
+  isNaN,
+  isNil,
+  map,
+  split,
+  times,
+  toNumber,
+} from 'lodash';
+import dayjs, { Dayjs } from 'dayjs';
+import DatePicker from 'react-datepicker';
+import { Rubik_80s_Fade } from 'next/font/google';
 
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
   const { data: DATA_SERVICES } = useServiceData();
+  const methods = useFormContext();
   const SERVICES: any = useMemo(() => DATA_SERVICES || [], [DATA_SERVICES]);
   const router = useRouter();
 
-  const bookingDataFromRedux = useSelector((state: RootState) => state.booking.bookingData);
-  const serviceDataFromRedux = useSelector((state: RootState) => state.booking.selectedService);
-  console.log(serviceDataFromRedux);
-  const initialStoreValue = bookingDataFromRedux?.store || LOCATIONS?.data?.[0].name;
-  const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
-  const [store, setStore] = useState(initialStoreValue || LOCATIONS?.data?.[0].name);
-  const [dropdowns, setDropdowns] = useState({
-    store: false,
-    location: false,
-    room: false,
-  });
-  const [selectedRoom, setSelectedRoom] = useState(roomsData[0].name);
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
   const openModalRoom = () => setModalOpenRoom(true);
   const closeModalRoom = () => setModalOpenRoom(false);
@@ -91,34 +98,7 @@ const SectionFormBooking = () => {
     setSelectedServiceBooking(services);
   };
 
-  const handleRoomSelect = (room: RoomProps) => {
-    setSelectedRoom(room.name); // Set the selected room name
-    // Optionally, handle other actions (e.g., set room details)
-  };
-
-  const toggleDropdown = (type: keyof typeof dropdowns) => {
-    setDropdowns((prev) => ({
-      ...prev,
-      [type]: !prev[type],
-    }));
-  };
-
-  const handleSelect = (type: keyof typeof dropdowns, value: string) => {
-    if (type === 'store') setStore(value);
-    if (type === 'location') setServiceLocation(value);
-
-    if (type === 'location') {
-      if (value === 'Massage tại cửa hàng') {
-        router.push('/dat-lich');
-      } else {
-        router.push('/dat-lich-tai-nha');
-      }
-    }
-    toggleDropdown(type); // Close dropdown after selecting
-  };
-
   const [isModalOpenService, setIsModalOpenService] = useState(false);
-  const [selectedServices, setSelectedServices] = useState<{ [key: string]: number }>({});
 
   const handleOpenModalService = () => {
     setIsModalOpenService(true);
@@ -128,22 +108,45 @@ const SectionFormBooking = () => {
     setIsModalOpenService(false);
   };
 
-  const handleSelectServices = (selected: { [key: string]: number }) => {
-    setSelectedServices(selected);
-  };
-  const handleRemoveService = (serviceId: string) => {
-    setSelectedServices((prev) => {
-      const updated = { ...prev };
-      delete updated[serviceId]; // Remove the service from the selected services
-      return updated;
-    });
-  };
+  const [isOpenLocation, locationHandlers] = useBoolean(false);
+  const [isOpenStore, storeHandlers] = useBoolean(false);
 
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit, setValue, watch, reset } = useForm<any>();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
+  const location = watch('serviceLocation');
+  const selectedTime = watch('selectedTime');
+  const room = watch('room');
+  const services = watch('services');
+
+  const timeValue = useMemo(() => {
+    if (isEmpty(selectedTime)) return;
+
+    const [hour, minute] = split(selectedTime, ':');
+    let h = 0;
+    let m = 0;
+
+    if (isNaN(toNumber(hour))) return;
+    else h = toNumber(hour);
+
+    if (isNaN(toNumber(minute))) return;
+    else m = toNumber(minute);
+
+    const now = dayjs();
+
+    return now.set('hour', h).set('minute', m).toDate();
+  }, [selectedTime]);
+
+  const handleBook: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
+
+  useEffect(() => {
+    reset(methods.getValues());
+  }, [methods, reset]);
+
+  useEffect(() => {
+    if (isEmpty(room)) setValue('room', head(roomsData)?.name);
+  }, [room, setValue]);
 
   return (
     <section className="mb-5 md:mb-10">
@@ -157,33 +160,36 @@ const SectionFormBooking = () => {
       <div className="my-[14px] flex flex-col md:my-[28px] lg:my-[56px] lg:flex-row lg:space-x-8">
         {/* Left Side: Customer Information */}
         <div className="w-full lg:w-[533px]">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(handleBook)}>
             <div className="mb-5 rounded-3xl bg-[#F1F1F4] p-4 md:mb-6">
               <div className="relative mb-3 w-full md:mb-6">
                 <button
                   type="button"
-                  onClick={() => toggleDropdown('location')}
+                  onClick={locationHandlers.toggle}
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none md:text-base"
                 >
                   <CustomImage width={18} height={18} src={LocationIc} alt="Location Icon" />
-                  {serviceLocation}
+                  {find(serviceLocations, { value: location })?.label}
                   <CustomImage
                     width={18}
                     height={18}
                     src={downBlue}
                     alt="Arrow Down"
-                    className={`transition-all duration-300 ${dropdowns.location ? 'rotate-180' : ''}`}
+                    className={`transition-all duration-300 ${isOpenLocation ? 'rotate-180' : ''}`}
                   />
                 </button>
-                {dropdowns.location && (
+                {isOpenLocation && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
-                    {typeServices.map((location: any) => (
+                    {map(serviceLocations, (location) => (
                       <li
-                        key={location.id}
-                        onClick={() => handleSelect('location', location.type)}
+                        key={location.value}
+                        onClick={() => {
+                          setValue('serviceLocation', location.value);
+                          locationHandlers.setFalse();
+                        }}
                         className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
                       >
-                        {location.type}
+                        {location.label}
                       </li>
                     ))}
                   </ul>
@@ -193,25 +199,28 @@ const SectionFormBooking = () => {
               <div className="relative w-full">
                 <button
                   type="button"
-                  onClick={() => toggleDropdown('store')}
+                  onClick={storeHandlers.toggle}
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
                 >
                   <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
-                  {store}
+                  {watch('store') || 'Chọn cửa hàng'}
                   <CustomImage
                     width={18}
                     height={18}
                     src={ArrowIc}
                     alt="Arrow Down"
-                    className={`transition-all duration-300 ${dropdowns.store ? 'rotate-180' : ''}`}
+                    className={`transition-all duration-300 ${isOpenStore ? 'rotate-180' : ''}`}
                   />
                 </button>
-                {dropdowns.store && (
+                {isOpenStore && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
                     {DATA_LOCATIONS?.data?.map((storeOption: any) => (
                       <li
                         key={storeOption.id}
-                        onClick={() => handleSelect('store', storeOption.name)}
+                        onClick={() => {
+                          setValue('store', storeOption.name);
+                          storeHandlers.setFalse();
+                        }}
                         className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
                       >
                         {storeOption.name}
@@ -293,16 +302,11 @@ const SectionFormBooking = () => {
                   {...register('numPeople')}
                   className="mt-2 w-full rounded-xl border px-4 py-[10px]"
                 >
-                  <option value="1" className="text-sm md:text-base">
-                    1 người
-                  </option>
-                  <option value="2" className="text-sm md:text-base">
-                    2 người
-                  </option>
-                  <option value="3" className="text-sm md:text-base">
-                    3 người
-                  </option>
-                  {/* Add more options as needed */}
+                  {times(5, (index) => (
+                    <option key={index} value={index + 1} className="text-sm md:text-base">
+                      {index + 1} người
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -312,19 +316,44 @@ const SectionFormBooking = () => {
                 <label className="block text-sm font-medium text-black md:text-base">
                   Ngày đến
                 </label>
-                <input
+                {/* <input
                   type="date"
                   {...register('arrivalDate')}
+                  value={dayjs(watch('startDate')).toDate()}
+                  className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
+                /> */}
+                <DatePicker
+                  minDate={dayjs().toDate()}
+                  selected={watch('startDate')}
+                  dateFormat="dd/MM/yyyy"
+                  onChange={(date) => {
+                    if (!isNil(date)) {
+                      setValue('startDate', dayjs(date).toISOString());
+                    }
+                  }}
                   className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
                 />
               </div>
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-black md:text-base">Giờ đến</label>
-                <input
-                  type="time"
-                  {...register('arrivalTime')}
+                <DatePicker
                   className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
+                  selected={timeValue}
+                  showTimeSelect
+                  showTimeSelectOnly
+                  timeIntervals={30}
+                  timeFormat="HH:mm"
+                  dateFormat="HH:mm"
+                  placeholderText="Select a time"
+                  minTime={new Date().setHours(7, 30) as any}
+                  maxTime={new Date().setHours(22, 0) as any}
+                  onChange={(date) => {
+                    const hour = dayjs(date).get('hour');
+                    const minute = dayjs(date).get('minute');
+
+                    setValue('selectedTime', `${hour}:${minute}`);
+                  }}
                 />
               </div>
             </div>
@@ -340,15 +369,20 @@ const SectionFormBooking = () => {
                 <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
               </button>
               {/* Display selected room */}
-              <div className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] text-xs font-medium leading-4 text-black/85 md:text-base">
-                {selectedRoom}
-              </div>
+              {room && (
+                <div className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] text-xs font-medium leading-4 text-black/85 md:text-base">
+                  {room}
+                </div>
+              )}
             </div>
+
             {/* Room Selection Modal */}
             <SelectionModalForm
               isOpen={isModalOpenRoom}
               onClose={closeModalRoom}
-              onSelectRoom={handleRoomSelect}
+              onSelectRoom={(v) => {
+                setValue('room', v.name);
+              }}
               rooms={roomsData}
               title="Đặt phòng"
               sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
@@ -369,7 +403,14 @@ const SectionFormBooking = () => {
               <ServiceSelectionModal
                 isOpen={isModalOpenService}
                 onClose={handleCloseModalService}
-                onSelectServices={handleSelectServices}
+                onSelectServices={(v) => {
+                  const result = map(v, (quantity, id) => ({
+                    id,
+                    quantity,
+                  }));
+
+                  setValue('services', result);
+                }}
                 services={servicesData}
                 title="Đặt dịch vụ"
                 subTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
@@ -380,11 +421,19 @@ const SectionFormBooking = () => {
               {/* Display selected services below the button */}
               <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-4">
-                  {Object.entries(selectedServices).map(([serviceId, quantity]) => {
-                    const service = servicesData.find((s) => s.id === serviceId);
-                    return service ? (
+                  {map(services, ({ id, quantity }) => {
+                    const service = find(servicesData, { id });
+
+                    if (isEmpty(service)) return null;
+
+                    return (
                       <div
-                        onClick={() => handleRemoveService(serviceId)}
+                        key={id}
+                        onClick={() => {
+                          const result = filter(services, ({ id: i }) => i !== id);
+
+                          setValue('services', result);
+                        }}
                         className="mb-4 flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-[#F1F1F4] px-4 py-2 text-[13px] leading-4"
                       >
                         <CustomImage
@@ -394,11 +443,11 @@ const SectionFormBooking = () => {
                           alt="Arrow Down"
                           className="h-[14px] w-[14px]"
                         />
-                        <p key={serviceId} className="text-xs md:text-base">
+                        <p className="text-xs md:text-base">
                           {quantity} {service.name}
                         </p>
                       </div>
-                    ) : null;
+                    );
                   })}
                 </div>
               </div>
@@ -411,7 +460,7 @@ const SectionFormBooking = () => {
                 className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
                 rows={3}
                 placeholder="Tôi có thể đến muộn 10p"
-              ></textarea>
+              />
             </div>
           </form>
         </div>

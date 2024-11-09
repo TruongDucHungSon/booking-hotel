@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+@import 'react-datepicker/dist/react-datepicker.css';
+
 @layer base {
 }
 html {
@@ -227,4 +229,7 @@ html {
 
 .z-banner {
   z-index: 1 !important;
+}
+.react-datepicker__time-list-item.react-datepicker__time-list-item--disabled {
+  display: none;
 }
