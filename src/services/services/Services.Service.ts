@@ -7,10 +7,12 @@ export const useServiceData = (): UseQueryResult<any, Error> => {
   return useQuery<any, Error>({
     queryKey: ['services'], // Query key as an object with 'queryKey' property
     queryFn: async () => {
-      return publicRequest.request({
+      const response = publicRequest.request({
         method: 'GET',
         url: API_ENDPOINT.GET_SERVICE,
       });
+
+      return response || [];
     },
   });
 };

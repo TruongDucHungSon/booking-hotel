@@ -25,7 +25,6 @@ import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm from '@/components/modal/SelectionModalForm';
 import { useLocationData } from '@/services/location/Location.Service';
 import {
-  ServicesBooking,
   productsBooking,
   roomsData,
   serviceLocations,
@@ -34,33 +33,41 @@ import {
 } from '@/utils/constants';
 import { useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
-
 import { FormValues } from '@/utils/type';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
-import { filter, find, head, isEmpty, isNaN, isNil, map, split, times, toNumber } from 'lodash';
+import {
+  filter,
+  find,
+  forEach,
+  head,
+  isEmpty,
+  isNaN,
+  isNil,
+  map,
+  split,
+  times,
+  toNumber,
+} from 'lodash';
+import addIc from '@/assets/svgs/search/add.svg';
+import useIc from '@/assets/svgs/search/use.svg';
 import DatePicker from 'react-datepicker';
+import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
 
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
   const methods = useFormContext();
-  // const { data: DATA_SERVICES } = useServiceData();
-  // const SERVICES: any = useMemo(() => DATA_SERVICES?.data || [], [DATA_SERVICES]);
 
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
   const openModalRoom = () => setModalOpenRoom(true);
   const closeModalRoom = () => setModalOpenRoom(false);
   const [isModalOpenServiceBooking, setModalOpenServiceBooking] = useState(false);
-  const [selectedServicesBooking, setSelectedServiceBooking] = useState<SelectedServiceBooking[]>(
-    [],
-  );
 
   const [isProductModalOpen, setProductModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const handleSelectProduct = (product: Product) => {
     setSelectedProduct(product);
-    console.log('Selected Product:', product);
   };
 
   const [selectedVoucher, setSelectedVoucher] = useState<string | null>(null);
@@ -75,10 +82,6 @@ const SectionFormBooking = () => {
     setIsModalOpenVoucher(false); // Close modal after selection
   };
 
-  const handleSelectServicesBooking = (services: SelectedServiceBooking[]) => {
-    setSelectedServiceBooking(services);
-  };
-
   const [isModalOpenService, setIsModalOpenService] = useState(false);
 
   const handleOpenModalService = () => {
@@ -91,13 +94,17 @@ const SectionFormBooking = () => {
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
+  const [isOpenEmployee, employeeHandlers] = useBoolean(false);
 
   const { register, handleSubmit, setValue, watch, reset } = useForm<any>();
 
   const location = watch('serviceLocation');
   const selectedTime = watch('selectedTime');
   const room = watch('room');
-  const services = watch('services');
+  const currentServices = watch('services');
+  const selectedService = watch('service');
+  const selectedCategory = watch('category');
+  const employee = watch('employee');
 
   const timeValue = useMemo(() => {
     if (isEmpty(selectedTime)) return;
@@ -118,7 +125,11 @@ const SectionFormBooking = () => {
   }, [selectedTime]);
 
   const handleBook: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+    forEach(data, (value, key) => methods.setValue(key, value));
+
+    const values = methods.getValues();
+
+    console.log(values);
   };
 
   useEffect(() => {
@@ -129,8 +140,12 @@ const SectionFormBooking = () => {
     if (isEmpty(room)) setValue('room', head(roomsData)?.name);
   }, [room, setValue]);
 
+  useEffect(() => {
+    if (location === 2 && isEmpty(employee)) setValue('employee', head(employees));
+  }, [employee, location, setValue]);
+
   return (
-    <section className="mb-5 md:mb-10">
+    <form onSubmit={handleSubmit(handleBook)} className="mb-5 md:mb-10">
       {/* heading */}
       <Title>thông tin đặt chỗ</Title>
       <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
@@ -141,7 +156,7 @@ const SectionFormBooking = () => {
       <div className="my-[14px] flex flex-col md:my-[28px] lg:my-[56px] lg:flex-row lg:space-x-8">
         {/* Left Side: Customer Information */}
         <div className="w-full lg:w-[533px]">
-          <form onSubmit={handleSubmit(handleBook)}>
+          <div>
             <div className="mb-5 rounded-3xl bg-[#F1F1F4] p-4 md:mb-6">
               <div className="relative mb-3 w-full md:mb-6">
                 <button
@@ -177,39 +192,95 @@ const SectionFormBooking = () => {
                 )}
               </div>
 
-              <div className="relative w-full">
-                <button
-                  type="button"
-                  onClick={storeHandlers.toggle}
-                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
-                >
-                  <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
-                  {watch('store') || 'Chọn cửa hàng'}
-                  <CustomImage
-                    width={18}
-                    height={18}
-                    src={ArrowIc}
-                    alt="Arrow Down"
-                    className={`transition-all duration-300 ${isOpenStore ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                {isOpenStore && (
-                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
-                    {LOCATIONS?.data?.map((storeOption: any) => (
-                      <li
-                        key={storeOption.id}
-                        onClick={() => {
-                          setValue('store', storeOption.name);
-                          storeHandlers.setFalse();
-                        }}
-                        className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
-                      >
-                        {storeOption.name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              {location === 1 && (
+                <div className="relative w-full">
+                  <button
+                    type="button"
+                    onClick={storeHandlers.toggle}
+                    className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
+                  >
+                    <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
+                    {watch('store') || 'Chọn cửa hàng'}
+                    <CustomImage
+                      width={18}
+                      height={18}
+                      src={ArrowIc}
+                      alt="Arrow Down"
+                      className={`transition-all duration-300 ${isOpenStore ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  {isOpenStore && (
+                    <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
+                      {LOCATIONS?.data?.map((storeOption: any) => (
+                        <li
+                          key={storeOption.id}
+                          onClick={() => {
+                            setValue('store', storeOption.name);
+                            storeHandlers.setFalse();
+                          }}
+                          className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
+                        >
+                          {storeOption.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+              {location === 2 && (
+                <>
+                  <div className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base">
+                    <CustomImage width={18} height={18} src={addIc} alt="Location Icon" />
+                    <input
+                      placeholder="Nhập địa chỉ"
+                      type="text"
+                      className="w-full border-none text-center outline-none"
+                      {...register('address')}
+                    />
+                    <CustomImage
+                      width={18}
+                      height={18}
+                      src={ArrowIc}
+                      alt="Arrow Down"
+                      className={`transition-all duration-300`}
+                    />
+                  </div>
+
+                  <div className="relative mt-3 w-full md:mt-6">
+                    <button
+                      onClick={employeeHandlers.toggle}
+                      type="button"
+                      className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
+                    >
+                      <CustomImage width={18} height={18} src={useIc} alt="Employee Icon" />
+                      {employee}
+                      <CustomImage
+                        width={18}
+                        height={18}
+                        src={ArrowIc}
+                        alt="Arrow Down"
+                        className={`transition-all duration-300 ${isOpenEmployee ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+                    {isOpenEmployee && (
+                      <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
+                        {map(employees, (item) => (
+                          <li
+                            key={item}
+                            onClick={() => {
+                              employeeHandlers.setFalse();
+                              setValue('employee', item);
+                            }}
+                            className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white md:text-base"
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
             <h2 className="mb-2 text-lg font-semibold text-[#18181B] md:mb-4 md:text-xl">
               THÔNG TIN KHÁCH HÀNG
@@ -340,7 +411,7 @@ const SectionFormBooking = () => {
             </div>
 
             {/* Room choice */}
-            <div className="relative mb-4 w-full">
+            <div aria-hidden={location === 2} className="relative mb-4 w-full aria-hidden:hidden">
               <button
                 type="button"
                 onClick={openModalRoom}
@@ -372,6 +443,9 @@ const SectionFormBooking = () => {
             />
 
             <div>
+              <label className="mb-1 block text-sm font-medium text-black md:text-base">
+                Dịch vụ
+              </label>
               <button
                 type="button"
                 onClick={handleOpenModalService}
@@ -402,7 +476,7 @@ const SectionFormBooking = () => {
               {/* Display selected services below the button */}
               <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-4">
-                  {map(services, ({ id, quantity }) => {
+                  {map(currentServices, ({ id, quantity }) => {
                     const service = find(servicesData, { id });
 
                     if (isEmpty(service)) return null;
@@ -411,7 +485,7 @@ const SectionFormBooking = () => {
                       <div
                         key={id}
                         onClick={() => {
-                          const result = filter(services, ({ id: i }) => i !== id);
+                          const result = filter(currentServices, ({ id: i }) => i !== id);
 
                           setValue('services', result);
                         }}
@@ -443,14 +517,14 @@ const SectionFormBooking = () => {
                 placeholder="Tôi có thể đến muộn 10p"
               />
             </div>
-          </form>
+          </div>
         </div>
 
         {/* Right Side: Service Details */}
         <div className="w-full rounded-3xl bg-[#F1F1F4] p-4 md:p-6 lg:h-min lg:w-[calc(100%-(500px+32px))]">
           <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row md:gap-6">
             {/* Render selected services */}
-            {selectedServicesBooking?.map(({ service, category }) => (
+            {[]?.map(({ service, category }: any) => (
               <div
                 key={category?.categoryId}
                 className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"
@@ -496,24 +570,26 @@ const SectionFormBooking = () => {
             ))}
 
             {/* Hide this button if there are selected services */}
-            {selectedServicesBooking.length === 0 && (
-              <div className="flex w-full flex-col">
-                <button
-                  onClick={() => setModalOpenServiceBooking(true)}
-                  type="button"
-                  className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
-                >
-                  Chọn dịch vụ
-                </button>
-              </div>
-            )}
+            <div className="flex w-full flex-col">
+              <button
+                onClick={() => setModalOpenServiceBooking(true)}
+                type="button"
+                className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
+              >
+                {isEmpty(selectedService) ? 'Chọn dịch vụ' : selectedService?.name}
+              </button>
+            </div>
 
             {/* Modal service booking */}
             <ModalServiceBooking
               isOpen={isModalOpenServiceBooking}
               onClose={() => setModalOpenServiceBooking(false)}
-              servicesBooking={ServicesBooking}
-              onSelectServices={handleSelectServicesBooking}
+              onSelect={({ category, service }) => {
+                setValue('category', category);
+                setValue('service', service);
+              }}
+              serviceId={selectedService?.id}
+              categoryId={selectedCategory?.id}
             />
           </div>
 
@@ -628,7 +704,7 @@ const SectionFormBooking = () => {
             </p>
           </div>
           <button
-            type="button"
+            type="submit"
             className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border bg-[#3A449B] text-center text-base text-white transition duration-300 ease-in-out hover:bg-blue-900 md:h-12"
           >
             Thanh toán
@@ -659,7 +735,7 @@ const SectionFormBooking = () => {
           </div>
         </div>
       </div>
-    </section>
+    </form>
   );
 };
 
