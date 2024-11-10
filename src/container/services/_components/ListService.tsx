@@ -43,9 +43,8 @@ const ListService = () => {
 
   // Handle the booking of a service
   const handleBook = (service: any) => {
-    forEach(service, (value, key) => {
-      methods.setValue(key, value);
-    });
+    methods.setValue('service', service);
+    methods.getValues('category', selectedPackage);
 
     router.push('/dat-lich');
   };

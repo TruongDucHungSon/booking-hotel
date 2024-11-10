@@ -2,6 +2,8 @@
 import check from '@/assets/svgs/arrow/check1.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
+import { useServiceData } from '@/services/services/Services.Service';
+import { find, get, head, isEmpty, isEqual, map } from 'lodash';
 import { FC, useEffect, useMemo, useState } from 'react';
 
 interface Service {
@@ -27,57 +29,41 @@ export interface SelectedServiceBooking {
 interface ServiceModalProps {
   isOpen: boolean;
   onClose: () => void;
-  servicesBooking: Category[];
-  onSelectServices: (services: SelectedServiceBooking[]) => void;
+  onSelect: ({ category, service }: any) => void;
+  categoryId?: string | number;
+  serviceId?: string | number;
 }
 
 const ModalServiceBooking: FC<ServiceModalProps> = ({
   isOpen,
   onClose,
-  servicesBooking,
-  onSelectServices,
+  onSelect,
+  categoryId,
+  serviceId,
 }) => {
-  const [selectedServices, setSelectedServices] = useState<{ [key: number]: Service | null }>({});
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const { data } = useServiceData();
+  const services = useMemo(() => get(data, 'data', []), [data]);
+
+  const category = useMemo(() => find(services, { id: categoryId }), [categoryId, services]);
+  const serviceValue = useMemo(() => {
+    const services = get(category, 'services', []);
+
+    if (isEmpty(services)) return null;
+
+    return find(services, { id: serviceId });
+  }, [category, serviceId]);
+
+  const [selectedCategory, setSelectedCategory] = useState<any>(category);
+  const [selectedService, setSelectedService] = useState<any>(serviceValue);
 
   useEffect(() => {
-    if (isOpen && servicesBooking.length > 0) {
-      const { categoryId, services } = servicesBooking[0];
-      setSelectedServices({ [categoryId]: services[0] });
-      setSelectedCategory(categoryId);
-    }
-  }, [isOpen, servicesBooking]);
+    if (isEmpty(selectedCategory) && !isEmpty(services)) setSelectedCategory(head(services));
+  }, [selectedCategory, services]);
 
-  const handleServiceClick = (categoryId: number, service: Service) => {
-    setSelectedServices({ [categoryId]: service }); // Update selected service for the category
-  };
-
-  const handleCategoryClick = (categoryId: number) => {
-    setSelectedCategory((prev) => (prev === categoryId ? null : categoryId));
-  };
-
-  const filteredServices = useMemo(() => {
-    return selectedCategory !== null
-      ? servicesBooking.find((category) => category.categoryId === selectedCategory)?.services
-      : servicesBooking.flatMap((category) => category.services);
-  }, [selectedCategory, servicesBooking]);
-
-  const handleBooking = () => {
-    const selectedServicesList = Object.keys(selectedServices)
-      .map((key) => {
-        const selectedService = selectedServices[+key];
-        const categoryId = +key;
-        const category = servicesBooking.find((cat) => cat.categoryId === categoryId);
-
-        return selectedService ? { service: selectedService, category } : null;
-      })
-      .filter(
-        (service): service is SelectedServiceBooking => service !== null,
-      ) as SelectedServiceBooking[];
-
-    onSelectServices(selectedServicesList);
-    onClose();
-  };
+  useEffect(() => {
+    if (isEmpty(selectedService) && !isEmpty(selectedCategory))
+      setSelectedService(head(get(selectedCategory, 'services', [])));
+  }, [selectedCategory, selectedService]);
 
   if (!isOpen) return null;
 
@@ -101,19 +87,19 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
 
         {/* Category filter */}
         <div className="sidebar-scroll mb-4 flex snap-x snap-mandatory gap-6 overflow-visible overflow-x-auto lg:grid-cols-5">
-          {servicesBooking.map(({ categoryId, image, categoryTitle }) => (
+          {map(services, (item) => (
             <div
               className="mb-2 flex min-w-[calc(23%-1rem)] flex-shrink-0 cursor-pointer snap-center flex-col items-center gap-2 md:gap-4"
-              onClick={() => handleCategoryClick(categoryId)}
-              key={categoryId}
+              key={item.id}
+              onClick={() => setSelectedCategory(item)}
             >
               <CustomImage
-                src={image}
+                src={get(item, 'image.url', '')}
                 width={200}
                 height={200}
                 alt="category service"
                 className={`rounded-[26px] border-2 transition-all duration-300 ease-in-out ${
-                  selectedCategory === categoryId
+                  item.id === selectedCategory?.id
                     ? 'border-[#3A449B] opacity-100'
                     : 'border-transparent opacity-60'
                 }`}
@@ -122,10 +108,10 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
               <button className="text-center">
                 <p
                   className={`text-center font-semibold transition-colors duration-300 ease-in-out ${
-                    selectedCategory === categoryId ? 'text-[#3A449B]' : 'text-[#18181B]'
+                    item.id === selectedCategory?.id ? 'text-[#3A449B]' : 'text-[#18181B]'
                   }`}
                 >
-                  {categoryTitle} phút
+                  {item.duration?.minutes} phút
                 </p>
               </button>
             </div>
@@ -133,14 +119,14 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredServices?.map((service) => (
+          {map(get(selectedCategory, 'services', []), (service) => (
             <div
               key={service.id}
-              onClick={() => selectedCategory && handleServiceClick(selectedCategory, service)}
-              className={`cursor-pointer rounded-3xl border p-5 transition-all duration-300 ease-in-out lg:p-6 ${selectedServices[selectedCategory!] === service ? 'border-[#3A449B]' : 'border-gray-200 opacity-100'}`}
+              className={`cursor-pointer rounded-3xl border p-5 transition-all duration-300 ease-in-out lg:p-6 ${selectedService?.id === service?.id ? 'border-[#3A449B]' : 'border-gray-200 opacity-100'}`}
+              onClick={() => setSelectedService(service)}
             >
               <h3
-                className={`text-center text-base font-semibold md:text-lg ${selectedServices[selectedCategory!] === service ? 'text-[#3A449B]' : 'text-[#18181B]'}`}
+                className={`text-center text-base font-semibold md:text-lg ${selectedService?.id === service?.id ? 'text-[#3A449B]' : 'text-[#18181B]'}`}
               >
                 {service.title}
               </h3>
@@ -154,19 +140,12 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
                   {service.price} <span className="font-normal">VND/LẦN</span>
                 </p>
               </div>
+              <h2 className="text-sm font-bold">{service.name}</h2>
               <div className="mt-2 space-y-1 text-sm text-gray-600">
-                {service.description.map((desc, idx) => (
-                  <div key={idx} className="flex items-center justify-between gap-3">
-                    <CustomImage
-                      src={check}
-                      alt="check"
-                      width={32}
-                      height={32}
-                      className="h-6 w-6"
-                    />
-                    <p className="w-[320px] text-xs md:text-sm">{desc}</p>
-                  </div>
-                ))}
+                <div className="flex items-center gap-3">
+                  <CustomImage src={check} alt="check" width={32} height={32} className="h-6 w-6" />
+                  <p className="w-[320px] text-xs md:text-sm">{service?.description}</p>
+                </div>
                 <p className="mt-2 text-sm font-semibold text-[#18181B] md:mt-4 md:text-base">
                   Giá chưa bao gồm VAT & TIP.
                 </p>
@@ -177,7 +156,13 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
 
         <div className="mt-6 flex justify-center">
           <button
-            onClick={handleBooking}
+            onClick={() => {
+              if (!isEqual(serviceId, selectedService?.id)) {
+                onSelect({ category: selectedCategory, service: selectedService });
+              }
+
+              onClose();
+            }}
             className="w-[220px] rounded-3xl bg-[#3A449B] px-4 py-2 text-base font-semibold text-white transition-colors duration-300 ease-in-out hover:bg-[#3A449B]/80"
           >
             Đặt lịch
