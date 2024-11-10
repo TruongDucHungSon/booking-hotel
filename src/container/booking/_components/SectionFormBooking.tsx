@@ -22,8 +22,7 @@ import ModalServiceBooking, {
 } from '@/components/modal/ModalServiceBooking';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
-import SelectionModalForm, { RoomProps } from '@/components/modal/SelectionModalForm';
-import { RootState } from '@/redux/rootReducers';
+import SelectionModalForm from '@/components/modal/SelectionModalForm';
 import { useLocationData } from '@/services/location/Location.Service';
 import {
   ServicesBooking,
@@ -31,41 +30,23 @@ import {
   roomsData,
   serviceLocations,
   servicesData,
-  typeServices,
   vouchers,
 } from '@/utils/constants';
 import { useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 
-import { useServiceData } from '@/services/services/Services.Service';
 import { FormValues } from '@/utils/type';
-import { useRouter } from 'next/navigation';
 import { useBoolean } from 'ahooks';
-import {
-  filter,
-  find,
-  forEach,
-  head,
-  isEmpty,
-  isNaN,
-  isNil,
-  map,
-  split,
-  times,
-  toNumber,
-} from 'lodash';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { filter, find, head, isEmpty, isNaN, isNil, map, split, times, toNumber } from 'lodash';
 import DatePicker from 'react-datepicker';
-import { Rubik_80s_Fade } from 'next/font/google';
 
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
-  const { data: DATA_SERVICES } = useServiceData();
   const methods = useFormContext();
-  const SERVICES: any = useMemo(() => DATA_SERVICES || [], [DATA_SERVICES]);
-  const router = useRouter();
+  // const { data: DATA_SERVICES } = useServiceData();
+  // const SERVICES: any = useMemo(() => DATA_SERVICES?.data || [], [DATA_SERVICES]);
 
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
   const openModalRoom = () => setModalOpenRoom(true);
@@ -214,7 +195,7 @@ const SectionFormBooking = () => {
                 </button>
                 {isOpenStore && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
-                    {DATA_LOCATIONS?.data?.map((storeOption: any) => (
+                    {LOCATIONS?.data?.map((storeOption: any) => (
                       <li
                         key={storeOption.id}
                         onClick={() => {
