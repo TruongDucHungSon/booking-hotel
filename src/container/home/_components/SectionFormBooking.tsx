@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
+
 import DateIc from '@/assets/svgs/arrow/date.svg';
 import ArrowIc from '@/assets/svgs/arrow/down.svg';
 import LocationIc from '@/assets/svgs/arrow/location.svg';
@@ -8,120 +9,93 @@ import TimeIc from '@/assets/svgs/arrow/time.svg';
 import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
-import { setBookingData } from '@/redux/formBooking/slice';
 import { useStaffData } from '@/services/staff/Staff.service';
+import { availableTimes, serviceLocations } from '@/utils/constants';
+import { useBoolean } from 'ahooks';
 import { vi } from 'date-fns/locale';
+import dayjs from 'dayjs';
+import { find, forEach, get, head, map } from 'lodash';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { useDispatch } from 'react-redux';
+import { useForm, useFormContext } from 'react-hook-form';
+
 const SectionFormBooking = ({ LOCATIONS }: any) => {
-  const dispatch = useDispatch();
+  const methods = useFormContext();
+
   const { data: DATA_STAFFS } = useStaffData();
   const STAFFS: any = DATA_STAFFS || [];
-  console.log(STAFFS);
+
   const router = useRouter();
-  const handleNavigate = () => {
-    const destination = serviceLocation === 'Massage tại nhà' ? '/dat-lich-tai-nha' : '/dich-vu';
-    router.push(destination);
-  };
+
+  const [isOpenLocation, locationHandlers] = useBoolean(false);
+  const [isOpenStore, storeHandlers] = useBoolean(false);
+  const [isOpenStaff, staffHandlers] = useBoolean(false);
+  const [isOpenTime, timeHandlers] = useBoolean(false);
 
   // Load booking data from Redux
-
-  const [store, setStore] = useState(LOCATIONS?.data?.[0].name);
-  const [serviceLocation, setServiceLocation] = useState('Massage tại cửa hàng');
-  const [selectedStaff, setSelectedStaff] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-
-  const [dropdowns, setDropdowns] = useState({
-    store: false,
-    location: false,
-    time: false,
-    staff: false,
+  const { handleSubmit, watch, setValue } = useForm<{
+    store: string;
+    serviceLocation: number;
+    selectedStaff: string;
+    startDate: string;
+    selectedTime: string;
+  }>({
+    defaultValues: {
+      store: get(head(LOCATIONS?.data), 'name', ''),
+      serviceLocation: 1,
+      selectedStaff: get(head(STAFFS?.data), 'name', ''),
+      startDate: dayjs(new Date()).toISOString(),
+      selectedTime: '',
+    },
   });
 
-  const toggleDropdown = (type: string) => {
-    setDropdowns((prev) => ({
-      ...prev,
-      [type as keyof typeof dropdowns]: !prev[type as keyof typeof dropdowns],
-    }));
-  };
+  const location = watch('serviceLocation');
+  const startDate = watch('startDate');
+  const selectedTime = watch('selectedTime');
 
-  const handleSelect = (type: string, value: string) => {
-    if (type === 'store') setStore(value);
-    if (type === 'location') {
-      setServiceLocation(value);
-      if (value === 'Massage tại nhà') {
-        setStore('');
-      }
-    }
-    if (type === 'time') setSelectedTime(value);
-    if (type === 'staff') setSelectedStaff(value);
-    toggleDropdown(type); // Close dropdown after selecting
-  };
+  const handleNavigate = () => router.push(location === 1 ? '/dich-vu' : '/dat-lich-tai-nha');
 
-  const availableTimes = Array.from({ length: 48 }, (_, index) => {
-    const hour = String(Math.floor(index / 2) + 8); // Start from 8 AM
-    const minute = index % 2 === 0 ? '30' : '00';
-    return `${hour}:${minute}`;
-  });
-
-  // Filter to include only times from 8:30 AM to 10:00 PM
-  const filteredAvailableTimes = availableTimes.filter((time) => {
-    const [hour, minute] = time.split(':').map(Number);
-    return (
-      (hour > 8 || (hour === 8 && minute === 30)) && (hour < 22 || (hour === 22 && minute === 0))
-    );
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const bookingData = {
-      store,
-      serviceLocation,
-      selectedTime,
-      selectedStaff,
-      startDate,
-    };
-    dispatch(setBookingData(bookingData));
-    handleNavigate();
-  };
+  const onSubmit = (data: any) =>
+    forEach(data, (value, key) => {
+      methods.setValue(key, value);
+    });
 
   return (
     <section className="container top-0 z-[9999] mx-auto rounded-3xl bg-[#f5f6fa]">
       <div className="px-8 py-6">
         <Title type="secondary">Đặt lịch massage</Title>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-center">
             {/* Location Dropdown */}
             <div className="relative w-full lg:w-1/3">
               <button
                 type="button"
-                onClick={() => toggleDropdown('location')}
+                onClick={locationHandlers.toggle}
                 className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none lg:text-base"
               >
                 <CustomImage width={18} height={18} src={LocationIc} alt="Arrow Down" />
-                {serviceLocation}
+                {find(serviceLocations, { value: location })?.label}
                 <CustomImage
                   width={18}
                   height={18}
                   src={downBLue}
                   alt="Arrow Down"
-                  className={`transition-all duration-300 ${dropdowns.location ? 'rotate-180' : ''}`}
+                  className={`transition-all duration-300 ${isOpenLocation ? 'rotate-180' : ''}`}
                 />
               </button>
-              {dropdowns.location && (
+              {isOpenLocation && (
                 <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                  {['Massage tại cửa hàng', 'Massage tại nhà'].map((location) => (
+                  {map(serviceLocations, (location) => (
                     <li
-                      key={location}
-                      onClick={() => handleSelect('location', location)}
+                      key={location.value}
+                      onClick={() => {
+                        setValue('serviceLocation', location.value);
+                        locationHandlers.setFalse();
+                      }}
                       className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
                     >
-                      {location}
+                      {location.label}
                     </li>
                   ))}
                 </ul>
@@ -129,29 +103,32 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
             </div>
 
             {/* Store Dropdown */}
-            {serviceLocation === 'Massage tại cửa hàng' ? (
+            {location === 1 ? (
               <div className="relative w-full lg:w-1/3">
                 <button
                   type="button"
-                  onClick={() => toggleDropdown('store')}
+                  onClick={storeHandlers.toggle}
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-sm"
                 >
                   <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
-                  {store || 'Chọn cửa hàng'}
+                  {watch('store') || 'Chọn cửa hàng'}
                   <CustomImage
                     width={18}
                     height={18}
                     src={ArrowIc}
                     alt="Arrow Down"
-                    className={`transition-all duration-300 ${dropdowns.store ? 'rotate-180' : ''}`}
+                    className={`transition-all duration-300 ${isOpenStore ? 'rotate-180' : ''}`}
                   />
                 </button>
-                {dropdowns.store && (
+                {isOpenStore && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
                     {LOCATIONS?.data?.map((location: any) => (
                       <li
                         key={location.id}
-                        onClick={() => handleSelect('store', location.name)}
+                        onClick={() => {
+                          setValue('store', location.name);
+                          storeHandlers.setFalse();
+                        }}
                         className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"
                       >
                         {location.name}
@@ -164,25 +141,28 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
               <div className="relative w-full lg:w-1/3">
                 <button
                   type="button"
-                  onClick={() => toggleDropdown('staff')}
+                  onClick={staffHandlers.toggle}
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
                 >
                   <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
-                  {selectedStaff || 'Chọn nhân viên'}
+                  {watch('selectedStaff') || 'Chọn nhân viên'}
                   <CustomImage
                     width={18}
                     height={18}
                     src={ArrowIc}
                     alt="Arrow Down"
-                    className={`transition-all duration-300 ${dropdowns.staff ? 'rotate-180' : ''}`}
+                    className={`transition-all duration-300 ${isOpenStaff ? 'rotate-180' : ''}`}
                   />
                 </button>
-                {dropdowns.staff && (
+                {isOpenStaff && (
                   <ul className="sidebar-scroll absolute z-10 mt-2 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
                     {STAFFS?.data?.map((staffOption: any) => (
                       <li
                         key={staffOption.id}
-                        onClick={() => handleSelect('staff', staffOption.name)}
+                        onClick={() => {
+                          setValue('selectedStaff', staffOption.name);
+                          staffHandlers.setFalse();
+                        }}
                         className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
                       >
                         {staffOption.name}
@@ -204,8 +184,12 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                   className="h-7 w-7"
                 />
                 <DatePicker
-                  selected={startDate}
-                  onChange={(date) => date && setStartDate(date)}
+                  selected={dayjs(startDate).toDate()}
+                  minDate={new Date()}
+                  onChange={(date) => {
+                    if (date) setValue('startDate', dayjs(date).toISOString());
+                    locationHandlers.setFalse();
+                  }}
                   dateFormat="dd/MM/yyyy"
                   className="w-full rounded-2xl bg-white py-[10px] text-center text-sm font-medium text-black focus:outline-none lg:w-[95%] lg:text-base"
                   placeholderText="Chọn ngày"
@@ -233,7 +217,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                 />
                 <button
                   type="button"
-                  onClick={() => toggleDropdown('time')}
+                  onClick={timeHandlers.toggle}
                   className="w-full cursor-pointer rounded-md border-none bg-transparent px-2 py-2 text-center text-sm font-medium text-primary focus:border-[#3A449B] focus:outline-none lg:text-base"
                 >
                   {selectedTime || 'Chọn giờ'}
@@ -245,12 +229,15 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                   alt="Arrow Down"
                   className="h-6 w-6"
                 />
-                {dropdowns.time && (
+                {isOpenTime && (
                   <ul className="sidebar-scroll absolute left-0 top-12 z-10 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
-                    {filteredAvailableTimes.map((time) => (
+                    {map(availableTimes, (time) => (
                       <li
                         key={time}
-                        onClick={() => handleSelect('time', time)}
+                        onClick={() => {
+                          setValue('selectedTime', time);
+                          timeHandlers.setFalse();
+                        }}
                         className="cursor-pointer rounded-xl px-4 py-[10px] text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
                       >
                         {time}
