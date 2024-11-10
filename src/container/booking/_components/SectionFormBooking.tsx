@@ -49,7 +49,10 @@ import {
   times,
   toNumber,
 } from 'lodash';
+import addIc from '@/assets/svgs/search/add.svg';
+import useIc from '@/assets/svgs/search/use.svg';
 import DatePicker from 'react-datepicker';
+import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
 
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
@@ -60,9 +63,6 @@ const SectionFormBooking = () => {
   const openModalRoom = () => setModalOpenRoom(true);
   const closeModalRoom = () => setModalOpenRoom(false);
   const [isModalOpenServiceBooking, setModalOpenServiceBooking] = useState(false);
-  const [selectedServicesBooking, setSelectedServiceBooking] = useState<SelectedServiceBooking[]>(
-    [],
-  );
 
   const [isProductModalOpen, setProductModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -94,6 +94,7 @@ const SectionFormBooking = () => {
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
+  const [isOpenEmployee, employeeHandlers] = useBoolean(false);
 
   const { register, handleSubmit, setValue, watch, reset } = useForm<any>();
 
@@ -103,6 +104,7 @@ const SectionFormBooking = () => {
   const currentServices = watch('services');
   const selectedService = watch('service');
   const selectedCategory = watch('category');
+  const employee = watch('employee');
 
   const timeValue = useMemo(() => {
     if (isEmpty(selectedTime)) return;
@@ -137,6 +139,10 @@ const SectionFormBooking = () => {
   useEffect(() => {
     if (isEmpty(room)) setValue('room', head(roomsData)?.name);
   }, [room, setValue]);
+
+  useEffect(() => {
+    if (location === 2 && isEmpty(employee)) setValue('employee', head(employees));
+  }, [employee, location, setValue]);
 
   return (
     <form onSubmit={handleSubmit(handleBook)} className="mb-5 md:mb-10">
@@ -186,39 +192,95 @@ const SectionFormBooking = () => {
                 )}
               </div>
 
-              <div className="relative w-full">
-                <button
-                  type="button"
-                  onClick={storeHandlers.toggle}
-                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
-                >
-                  <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
-                  {watch('store') || 'Chọn cửa hàng'}
-                  <CustomImage
-                    width={18}
-                    height={18}
-                    src={ArrowIc}
-                    alt="Arrow Down"
-                    className={`transition-all duration-300 ${isOpenStore ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                {isOpenStore && (
-                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
-                    {LOCATIONS?.data?.map((storeOption: any) => (
-                      <li
-                        key={storeOption.id}
-                        onClick={() => {
-                          setValue('store', storeOption.name);
-                          storeHandlers.setFalse();
-                        }}
-                        className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
-                      >
-                        {storeOption.name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              {location === 1 && (
+                <div className="relative w-full">
+                  <button
+                    type="button"
+                    onClick={storeHandlers.toggle}
+                    className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
+                  >
+                    <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
+                    {watch('store') || 'Chọn cửa hàng'}
+                    <CustomImage
+                      width={18}
+                      height={18}
+                      src={ArrowIc}
+                      alt="Arrow Down"
+                      className={`transition-all duration-300 ${isOpenStore ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  {isOpenStore && (
+                    <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
+                      {LOCATIONS?.data?.map((storeOption: any) => (
+                        <li
+                          key={storeOption.id}
+                          onClick={() => {
+                            setValue('store', storeOption.name);
+                            storeHandlers.setFalse();
+                          }}
+                          className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
+                        >
+                          {storeOption.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+              {location === 2 && (
+                <>
+                  <div className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base">
+                    <CustomImage width={18} height={18} src={addIc} alt="Location Icon" />
+                    <input
+                      placeholder="Nhập địa chỉ"
+                      type="text"
+                      className="w-full border-none text-center outline-none"
+                      {...register('address')}
+                    />
+                    <CustomImage
+                      width={18}
+                      height={18}
+                      src={ArrowIc}
+                      alt="Arrow Down"
+                      className={`transition-all duration-300`}
+                    />
+                  </div>
+
+                  <div className="relative mt-3 w-full md:mt-6">
+                    <button
+                      onClick={employeeHandlers.toggle}
+                      type="button"
+                      className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
+                    >
+                      <CustomImage width={18} height={18} src={useIc} alt="Employee Icon" />
+                      {employee}
+                      <CustomImage
+                        width={18}
+                        height={18}
+                        src={ArrowIc}
+                        alt="Arrow Down"
+                        className={`transition-all duration-300 ${isOpenEmployee ? 'rotate-180' : ''}`}
+                      />
+                    </button>
+                    {isOpenEmployee && (
+                      <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
+                        {map(employees, (item) => (
+                          <li
+                            key={item}
+                            onClick={() => {
+                              employeeHandlers.setFalse();
+                              setValue('employee', item);
+                            }}
+                            className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white md:text-base"
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
             <h2 className="mb-2 text-lg font-semibold text-[#18181B] md:mb-4 md:text-xl">
               THÔNG TIN KHÁCH HÀNG
@@ -459,7 +521,7 @@ const SectionFormBooking = () => {
         <div className="w-full rounded-3xl bg-[#F1F1F4] p-4 md:p-6 lg:h-min lg:w-[calc(100%-(500px+32px))]">
           <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row md:gap-6">
             {/* Render selected services */}
-            {selectedServicesBooking?.map(({ service, category }) => (
+            {[]?.map(({ service, category }: any) => (
               <div
                 key={category?.categoryId}
                 className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"

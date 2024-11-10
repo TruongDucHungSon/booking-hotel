@@ -14,7 +14,7 @@ import addIc from '@/assets/svgs/search/add.svg';
 import useIc from '@/assets/svgs/search/use.svg';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 
 import voucher from '@/assets/svgs/arrow/voucher.svg';
 import downBlue from '@/assets/svgs/search/dropdowBlu.svg';

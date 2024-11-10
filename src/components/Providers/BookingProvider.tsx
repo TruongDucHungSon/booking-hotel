@@ -2,18 +2,22 @@
 'use client';
 
 import { useLocalStorageState } from 'ahooks';
-import { isEqual } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { useLayoutEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 const BookingProvider = ({ children }: React.PropsWithChildren) => {
-  const methods = useForm();
+  const methods = useForm<any>({
+    defaultValues: {
+      serviceLocation: 1,
+    },
+  });
   const [value, setValue] = useLocalStorageState<any>('booking-form', { defaultValue: undefined });
 
   const formValue = useMemo(() => methods.getValues(), [methods]);
 
   useLayoutEffect(() => {
-    if (!isEqual(value, formValue)) {
+    if (!isEqual(value, formValue) && !isEmpty(value)) {
       methods.reset(value);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

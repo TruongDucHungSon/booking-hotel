@@ -53,13 +53,14 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
   const startDate = watch('startDate');
   const selectedTime = watch('selectedTime');
 
-  const handleNavigate = () => router.push(location === 1 ? '/dich-vu' : '/dat-lich-tai-nha');
+  const handleNavigate = () => router.push('/dat-lich');
 
-  const onSubmit = (data: any) =>
+  const onSubmit = (data: any) => {
+    console.log(data);
     forEach(data, (value, key) => {
       methods.setValue(key, value);
     });
-
+  };
   return (
     <section className="container top-0 z-[9999] mx-auto rounded-3xl bg-[#f5f6fa]">
       <div className="px-8 py-6">
@@ -161,6 +162,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                         key={staffOption.id}
                         onClick={() => {
                           setValue('selectedStaff', staffOption.name);
+
                           staffHandlers.setFalse();
                         }}
                         className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
