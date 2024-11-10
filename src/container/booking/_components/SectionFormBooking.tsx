@@ -411,7 +411,7 @@ const SectionFormBooking = () => {
             </div>
 
             {/* Room choice */}
-            <div className="relative mb-4 w-full">
+            <div aria-hidden={location === 2} className="relative mb-4 w-full aria-hidden:hidden">
               <button
                 type="button"
                 onClick={openModalRoom}
@@ -443,6 +443,9 @@ const SectionFormBooking = () => {
             />
 
             <div>
+              <label className="mb-1 block text-sm font-medium text-black md:text-base">
+                Dịch vụ
+              </label>
               <button
                 type="button"
                 onClick={handleOpenModalService}
