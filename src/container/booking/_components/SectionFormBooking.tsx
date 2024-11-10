@@ -53,6 +53,8 @@ import addIc from '@/assets/svgs/search/add.svg';
 import useIc from '@/assets/svgs/search/use.svg';
 import DatePicker from 'react-datepicker';
 import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
@@ -96,7 +98,25 @@ const SectionFormBooking = () => {
   const [isOpenStore, storeHandlers] = useBoolean(false);
   const [isOpenEmployee, employeeHandlers] = useBoolean(false);
 
-  const { register, handleSubmit, setValue, watch, reset } = useForm<any>();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<any>({
+    resolver: yupResolver(
+      yup.object().shape({
+        serviceLocation: yup.number().required(),
+        selectedTime: yup.string().required(),
+        room: yup.string(),
+        services: yup.mixed(),
+        service: yup.mixed().nonNullable().required(),
+        employee: yup.string(),
+      }),
+    ),
+  });
 
   const location = watch('serviceLocation');
   const selectedTime = watch('selectedTime');

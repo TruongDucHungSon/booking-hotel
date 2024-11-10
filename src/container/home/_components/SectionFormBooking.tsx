@@ -53,7 +53,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
   const startDate = watch('startDate');
   const selectedTime = watch('selectedTime');
 
-  const handleNavigate = () => router.push('/dat-lich');
+  const handleNavigate = () => router.push(location === 1 ? '/dich-vu' : '/dat-lich');
 
   const onSubmit = (data: any) => {
     console.log(data);
