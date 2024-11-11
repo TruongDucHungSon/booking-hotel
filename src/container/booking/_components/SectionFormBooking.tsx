@@ -33,6 +33,7 @@ import {
   vouchers,
 } from '@/utils/constants';
 import { FormValues } from '@/utils/type';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
 import {
@@ -51,6 +52,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
+import * as yup from 'yup';
 
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
@@ -94,7 +96,25 @@ const SectionFormBooking = () => {
   const [isOpenStore, storeHandlers] = useBoolean(false);
   const [isOpenEmployee, employeeHandlers] = useBoolean(false);
 
-  const { register, handleSubmit, setValue, watch, reset } = useForm<any>();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<any>({
+    resolver: yupResolver(
+      yup.object().shape({
+        serviceLocation: yup.number().required(),
+        selectedTime: yup.string().required(),
+        room: yup.string(),
+        services: yup.mixed(),
+        service: yup.mixed().nonNullable().required(),
+        employee: yup.string(),
+      }),
+    ),
+  });
 
   const location = watch('serviceLocation');
   const selectedTime = watch('selectedTime');

@@ -13,10 +13,10 @@ import { useLocationData } from '@/services/location/Location.Service';
 import { useStaffData } from '@/services/staff/Staff.service';
 import { typeServices } from '@/utils/constants';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useFormContext } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import ListService from './ListService';
 
@@ -25,6 +25,7 @@ const SectionFormBooking = () => {
   const router = useRouter();
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
+  const methods = useFormContext();
 
   const { data: DATA_STAFFS } = useStaffData();
   const STAFFS: any = DATA_STAFFS || [];
@@ -44,6 +45,7 @@ const SectionFormBooking = () => {
     setValue,
     watch,
     formState: { errors },
+    reset,
   } = useForm<any>({
     defaultValues: {
       store: initialStoreValue,
@@ -100,6 +102,11 @@ const SectionFormBooking = () => {
       router.push('/dich-vu');
     }
   };
+
+  useEffect(() => {
+    const values = methods.getValues();
+    reset(values as any);
+  }, [methods, reset]);
 
   return (
     <section className="pt-10 lg:pt-20">
