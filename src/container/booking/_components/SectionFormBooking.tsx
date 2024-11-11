@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-
+import qr from '@/assets/images/banner/qr.png';
 import sv1 from '@/assets/images/new/sv1.png';
 import bed from '@/assets/svgs/arrow/bed.svg';
 import BoxIc from '@/assets/svgs/arrow/box.svg';
@@ -159,7 +159,7 @@ const SectionFormBooking = () => {
   }, [room, setValue]);
 
   useEffect(() => {
-    if (location === 2 && isEmpty(staff)) setValue('staff', head(staffs));
+    if (location === 2 && isEmpty(staff)) setValue('staffs', head(staffs));
   }, [staffs, location, setValue]);
 
   const handleBook: SubmitHandler<any> = (data) => {
@@ -838,15 +838,69 @@ const SectionFormBooking = () => {
         </div>
       </div>
       {showThankYouModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="rounded-lg bg-white p-6 text-center">
-            <h2 className="text-lg font-semibold">Cảm ơn quý khách!</h2>
-            <p>Lịch của quý khách đã được đặt thành công.</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative w-full max-w-[60%] rounded-3xl bg-white p-10 lg:px-16 lg:py-12">
+            {/* Modal Title */}
+            <Title>Thông tin thanh toán</Title>
+
+            <div className="mt-5 grid grid-cols-1 gap-8 md:grid-cols-2 lg:mt-6">
+              {/* Left Section - Payment Information Form */}
+              <form>
+                <label className="mb-1 block text-sm font-medium">Chủ tài khoản</label>
+                <input
+                  type="text"
+                  value="HOANG LE QUANG"
+                  readOnly
+                  className="mb-4 w-full rounded-xl border border-[#E8E8E8] px-3 py-2 text-black"
+                />
+
+                <label className="mb-1 block text-sm font-medium">Số tài khoản</label>
+                <input
+                  type="text"
+                  value="0123456789"
+                  readOnly
+                  className="text-sm- mb-4 w-full rounded-xl border border-[#E8E8E8] px-3 py-2 text-black"
+                />
+
+                <label className="mb-1 block text-sm font-medium">Số tiền</label>
+                <input
+                  type="text"
+                  value="900.000đ"
+                  readOnly
+                  className="mb-4 w-full rounded-xl border border-[#E8E8E8] px-3 py-2 text-black"
+                />
+
+                <label className="mb-1 block text-sm font-medium">Nội dung chuyển tiền</label>
+                <input
+                  type="text"
+                  value="HD7475"
+                  readOnly
+                  className="mb-4 w-full rounded-xl border border-[#E8E8E8] px-3 py-2 text-black"
+                />
+              </form>
+
+              {/* Right Section - QR Code */}
+              <div className="flex flex-col items-center rounded-[32px] bg-[#3A449B] p-6 text-white">
+                <h3 className="mb-4 text-lg font-semibold">Quét mã QR để thanh toán</h3>
+                <CustomImage
+                  src={qr.src}
+                  alt="QR Code"
+                  width={300}
+                  height={300}
+                  className="mb-4 h-[200px] w-[200px]"
+                />
+                <p className="text-center text-sm">
+                  Sử dụng ứng dụng ngân hàng hoặc ví điện tử hoặc Camera hỗ trợ QR code để quét mã
+                </p>
+              </div>
+            </div>
+
+            {/* Payment Button */}
             <button
-              className="mt-4 rounded bg-blue-900 px-4 py-2 text-white"
-              onClick={() => setShowThankYouModal(false)} // Close modal on button click
+              onClick={() => setShowThankYouModal(false)}
+              className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-lg bg-[#3A449B] py-2 text-white transition-all duration-300 hover:opacity-90"
             >
-              Đóng
+              Thanh toán
             </button>
           </div>
         </div>
