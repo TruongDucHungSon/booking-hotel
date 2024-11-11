@@ -111,7 +111,7 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
                     item.id === selectedCategory?.id ? 'text-[#3A449B]' : 'text-[#18181B]'
                   }`}
                 >
-                  {item.duration?.minutes} phút
+                  {item.name}
                 </p>
               </button>
             </div>
@@ -128,7 +128,7 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
               <h3
                 className={`text-center text-base font-semibold md:text-lg ${selectedService?.id === service?.id ? 'text-[#3A449B]' : 'text-[#18181B]'}`}
               >
-                {service.title}
+                {service.name}
               </h3>
               <div className="my-4 flex items-center justify-between rounded-xl bg-custom-gradient px-2 py-[10px] text-sm text-white">
                 <p className="text-xs font-semibold lg:text-sm">
@@ -140,7 +140,6 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
                   {service.price} <span className="font-normal">VND/LẦN</span>
                 </p>
               </div>
-              <h2 className="text-sm font-bold">{service.name}</h2>
               <div className="mt-2 space-y-1 text-sm text-gray-600">
                 <div className="flex items-center gap-3">
                   <CustomImage src={check} alt="check" width={32} height={32} className="h-6 w-6" />

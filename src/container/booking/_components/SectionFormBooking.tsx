@@ -61,7 +61,7 @@ const SectionFormBooking = () => {
   const { data: DATA_STAFFS } = useStaffData();
   const staffs: any = DATA_STAFFS || [];
   const methods = useFormContext();
-
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
   const openModalRoom = () => setModalOpenRoom(true);
   const closeModalRoom = () => setModalOpenRoom(false);
@@ -147,11 +147,11 @@ const SectionFormBooking = () => {
     return now.set('hour', h).set('minute', m).toDate();
   }, [selectedTime]);
 
-  const handleBook: SubmitHandler<FormValues> = (data) => {
+  const handleBook: SubmitHandler<FormValues> = async (data) => {
     forEach(data, (value, key) => methods.setValue(key, value));
 
     const values = methods.getValues();
-
+    await setShowThankYouModal(true);
     console.log(values);
   };
 
@@ -773,6 +773,20 @@ const SectionFormBooking = () => {
           </div>
         </div>
       </div>
+      {showThankYouModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="rounded-lg bg-white p-6 text-center">
+            <h2 className="text-lg font-semibold">Cảm ơn quý khách!</h2>
+            <p>Lịch của quý khách đã được đặt thành công.</p>
+            <button
+              className="mt-4 rounded bg-blue-900 px-4 py-2 text-white"
+              onClick={() => setShowThankYouModal(false)} // Close modal on button click
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
     </form>
   );
 };
