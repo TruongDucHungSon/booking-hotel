@@ -112,6 +112,9 @@ const SectionFormBooking = () => {
         services: yup.mixed(),
         service: yup.mixed().nonNullable().required(),
         staff: yup.string(),
+        fullName: yup.string().required(),
+        phoneNumber: yup.number().required(),
+        address: yup.string().required(),
       }),
     ),
   });
@@ -262,6 +265,11 @@ const SectionFormBooking = () => {
                       alt="Arrow Down"
                       className={`transition-all duration-300`}
                     />
+                    {errors.address ? (
+                      <div className="text-[12px] font-medium text-red-500">
+                        Quý khách vui lòng nhập địa chỉ nhà
+                      </div>
+                    ) : null}
                   </div>
 
                   <div className="relative mt-3 w-full md:mt-6">
@@ -314,6 +322,11 @@ const SectionFormBooking = () => {
                   {...register('fullName')}
                   className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
                 />
+                {errors.fullName ? (
+                  <div className="text-[12px] font-medium text-red-500">
+                    Quý khách vui lòng nhập tên
+                  </div>
+                ) : null}
               </div>
 
               <div className="mb-4">
@@ -326,6 +339,11 @@ const SectionFormBooking = () => {
                   className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm focus:border-[#3A449B] md:text-base"
                 />
               </div>
+              {errors.phoneNumber ? (
+                <div className="text-[12px] font-medium text-red-500">
+                  Quý khách vui lòng nhập số điện thoại
+                </div>
+              ) : null}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -386,12 +404,7 @@ const SectionFormBooking = () => {
                 <label className="block text-sm font-medium text-black md:text-base">
                   Ngày đến
                 </label>
-                {/* <input
-                  type="date"
-                  {...register('arrivalDate')}
-                  value={dayjs(watch('startDate')).toDate()}
-                  className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
-                /> */}
+
                 <DatePicker
                   minDate={dayjs().toDate()}
                   selected={watch('startDate')}
@@ -403,6 +416,11 @@ const SectionFormBooking = () => {
                   }}
                   className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm md:text-base"
                 />
+                {errors.startDate ? (
+                  <div className="text-[12px] font-medium text-red-500">
+                    Quý khách vui lòng nhập ngày
+                  </div>
+                ) : null}
               </div>
 
               <div className="mb-4">
@@ -425,11 +443,16 @@ const SectionFormBooking = () => {
                     setValue('selectedTime', `${hour}:${minute}`);
                   }}
                 />
+                {errors.selectedTime ? (
+                  <div className="text-[12px] font-medium text-red-500">
+                    Quý khách vui lòng giờ đặt lịch
+                  </div>
+                ) : null}
               </div>
             </div>
 
             {/* Room choice */}
-            <div aria-hidden={location === 2} className="relative mb-4 w-full aria-hidden:hidden">
+            <div className={`relative mb-4 w-full ${location === 2 ? 'hidden' : 'block'}`}>
               <button
                 type="button"
                 onClick={openModalRoom}
