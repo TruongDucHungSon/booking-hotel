@@ -23,7 +23,7 @@ import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm from '@/components/modal/SelectionModalForm';
-import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
+import { staffs } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
 import { useLocationData } from '@/services/location/Location.Service';
 import {
   productsBooking,
@@ -94,7 +94,7 @@ const SectionFormBooking = () => {
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
-  const [isOpenEmployee, employeeHandlers] = useBoolean(false);
+  const [isOpenstaff, staffHandlers] = useBoolean(false);
 
   const {
     register,
@@ -111,7 +111,7 @@ const SectionFormBooking = () => {
         room: yup.string(),
         services: yup.mixed(),
         service: yup.mixed().nonNullable().required(),
-        employee: yup.string(),
+        staff: yup.string(),
       }),
     ),
   });
@@ -122,7 +122,7 @@ const SectionFormBooking = () => {
   const currentServices = watch('services');
   const selectedService = watch('service');
   const selectedCategory = watch('category');
-  const employee = watch('employee');
+  const staff = watch('staff');
 
   const timeValue = useMemo(() => {
     if (isEmpty(selectedTime)) return;
@@ -159,8 +159,8 @@ const SectionFormBooking = () => {
   }, [room, setValue]);
 
   useEffect(() => {
-    if (location === 2 && isEmpty(employee)) setValue('employee', head(employees));
-  }, [employee, location, setValue]);
+    if (location === 2 && isEmpty(staff)) setValue('staff', head(staffs));
+  }, [staff, location, setValue]);
 
   return (
     <form onSubmit={handleSubmit(handleBook)} className="mb-5 md:mb-10">
@@ -266,28 +266,28 @@ const SectionFormBooking = () => {
 
                   <div className="relative mt-3 w-full md:mt-6">
                     <button
-                      onClick={employeeHandlers.toggle}
+                      onClick={staffHandlers.toggle}
                       type="button"
                       className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
                     >
-                      <CustomImage width={18} height={18} src={useIc} alt="Employee Icon" />
-                      {employee}
+                      <CustomImage width={18} height={18} src={useIc} alt="staff Icon" />
+                      {staff}
                       <CustomImage
                         width={18}
                         height={18}
                         src={ArrowIc}
                         alt="Arrow Down"
-                        className={`transition-all duration-300 ${isOpenEmployee ? 'rotate-180' : ''}`}
+                        className={`transition-all duration-300 ${isOpenstaff ? 'rotate-180' : ''}`}
                       />
                     </button>
-                    {isOpenEmployee && (
+                    {isOpenstaff && (
                       <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                        {map(employees, (item) => (
+                        {map(staffs, (item) => (
                           <li
                             key={item}
                             onClick={() => {
-                              employeeHandlers.setFalse();
-                              setValue('employee', item);
+                              staffHandlers.setFalse();
+                              setValue('staff', item);
                             }}
                             className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white md:text-base"
                           >
@@ -467,7 +467,7 @@ const SectionFormBooking = () => {
               <button
                 type="button"
                 onClick={handleOpenModalService}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-base text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base"
+                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base"
               >
                 Dịch vụ
                 <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />

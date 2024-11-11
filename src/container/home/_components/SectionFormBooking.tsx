@@ -36,15 +36,14 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
   const { handleSubmit, watch, setValue } = useForm<{
     store: string;
     serviceLocation: number;
-    selectedStaff: string;
+    staff: string;
     startDate: string;
     selectedTime: string;
   }>({
     defaultValues: {
       store: get(head(LOCATIONS?.data), 'name', ''),
       serviceLocation: 1,
-      selectedStaff: get(head(STAFFS?.data), 'name', ''),
-      startDate: dayjs(new Date()).toISOString(),
+      staff: get(head(STAFFS?.data), 'name', ''),
       selectedTime: '',
     },
   });
@@ -146,7 +145,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
                 >
                   <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
-                  {watch('selectedStaff') || 'Chọn nhân viên'}
+                  {watch('staff') || 'Chọn nhân viên'}
                   <CustomImage
                     width={18}
                     height={18}
@@ -161,7 +160,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                       <li
                         key={staffOption.id}
                         onClick={() => {
-                          setValue('selectedStaff', staffOption.name);
+                          setValue('staff', staffOption.name);
 
                           staffHandlers.setFalse();
                         }}
@@ -186,7 +185,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                   className="h-7 w-7"
                 />
                 <DatePicker
-                  selected={dayjs(startDate).toDate()}
+                  selected={startDate ? dayjs(startDate).toDate() : undefined}
                   minDate={new Date()}
                   onChange={(date) => {
                     if (date) setValue('startDate', dayjs(date).toISOString());

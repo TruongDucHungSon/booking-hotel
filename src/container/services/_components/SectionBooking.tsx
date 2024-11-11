@@ -1,28 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
+
 import DateIc from '@/assets/svgs/arrow/date.svg';
 import ArrowIc from '@/assets/svgs/arrow/down.svg';
 import LocationIc from '@/assets/svgs/arrow/location.svg';
 import StoreIc from '@/assets/svgs/arrow/store.svg';
 import TimeIc from '@/assets/svgs/arrow/time.svg';
-import downBlue from '@/assets/svgs/search/dropdowBlu.svg';
+import downBLue from '@/assets/svgs/search/dropdowBlu.svg';
 import CustomImage from '@/components/CustomImage';
-import { setBookingData } from '@/redux/formBooking/slice';
-import { RootState } from '@/redux/rootReducers';
 import { useLocationData } from '@/services/location/Location.Service';
 import { useStaffData } from '@/services/staff/Staff.service';
-import { typeServices } from '@/utils/constants';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { availableTimes, serviceLocations } from '@/utils/constants';
+import { useBoolean } from 'ahooks';
+import { vi } from 'date-fns/locale';
+import dayjs from 'dayjs';
+import { find, map } from 'lodash';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Controller, useForm, useFormContext } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useFormContext } from 'react-hook-form';
 import ListService from './ListService';
 
 const SectionFormBooking = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
   const methods = useFormContext();
@@ -30,247 +28,189 @@ const SectionFormBooking = () => {
   const { data: DATA_STAFFS } = useStaffData();
   const STAFFS: any = DATA_STAFFS || [];
 
-  const bookingDataFromRedux = useSelector((state: RootState) => state.booking.bookingData);
-  // Retrieve store value from localStorage
-  const initialStoreValue = bookingDataFromRedux?.store || LOCATIONS?.data?.[0].name;
+  const location = methods.watch('serviceLocation');
 
-  // Parse and validate the startDate before setting it
-  const parsedStartDate = bookingDataFromRedux?.startDate || new Date();
-
-  // If the parsed date is invalid, use the current date as the default
-
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-    reset,
-  } = useForm<any>({
-    defaultValues: {
-      store: initialStoreValue,
-      serviceLocation: bookingDataFromRedux?.serviceLocation || 'Massage tại cửa hàng',
-      selectedStaff: bookingDataFromRedux?.selectedStaff || '',
-      selectedTime: bookingDataFromRedux?.selectedTime || '',
-      startDate: parsedStartDate,
-    },
-  });
-
-  const [dropdowns, setDropdowns] = useState<{ [key: string]: boolean }>({
-    store: false,
-    location: false,
-    time: false,
-  });
-
-  const toggleDropdown = (type: string) => {
-    setDropdowns((prev) => ({
-      ...prev,
-      [type]: !prev[type],
-    }));
-  };
-
-  const closeDropdown = (type: string) => {
-    setDropdowns((prev) => ({
-      ...prev,
-      [type]: false,
-    }));
-  };
-
-  const availableTimes = Array.from({ length: 48 }, (_, index) => {
-    const hour = String(Math.floor(index / 2) + 8); // Start from 8 AM
-    const minute = index % 2 === 0 ? '30' : '00';
-    return `${hour}:${minute}`;
-  });
-
-  // Filter to include only times from 8:30 AM to 10:00 PM
-  const filteredAvailableTimes = availableTimes.filter((time) => {
-    const [hour, minute] = time.split(':').map(Number);
-    return (
-      (hour > 8 || (hour === 8 && minute === 30)) && (hour < 22 || (hour === 22 && minute === 0))
-    );
-  });
-  const serviceLocation = watch('serviceLocation');
-  const isHomeService = serviceLocation === 'Massage tại nhà';
-
-  const onSubmit = (data: any) => {
-    dispatch(setBookingData(data));
-    localStorage.setItem('bookingData', JSON.stringify(data));
-
-    if (isHomeService) {
-      router.push('/dat-lich-tai-nha');
-    } else {
-      router.push('/dich-vu');
-    }
-  };
-
-  useEffect(() => {
-    const values = methods.getValues();
-    reset(values as any);
-  }, [methods, reset]);
+  const [isOpenLocation, locationHandlers] = useBoolean(false);
+  const [isOpenStore, storeHandlers] = useBoolean(false);
+  const [isOpenStaff, staffHandlers] = useBoolean(false);
+  const [isOpenTime, timeHandlers] = useBoolean(false);
 
   return (
     <section className="pt-10 lg:pt-20">
-      <div className="rounded-3xl bg-[#F3F3F3] py-3 lg:px-8 lg:py-6">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex flex-col gap-4 px-2 lg:flex-row lg:items-center lg:p-0">
-            {/* Location Dropdown */}
-            <div className="relative w-full lg:w-1/3">
-              <button
-                type="button"
-                onClick={() => toggleDropdown('location')}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none lg:text-base"
-              >
-                <CustomImage width={18} height={18} src={LocationIc} alt="Location Icon" />
-                {watch('serviceLocation')}
-                <CustomImage
-                  width={18}
-                  height={18}
-                  src={downBlue}
-                  alt="Dropdown Icon"
-                  className={`transition-all duration-300 ${dropdowns.location ? 'rotate-180' : ''}`}
-                />
-              </button>
-              {dropdowns.location && (
-                <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                  {typeServices.map((location) => (
-                    <li
-                      key={location.id}
-                      onClick={() => {
-                        setValue('serviceLocation', location.type);
-                        closeDropdown('location');
-                      }}
-                      className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
-                    >
-                      {location.type}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+      <div className="flex flex-col gap-4 rounded-3xl bg-[#F3F3F3] px-2 py-3 lg:flex-row lg:items-center lg:p-0 lg:px-8 lg:py-6">
+        {/* Location Dropdown */}
+        <div className="relative w-full lg:w-1/3">
+          <button
+            type="button"
+            onClick={locationHandlers.toggle}
+            className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none lg:text-base"
+          >
+            <CustomImage width={18} height={18} src={LocationIc} alt="Arrow Down" />
+            {find(serviceLocations, { value: location })?.label}
+            <CustomImage
+              width={18}
+              height={18}
+              src={downBLue}
+              alt="Arrow Down"
+              className={`transition-all duration-300 ${isOpenLocation ? 'rotate-180' : ''}`}
+            />
+          </button>
+          {isOpenLocation && (
+            <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
+              {map(serviceLocations, (location) => (
+                <li
+                  key={location.value}
+                  onClick={() => {
+                    methods.setValue('serviceLocation', location.value);
+                    locationHandlers.setFalse();
+                  }}
+                  className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
+                >
+                  {location.label}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
-            {/* Store or Staff Dropdown */}
-            <div className="relative w-full lg:w-1/3">
-              {isHomeService ? (
-                <button
-                  type="button"
-                  onClick={() => toggleDropdown('store')}
-                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-sm"
-                >
-                  <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
-                  {watch('selectedStaff') || 'Chọn nhân viên'}
-                  <CustomImage
-                    width={18}
-                    height={18}
-                    src={ArrowIc}
-                    alt="Dropdown Icon"
-                    className={`transition-all duration-300 ${dropdowns.store ? 'rotate-180' : ''}`}
-                  />
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => toggleDropdown('store')}
-                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-sm"
-                >
-                  <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
-                  {watch('store')}
-                  <CustomImage
-                    width={18}
-                    height={18}
-                    src={ArrowIc}
-                    alt="Dropdown Icon"
-                    className={`transition-all duration-300 ${dropdowns.store ? 'rotate-180' : ''}`}
-                  />
-                </button>
-              )}
-              {dropdowns.store && (
-                <ul className="sidebar-scroll absolute z-10 mt-2 h-fit w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
-                  {(isHomeService ? STAFFS?.data : LOCATIONS?.data || []).map((option: any) => (
-                    <li
-                      key={option.id || option.id}
-                      onClick={() => {
-                        setValue(
-                          isHomeService ? 'selectedStaff' : 'store',
-                          isHomeService ? option.name : option.name,
-                        );
-                        closeDropdown('store');
-                      }}
-                      className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"
-                    >
-                      {isHomeService ? option.name : option.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+        {/* Store Dropdown */}
+        {location === 1 ? (
+          <div className="relative w-full lg:w-1/3">
+            <button
+              type="button"
+              onClick={storeHandlers.toggle}
+              className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-sm"
+            >
+              <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
+              {methods.watch('store') || 'Chọn cửa hàng'}
+              <CustomImage
+                width={18}
+                height={18}
+                src={ArrowIc}
+                alt="Arrow Down"
+                className={`transition-all duration-300 ${isOpenStore ? 'rotate-180' : ''}`}
+              />
+            </button>
+            {isOpenStore && (
+              <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
+                {LOCATIONS?.data?.map((location: any) => (
+                  <li
+                    key={location.id}
+                    onClick={() => {
+                      methods.setValue('store', location.name);
+                      storeHandlers.setFalse();
+                    }}
+                    className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"
+                  >
+                    {location.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ) : (
+          <div className="relative w-full lg:w-1/3">
+            <button
+              type="button"
+              onClick={staffHandlers.toggle}
+              className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
+            >
+              <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
+              {methods.watch('staff') || 'Chọn nhân viên'}
+              <CustomImage
+                width={18}
+                height={18}
+                src={ArrowIc}
+                alt="Arrow Down"
+                className={`transition-all duration-300 ${isOpenStaff ? 'rotate-180' : ''}`}
+              />
+            </button>
+            {isOpenStaff && (
+              <ul className="sidebar-scroll absolute z-10 mt-2 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
+                {STAFFS?.data?.map((staffOption: any) => (
+                  <li
+                    key={staffOption.id}
+                    onClick={() => {
+                      methods.setValue('staff', staffOption.name);
 
-            {/* Date and Time Pickers */}
-            <div className="flex w-full flex-col items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white text-base font-medium text-[#B9B9B9] lg:w-[38%] lg:flex-row">
-              <div className="flex w-full items-center justify-between px-4 lg:w-[50%]">
-                <CustomImage src={DateIc} alt="date" width={24} height={24} className="size-6" />
-                <Controller
-                  name="startDate"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <DatePicker
-                      {...field}
-                      selected={field.value}
-                      onChange={(date) => date && field.onChange(date)}
-                      dateFormat="dd/MM/yyyy"
-                      className="w-full rounded-2xl bg-white py-[10px] text-center text-sm font-medium text-black focus:outline-none lg:text-base"
-                      placeholderText="Chọn ngày"
-                    />
-                  )}
-                />{' '}
-                <CustomImage src={downBlue} alt="date" width={24} height={24} className="size-6" />
-              </div>
-              {errors.startDate && <p className="text-red-500">Vui lòng chọn ngày</p>}
-              <div className="relative flex w-full lg:w-[50%]">
-                <button
-                  type="button"
-                  onClick={() => toggleDropdown('time')}
-                  className="flex w-full items-center justify-between px-4 py-[10px] text-sm font-medium text-black focus:border-[#3A449B] focus:outline-none md:text-base"
-                >
-                  <CustomImage width={18} height={18} src={TimeIc} alt="Time Icon" />
-                  {watch('selectedTime') || 'Chọn giờ'}
-                  <CustomImage
-                    width={18}
-                    height={18}
-                    src={downBlue}
-                    alt="Dropdown Icon"
-                    className={`transition-all duration-300 ${dropdowns.time ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                {dropdowns.time && (
-                  <ul className="sidebar-scroll absolute left-0 top-10 z-10 mt-2 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
-                    {filteredAvailableTimes.map((time) => (
-                      <li
-                        key={time}
-                        onClick={() => {
-                          setValue('selectedTime', time);
-                          closeDropdown('time');
-                        }}
-                        className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white md:text-base"
-                      >
-                        {time}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
+                      staffHandlers.setFalse();
+                    }}
+                    className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
+                  >
+                    {staffOption.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
+        {/* Date and Time Pickers */}
+        <div className="flex w-full flex-col items-center gap-2 rounded-2xl border border-[#CCCCCC] bg-white text-base font-medium text-[#B9B9B9] lg:w-[45%] lg:flex-row lg:px-2">
+          <div className="relative flex w-full items-center justify-center gap-2 px-4 lg:px-0">
+            <CustomImage width={24} height={24} src={DateIc} alt="Date Icon" className="h-7 w-7" />
+            <DatePicker
+              selected={
+                methods.watch('startDate') ? dayjs(methods.watch('startDate')).toDate() : undefined
+              }
+              minDate={new Date()}
+              onChange={(date) => {
+                if (date) methods.setValue('startDate', dayjs(date).toISOString());
+                locationHandlers.setFalse();
+              }}
+              dateFormat="dd/MM/yyyy"
+              className="w-full rounded-2xl bg-white py-[10px] text-center text-sm font-medium text-black focus:outline-none lg:w-[95%] lg:text-base"
+              placeholderText="Chọn ngày"
+              locale={vi}
+              popperPlacement="bottom"
+              wrapperClassName="w-full"
+            />
+            <CustomImage
+              width={18}
+              height={18}
+              src={ArrowIc}
+              alt="Arrow Down"
+              className="h-6 w-6"
+            />
           </div>
 
-          {/* <div className="mt-4 flex justify-center lg:justify-end">
+          <span className="hidden lg:block">|</span>
+          <div className="relative flex w-full items-center justify-between px-4 lg:px-0">
+            <CustomImage width={50} height={50} src={TimeIc} alt="Arrow Down" className="h-6 w-7" />
             <button
-              type="submit"
-              className="w-[95%] rounded-2xl bg-[#3A449B] px-8 py-2 text-sm font-medium text-white transition-all duration-300 ease-in-out hover:bg-[#2B347E] md:w-[220px] lg:text-base"
+              type="button"
+              onClick={timeHandlers.toggle}
+              className="w-full cursor-pointer rounded-md border-none bg-transparent px-2 py-2 text-center text-sm font-medium text-primary focus:border-[#3A449B] focus:outline-none lg:text-base"
             >
-              Đặt lịch
+              {methods.watch('selectedTime') || 'Chọn giờ'}
             </button>
-          </div> */}
-        </form>
+            <CustomImage
+              width={50}
+              height={50}
+              src={ArrowIc}
+              alt="Arrow Down"
+              className="h-6 w-6"
+            />
+            {isOpenTime && (
+              <ul className="sidebar-scroll absolute left-0 top-12 z-10 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
+                {map(availableTimes, (time) => (
+                  <li
+                    key={time}
+                    onClick={() => {
+                      methods.setValue('selectedTime', time);
+                      timeHandlers.setFalse();
+                    }}
+                    className="cursor-pointer rounded-xl px-4 py-[10px] text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
+                  >
+                    {time}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        {/* Submit Button */}
       </div>
 
       <ListService />

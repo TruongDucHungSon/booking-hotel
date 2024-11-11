@@ -2,6 +2,7 @@
 'use client';
 
 import { useLocalStorageState } from 'ahooks';
+import dayjs from 'dayjs';
 import { isEmpty, isEqual } from 'lodash';
 import { useLayoutEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -10,6 +11,7 @@ const BookingProvider = ({ children }: React.PropsWithChildren) => {
   const methods = useForm<any>({
     defaultValues: {
       serviceLocation: 1,
+      startDate: dayjs().toISOString(),
     },
   });
   const [value, setValue] = useLocalStorageState<any>('booking-form', { defaultValue: undefined });
