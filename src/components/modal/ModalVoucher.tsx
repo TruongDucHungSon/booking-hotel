@@ -100,10 +100,10 @@ const VoucherCard: React.FC<any> = ({ discount, minimum, name, validDate, select
       }`}
       onClick={onSelect} // Handle click to select voucher
     >
-      <h3 className="text-gradient-hover text-[24px] font-bold leading-10 lg:text-[40px]">
+      <h3 className="text-gradient-hover pb-2 text-[24px] font-bold leading-10 lg:text-[40px]">
         {name}
       </h3>
-      <p className="my-2 text-base font-medium text-black md:text-lg">{minimum}</p>
+      <p className="mb-2 text-base font-medium text-black md:text-lg">{minimum}</p>
       <p className="text-sm text-[#4F4F4F] md:text-base">Có hiệu lực đến: {validDate}</p>
     </div>
     <div className="mt-2 text-center">

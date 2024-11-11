@@ -59,8 +59,14 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
-      <div className="sidebar-scroll h-[70%] w-[95%] overflow-y-scroll rounded-xl bg-white px-12 py-6 text-xl shadow-lg md:w-[90%] md:rounded-3xl lg:h-auto">
+      <div className="sidebar-scroll relative h-[70%] w-[95%] overflow-y-scroll rounded-xl bg-white px-12 py-6 text-xl shadow-lg md:w-[90%] md:rounded-3xl lg:h-auto">
         <Title>{title}</Title>
+        <button
+          className="absolute right-6 top-6 text-2xl text-gray-600 hover:text-gray-800"
+          onClick={onClose}
+        >
+          &times;
+        </button>
         <p className="mb-6 mt-[10px] flex flex-wrap items-center justify-center gap-2 text-center text-xs font-semibold text-[#1B1B1B] md:text-base">
           {subTitle1}
           <span className="text-[#EF5F5F]">{subTitle2}</span>

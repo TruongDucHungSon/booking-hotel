@@ -44,9 +44,12 @@ const ProductModal: React.FC<ProductModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-75">
       <div className="sidebar-scroll h-[70%] w-[90%] overflow-y-scroll rounded-3xl bg-white px-8 py-6 shadow-lg lg:h-auto lg:overflow-y-auto lg:px-16 lg:py-12">
-        <div className="flex items-center justify-center border-b pb-4">
+        <div className="relative flex items-center justify-center border-b pb-4">
           <Title>Chọn sản phẩm</Title>
-          <button className="text-2xl text-gray-600 hover:text-gray-800" onClick={onClose}>
+          <button
+            className="absolute -top-2 right-0 text-2xl text-gray-600 hover:text-gray-800"
+            onClick={onClose}
+          >
             &times;
           </button>
         </div>

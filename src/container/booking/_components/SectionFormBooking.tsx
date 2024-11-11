@@ -27,7 +27,6 @@ import { useLocationData } from '@/services/location/Location.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useStaffData } from '@/services/staff/Staff.service';
 import { productsBooking, roomsData, serviceLocations, servicesData } from '@/utils/constants';
-import { FormValues } from '@/utils/type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
@@ -59,7 +58,6 @@ const SectionFormBooking = () => {
   const staffs: any = DATA_STAFFS || [];
 
   const methods = useFormContext();
-  const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
   const openModalRoom = () => setModalOpenRoom(true);
   const closeModalRoom = () => setModalOpenRoom(false);
@@ -114,7 +112,7 @@ const SectionFormBooking = () => {
         service: yup.mixed().nonNullable().required(),
         staff: yup.string(),
         fullName: yup.string().required(),
-        address: yup.string().required(),
+        address: yup.string(),
         phoneNumber: yup
           .string()
           .required()
@@ -122,6 +120,7 @@ const SectionFormBooking = () => {
       }),
     ),
   });
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
 
   const location = watch('serviceLocation');
   const selectedTime = watch('selectedTime');
@@ -149,14 +148,6 @@ const SectionFormBooking = () => {
     return now.set('hour', h).set('minute', m).toDate();
   }, [selectedTime]);
 
-  const handleBook: SubmitHandler<FormValues> = async (data) => {
-    forEach(data, (value, key) => methods.setValue(key, value));
-
-    const values = methods.getValues();
-    setShowThankYouModal(true);
-    console.log(values);
-  };
-
   useEffect(() => {
     reset(methods.getValues());
   }, [methods, reset]);
@@ -168,6 +159,13 @@ const SectionFormBooking = () => {
   useEffect(() => {
     if (location === 2 && isEmpty(staff)) setValue('staff', head(staffs));
   }, [staffs, location, setValue]);
+
+  const handleBook: SubmitHandler<any> = (data) => {
+    forEach(data, (value, key) => methods.setValue(key, value));
+    const values = methods.getValues();
+    setShowThankYouModal(true);
+    console.log(values);
+  };
 
   return (
     <form onSubmit={handleSubmit(handleBook)} className="mb-5 md:mb-10">
@@ -456,7 +454,7 @@ const SectionFormBooking = () => {
             </div>
 
             {/* Room choice */}
-            <div className={`relative mb-4 w-full ${location === 2 ? 'block' : 'hidden'}`}>
+            <div className={`relative mb-4 w-full ${location === 2 ? 'hidden' : 'block'}`}>
               <button
                 type="button"
                 onClick={openModalRoom}
