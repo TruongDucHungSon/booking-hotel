@@ -13,16 +13,17 @@ import SaleIc from '@/assets/svgs/arrow/sale.svg';
 import service from '@/assets/svgs/arrow/service.svg';
 import StoreIc from '@/assets/svgs/arrow/store.svg';
 import voucher from '@/assets/svgs/arrow/voucher.svg';
+import addIc from '@/assets/svgs/search/add.svg';
 import downBlue from '@/assets/svgs/search/dropdowBlu.svg';
+import useIc from '@/assets/svgs/search/use.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import ProductModal, { Product } from '@/components/modal/ModalProduct';
-import ModalServiceBooking, {
-  SelectedServiceBooking,
-} from '@/components/modal/ModalServiceBooking';
+import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm from '@/components/modal/SelectionModalForm';
+import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
 import { useLocationData } from '@/services/location/Location.Service';
 import {
   productsBooking,
@@ -31,8 +32,6 @@ import {
   servicesData,
   vouchers,
 } from '@/utils/constants';
-import { useEffect, useMemo, useState } from 'react';
-import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 import { FormValues } from '@/utils/type';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
@@ -49,10 +48,9 @@ import {
   times,
   toNumber,
 } from 'lodash';
-import addIc from '@/assets/svgs/search/add.svg';
-import useIc from '@/assets/svgs/search/use.svg';
+import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { employees } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
+import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
