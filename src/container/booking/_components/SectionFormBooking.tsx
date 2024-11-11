@@ -112,6 +112,7 @@ const SectionFormBooking = () => {
         services: yup.mixed(),
         service: yup.mixed().nonNullable().required(),
         staff: yup.string(),
+        gender: yup.string().required(),
         fullName: yup.string().required(),
         address: yup.string().required(),
         phoneNumber: yup
@@ -383,6 +384,11 @@ const SectionFormBooking = () => {
                     <span className="ml-2 text-sm md:text-base">Khác</span>
                   </label>
                 </div>
+                {errors.gender ? (
+                  <div className="text-[12px] font-medium text-red-500">
+                    Quý khách vui lòng chọn giới tính
+                  </div>
+                ) : null}
               </div>
 
               <div className="mb-4">
