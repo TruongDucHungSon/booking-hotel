@@ -836,21 +836,21 @@ const SectionFormBooking = () => {
             </div>
           </div>
         </div>
-        {showThankYouModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="rounded-lg bg-white p-6 text-center">
-              <h2 className="text-lg font-semibold">Cảm ơn quý khách!</h2>
-              <p>Lịch của quý khách đã được đặt thành công.</p>
-              <button
-                className="mt-4 rounded bg-blue-900 px-4 py-2 text-white"
-                onClick={() => setShowThankYouModal(false)} // Close modal on button click
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
-        )}
       </div>
+      {showThankYouModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="rounded-lg bg-white p-6 text-center">
+            <h2 className="text-lg font-semibold">Cảm ơn quý khách!</h2>
+            <p>Lịch của quý khách đã được đặt thành công.</p>
+            <button
+              className="mt-4 rounded bg-blue-900 px-4 py-2 text-white"
+              onClick={() => setShowThankYouModal(false)} // Close modal on button click
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
     </form>
   );
 };
