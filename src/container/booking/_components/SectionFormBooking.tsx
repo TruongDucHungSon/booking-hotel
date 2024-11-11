@@ -116,7 +116,10 @@ const SectionFormBooking = () => {
         service: yup.mixed().nonNullable().required(),
         staff: yup.string(),
         fullName: yup.string().required(),
-        phoneNumber: yup.number().required(),
+        phoneNumber: yup
+          .string()
+          .required()
+          .matches(/^\d{10}$/, 'Số điện thoại phải có đúng 10 chữ số'),
       }),
     ),
   });
@@ -337,7 +340,7 @@ const SectionFormBooking = () => {
                 />
                 {errors.phoneNumber ? (
                   <div className="text-[12px] font-medium text-red-500">
-                    Quý khách vui lòng nhập số điện thoại
+                    Số điện thoại phải có đúng 10 chữ số
                   </div>
                 ) : null}
               </div>
