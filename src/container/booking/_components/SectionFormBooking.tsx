@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import sv1 from '@/assets/images/new/sv1.png';
 import bed from '@/assets/svgs/arrow/bed.svg';
 import BoxIc from '@/assets/svgs/arrow/box.svg';
 import box1 from '@/assets/svgs/arrow/box1.svg';
@@ -569,20 +570,20 @@ const SectionFormBooking = () => {
             {/* Render selected services */}
             {[]?.map(({ service, category }: any) => (
               <div
-                key={category?.categoryId}
+                key={selectedService?.id}
                 className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"
               >
                 <CustomImage
                   width={1200}
                   height={1000}
-                  src={category.image}
+                  src={sv1.src}
                   alt="Gói trị liệu"
                   className="w-full rounded-[20px] border border-[#E7E7E7] bg-white p-2 md:h-[137px] md:w-[270px]"
                   classNameImg="rounded-[16px]"
                 />
                 <div className="flex w-full flex-col items-start lg:w-[365px]">
                   <h3 className="text-sm font-semibold md:text-base lg:text-xl">
-                    {category?.categoryTitle || 'No Category'}
+                    {category?.name || 'No Category'}
                   </h3>
                   <p className="mt-1 font-medium">
                     Giá:{' '}
@@ -614,16 +615,63 @@ const SectionFormBooking = () => {
 
             {/* Hide this button if there are selected services */}
             <div className="flex w-full flex-col">
-              <button
-                onClick={() => setModalOpenServiceBooking(true)}
-                type="button"
-                className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
-              >
-                {isEmpty(selectedService) ? 'Chọn dịch vụ' : selectedService?.name}
-              </button>
+              {isEmpty(selectedService) ? (
+                <button
+                  onClick={() => setModalOpenServiceBooking(true)}
+                  type="button"
+                  className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
+                >
+                  Chọn dịch vụ
+                </button>
+              ) : null}
               {errors.service ? (
                 <div className="text-[12px] font-medium text-red-500">
                   Quý khách vui lòng chọn dịch vụ
+                </div>
+              ) : null}
+
+              {!isEmpty(selectedService) ? (
+                <div
+                  key={selectedService?.id}
+                  className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"
+                >
+                  <CustomImage
+                    width={1200}
+                    height={1000}
+                    src={sv1.src}
+                    alt="Gói trị liệu"
+                    className="w-full rounded-[20px] border border-[#E7E7E7] bg-white p-2 md:h-[137px] md:w-[270px]"
+                    classNameImg="rounded-[16px]"
+                  />
+                  <div className="flex w-full flex-col items-start lg:w-[365px]">
+                    <h3 className="text-sm font-semibold md:text-base lg:text-xl">
+                      {selectedService?.name || 'No Category'}
+                    </h3>
+                    <p className="mt-1 font-medium">
+                      Giá:{' '}
+                      <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
+                        {selectedService.price}
+                      </span>
+                      <span> VND / Lần</span>
+                    </p>
+                    <p className="mt-1 font-medium">
+                      Thời gian:{' '}
+                      <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
+                        {selectedService.duration}
+                      </span>
+                      <span> phút</span>
+                    </p>
+
+                    <div className="flex w-full flex-col">
+                      <button
+                        onClick={() => setModalOpenServiceBooking(true)}
+                        type="button"
+                        className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
+                      >
+                        Chọn lại dịch vụ
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ) : null}
             </div>
