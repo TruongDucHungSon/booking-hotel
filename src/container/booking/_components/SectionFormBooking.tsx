@@ -115,6 +115,7 @@ const SectionFormBooking = () => {
         gender: yup.string().required(),
         fullName: yup.string().required(),
         address: yup.string(),
+        store: yup.string().required(),
         phoneNumber: yup
           .string()
           .required()
@@ -234,6 +235,11 @@ const SectionFormBooking = () => {
                       className={`transition-all duration-300 ${isOpenStore ? 'rotate-180' : ''}`}
                     />
                   </button>
+                  {errors.store ? (
+                    <div className="text-[12px] font-medium text-red-500">
+                      Quý khách vui lòng chọn địa điểm
+                    </div>
+                  ) : null}
                   {isOpenStore && (
                     <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
                       {LOCATIONS?.data?.map((storeOption: any) => (
@@ -539,7 +545,7 @@ const SectionFormBooking = () => {
 
                           setValue('services', result);
                         }}
-                        className="mb-4 flex w-fit cursor-pointer items-center gap-2 rounded-xl bg-[#F1F1F4] px-4 py-2 text-[13px] leading-4"
+                        className="flex w-fit cursor-pointer items-center gap-4 rounded-xl bg-[#F1F1F4] px-4 py-2 text-[13px] leading-4"
                       >
                         <CustomImage
                           width={18}
@@ -558,7 +564,7 @@ const SectionFormBooking = () => {
               </div>
             </div>
 
-            <div className="mb-4">
+            <div className="my-4">
               <label className="block text-sm font-medium text-black md:text-base">Ghi chú</label>
               <textarea
                 {...register('note')}
@@ -574,50 +580,6 @@ const SectionFormBooking = () => {
         <div className="w-full rounded-3xl bg-[#F1F1F4] p-4 md:p-6 lg:h-min lg:w-[calc(100%-(500px+32px))]">
           <div className="flex w-full flex-col items-center justify-between gap-2 md:flex-row md:gap-6">
             {/* Render selected services */}
-            {[]?.map(({ service, category }: any) => (
-              <div
-                key={selectedService?.id}
-                className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"
-              >
-                <CustomImage
-                  width={1200}
-                  height={1000}
-                  src={sv1.src}
-                  alt="Gói trị liệu"
-                  className="w-full rounded-[20px] border border-[#E7E7E7] bg-white p-2 md:h-[137px] md:w-[270px]"
-                  classNameImg="rounded-[16px]"
-                />
-                <div className="flex w-full flex-col items-start lg:w-[365px]">
-                  <h3 className="text-sm font-semibold md:text-base lg:text-xl">
-                    {category?.name || 'No Category'}
-                  </h3>
-                  <p className="mt-1 font-medium">
-                    Giá:{' '}
-                    <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                      {service.price}
-                    </span>
-                    <span> VND / Lần</span>
-                  </p>
-                  <p className="mt-1 font-medium">
-                    Thời gian:{' '}
-                    <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                      {service.duration}
-                    </span>
-                    <span> phút</span>
-                  </p>
-
-                  <div className="flex w-full flex-col">
-                    <button
-                      onClick={() => setModalOpenServiceBooking(true)}
-                      type="button"
-                      className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
-                    >
-                      Chọn lại dịch vụ
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
 
             {/* Hide this button if there are selected services */}
             <div className="flex w-full flex-col">
@@ -881,7 +843,9 @@ const SectionFormBooking = () => {
 
               {/* Right Section - QR Code */}
               <div className="flex flex-col items-center rounded-[32px] bg-[#3A449B] p-6 text-white">
-                <h3 className="mb-4 text-lg font-semibold">Quét mã QR để thanh toán</h3>
+                <h3 className="mb-4 text-base font-semibold lg:text-lg">
+                  Quét mã QR để thanh toán
+                </h3>
                 <CustomImage
                   src={qr.src}
                   alt="QR Code"
@@ -889,7 +853,7 @@ const SectionFormBooking = () => {
                   height={300}
                   className="mb-4 h-[200px] w-[200px]"
                 />
-                <p className="text-center text-sm">
+                <p className="text-center text-xs md:text-sm">
                   Sử dụng ứng dụng ngân hàng hoặc ví điện tử hoặc Camera hỗ trợ QR code để quét mã
                 </p>
               </div>

@@ -1,11 +1,17 @@
-import pr1 from '@/assets/svgs/introduce/pr1.jpg';
 import { Service } from '@/components/modal/ModalServicer';
+import p1 from '../assets/images/banner/p1.jpg';
+import p2 from '../assets/images/banner/p2.jpg';
+import p3 from '../assets/images/banner/p3.jpg';
+import p4 from '../assets/images/banner/p4.jpg';
+import p5 from '../assets/images/banner/p5.png';
+import p6 from '../assets/images/banner/p6.jpg';
 import New1 from '../assets/images/new/new1.png';
 import Service1 from '../assets/images/service/sv1.png';
 import Service2 from '../assets/images/service/sv2.png';
 import Service3 from '../assets/images/service/sv3.png';
 import Service4 from '../assets/images/service/sv4.png';
 import Service5 from '../assets/images/service/sv5.png';
+import pr1 from '../assets/svgs/introduce/pr1.jpg';
 
 import RoomSrc1 from '@/assets/images/room/r1.png';
 import RoomSrc2 from '@/assets/images/room/r2.png';
@@ -633,38 +639,32 @@ export const servicesData: Service[] = [
   {
     id: '1',
     name: 'Service A',
-    image:
-      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+    image: p1,
   },
   {
     id: '2',
     name: 'Service B',
-    image:
-      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+    image: p2,
   },
   {
     id: '3',
     name: 'Service C',
-    image:
-      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+    image: p3,
   },
   {
     id: '4',
     name: 'Service D',
-    image:
-      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+    image: p4,
   },
   {
     id: '5',
     name: 'Service E',
-    image:
-      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+    image: p5,
   },
   {
     id: '6',
     name: 'Service S',
-    image:
-      'https://images.unsplash.com/photo-1729396877734-801af2fa5709?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzfHx8ZW58MHx8fHx8',
+    image: p6,
   },
   // Add more services as needed
 ];

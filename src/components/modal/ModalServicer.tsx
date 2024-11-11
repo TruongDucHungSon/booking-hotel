@@ -1,3 +1,4 @@
+import { StaticImageData } from 'next/image';
 import React, { useState } from 'react';
 import CustomImage from '../CustomImage';
 import Title from '../Title/Title';
@@ -5,7 +6,7 @@ import Title from '../Title/Title';
 export interface Service {
   id: string;
   name: string;
-  image: string;
+  image: StaticImageData | string;
 }
 
 interface ServiceSelectionModalProps {
@@ -83,9 +84,9 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
                 <CustomImage
                   width={180}
                   height={180}
-                  src={service.image}
+                  src={typeof service.image === 'string' ? service.image : service.image.src}
                   alt={service.name}
-                  className="h-[120px] w-[120px] rounded-3xl object-cover sm:w-full md:h-[180px]"
+                  className="h-[120px] w-[120px] rounded-3xl object-cover sm:w-full md:h-[160px]"
                   classNameImg="rounded-3xl"
                 />
                 <div className="mt-2 flex flex-col items-center justify-center gap-2 text-center text-sm text-gray-700 group-hover:text-[#3A449B] md:flex-row md:gap-5 md:text-base">
