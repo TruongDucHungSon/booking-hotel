@@ -116,6 +116,7 @@ const SectionFormBooking = () => {
         service: yup.mixed().nonNullable().required(),
         staff: yup.string(),
         fullName: yup.string().required(),
+        address: yup.string().required(),
         phoneNumber: yup
           .string()
           .required()
@@ -271,6 +272,11 @@ const SectionFormBooking = () => {
                       className={`transition-all duration-300`}
                     />
                   </div>
+                  {errors.address ? (
+                    <div className="text-[12px] font-medium text-red-500">
+                      Quý khách vui lòng nhập địa chỉ
+                    </div>
+                  ) : null}
 
                   <div className="relative mt-3 w-full md:mt-6">
                     <button
