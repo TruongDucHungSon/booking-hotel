@@ -53,7 +53,7 @@ const ProductDetailPage = () => {
         if (title) observer.unobserve(title);
       });
     };
-  }, []);
+  }, [sectionRefs]);
 
   const productData = {
     details: [

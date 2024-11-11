@@ -23,8 +23,8 @@ import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm from '@/components/modal/SelectionModalForm';
-import { staffs } from '@/container/booking-at-home/_components/SectionFormBookingAtHome';
 import { useLocationData } from '@/services/location/Location.Service';
+import { useStaffData } from '@/services/staff/Staff.service';
 import {
   productsBooking,
   roomsData,
@@ -57,6 +57,9 @@ import * as yup from 'yup';
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
+
+  const { data: DATA_STAFFS } = useStaffData();
+  const staffs: any = DATA_STAFFS || [];
   const methods = useFormContext();
 
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
@@ -114,7 +117,6 @@ const SectionFormBooking = () => {
         staff: yup.string(),
         fullName: yup.string().required(),
         phoneNumber: yup.number().required(),
-        address: yup.string().required(),
       }),
     ),
   });
@@ -163,7 +165,7 @@ const SectionFormBooking = () => {
 
   useEffect(() => {
     if (location === 2 && isEmpty(staff)) setValue('staff', head(staffs));
-  }, [staff, location, setValue]);
+  }, [staffs, location, setValue]);
 
   return (
     <form onSubmit={handleSubmit(handleBook)} className="mb-5 md:mb-10">
@@ -266,11 +268,6 @@ const SectionFormBooking = () => {
                       className={`transition-all duration-300`}
                     />
                   </div>
-                  {errors.address ? (
-                    <div className="text-[12px] font-medium text-red-500">
-                      Quý khách vui lòng nhập địa chỉ nhà
-                    </div>
-                  ) : null}
 
                   <div className="relative mt-3 w-full md:mt-6">
                     <button
@@ -289,17 +286,17 @@ const SectionFormBooking = () => {
                       />
                     </button>
                     {isOpenstaff && (
-                      <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                        {map(staffs, (item) => (
+                      <ul className="sidebar-scroll absolute z-10 mt-2 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
+                        {map(staffs?.data, (item) => (
                           <li
-                            key={item}
+                            key={item.id}
                             onClick={() => {
                               staffHandlers.setFalse();
-                              setValue('staff', item);
+                              setValue('staff', item.name);
                             }}
                             className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white md:text-base"
                           >
-                            {item}
+                            {item.name}
                           </li>
                         ))}
                       </ul>
@@ -452,7 +449,7 @@ const SectionFormBooking = () => {
             </div>
 
             {/* Room choice */}
-            <div className={`relative mb-4 w-full ${location === 2 ? 'hidden' : 'block'}`}>
+            <div className={`relative mb-4 w-full ${location === 2 ? 'block' : 'hidden'}`}>
               <button
                 type="button"
                 onClick={openModalRoom}
