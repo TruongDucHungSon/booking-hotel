@@ -265,12 +265,12 @@ const SectionFormBooking = () => {
                       alt="Arrow Down"
                       className={`transition-all duration-300`}
                     />
-                    {errors.address ? (
-                      <div className="text-[12px] font-medium text-red-500">
-                        Quý khách vui lòng nhập địa chỉ nhà
-                      </div>
-                    ) : null}
                   </div>
+                  {errors.address ? (
+                    <div className="text-[12px] font-medium text-red-500">
+                      Quý khách vui lòng nhập địa chỉ nhà
+                    </div>
+                  ) : null}
 
                   <div className="relative mt-3 w-full md:mt-6">
                     <button
@@ -338,12 +338,12 @@ const SectionFormBooking = () => {
                   {...register('phoneNumber')}
                   className="mt-2 w-full rounded-xl border px-4 py-[10px] text-sm focus:border-[#3A449B] md:text-base"
                 />
+                {errors.phoneNumber ? (
+                  <div className="text-[12px] font-medium text-red-500">
+                    Quý khách vui lòng nhập số điện thoại
+                  </div>
+                ) : null}
               </div>
-              {errors.phoneNumber ? (
-                <div className="text-[12px] font-medium text-red-500">
-                  Quý khách vui lòng nhập số điện thoại
-                </div>
-              ) : null}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
