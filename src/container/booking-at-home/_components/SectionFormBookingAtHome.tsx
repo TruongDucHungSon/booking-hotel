@@ -14,7 +14,7 @@ import addIc from '@/assets/svgs/search/add.svg';
 import useIc from '@/assets/svgs/search/use.svg';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import { useState } from 'react';
-import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 import voucher from '@/assets/svgs/arrow/voucher.svg';
 import downBlue from '@/assets/svgs/search/dropdowBlu.svg';
@@ -39,7 +39,7 @@ type FormValues = {
   note: string;
 };
 
-export const employees = ['Nguyễn Văn A', 'Trần Thị B', 'Phạm Văn C', 'Lê Thị D', 'Hoàng Văn E'];
+export const staffs = ['Nguyễn Văn A', 'Trần Thị B', 'Phạm Văn C', 'Lê Thị D', 'Hoàng Văn E'];
 
 const SectionFormBookingAtHome = () => {
   const [isModalOpenService, setIsModalOpenService] = useState(false);
@@ -82,12 +82,12 @@ const SectionFormBookingAtHome = () => {
   const handleSelectServicesBooking = (services: SelectedServiceBooking[]) => {
     setSelectedServiceBooking(services);
   };
-  const [employee, setEmployee] = useState('Nguyễn Văn A');
+  const [staffee, setStaffee] = useState('Nguyễn Văn A');
   const [serviceLocation, setServiceLocation] = useState('Massage tại nhà');
   const [dropdowns, setDropdowns] = useState({
     store: false,
     location: false,
-    employee: false,
+    staffee: false,
   });
 
   const handleRemoveService = (serviceId: string) => {
@@ -107,7 +107,7 @@ const SectionFormBookingAtHome = () => {
 
   const handleSelect = (type: keyof typeof dropdowns, value: string) => {
     if (type === 'location') setServiceLocation(value);
-    if (type === 'employee') setEmployee(value);
+    if (type === 'staffee') setStaffee(value);
     toggleDropdown(type); // Close dropdown after selecting
   };
 
@@ -177,32 +177,32 @@ const SectionFormBookingAtHome = () => {
                 />
               </div>
 
-              {/* Employee Dropdown */}
+              {/* Staffee Dropdown */}
               <div className="relative mt-3 w-full md:mt-6">
                 <button
                   type="button"
-                  onClick={() => toggleDropdown('employee')}
+                  onClick={() => toggleDropdown('staffee')}
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
                 >
-                  <CustomImage width={18} height={18} src={useIc} alt="Employee Icon" />
-                  {employee}
+                  <CustomImage width={18} height={18} src={useIc} alt="Staffee Icon" />
+                  {staffee}
                   <CustomImage
                     width={18}
                     height={18}
                     src={ArrowIc}
                     alt="Arrow Down"
-                    className={`transition-all duration-300 ${dropdowns.employee ? 'rotate-180' : ''}`}
+                    className={`transition-all duration-300 ${dropdowns.staffee ? 'rotate-180' : ''}`}
                   />
                 </button>
-                {dropdowns.employee && (
+                {dropdowns.staffee && (
                   <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white shadow-lg">
-                    {employees.map((employeeOption) => (
+                    {staffs.map((staffeeOption) => (
                       <li
-                        key={employeeOption}
-                        onClick={() => handleSelect('employee', employeeOption)}
+                        key={staffeeOption}
+                        onClick={() => handleSelect('staffee', staffeeOption)}
                         className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white md:text-base"
                       >
-                        {employeeOption}
+                        {staffeeOption}
                       </li>
                     ))}
                   </ul>

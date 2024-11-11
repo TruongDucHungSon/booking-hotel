@@ -8,7 +8,6 @@ import CustomImage from '@/components/CustomImage/index';
 import Title from '@/components/Title/Title';
 import { useServiceData } from '@/services/services/Services.Service';
 import { motion } from 'framer-motion';
-import { forEach } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
