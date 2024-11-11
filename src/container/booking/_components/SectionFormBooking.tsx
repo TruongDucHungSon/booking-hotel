@@ -114,7 +114,7 @@ const SectionFormBooking = () => {
         staff: yup.string(),
         gender: yup.string().required(),
         fullName: yup.string().required(),
-        address: yup.string().required(),
+        address: yup.string(),
         phoneNumber: yup
           .string()
           .required()
