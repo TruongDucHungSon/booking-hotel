@@ -24,14 +24,9 @@ import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm from '@/components/modal/SelectionModalForm';
 import { useLocationData } from '@/services/location/Location.Service';
+import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useStaffData } from '@/services/staff/Staff.service';
-import {
-  productsBooking,
-  roomsData,
-  serviceLocations,
-  servicesData,
-  vouchers,
-} from '@/utils/constants';
+import { productsBooking, roomsData, serviceLocations, servicesData } from '@/utils/constants';
 import { FormValues } from '@/utils/type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
@@ -57,9 +52,12 @@ import * as yup from 'yup';
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
+  const { data: DATA_PROMOTIONS } = usePromotionData();
+  const PROMOTIONS: any = DATA_PROMOTIONS || [];
 
   const { data: DATA_STAFFS } = useStaffData();
   const staffs: any = DATA_STAFFS || [];
+
   const methods = useFormContext();
   const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
@@ -155,7 +153,7 @@ const SectionFormBooking = () => {
     forEach(data, (value, key) => methods.setValue(key, value));
 
     const values = methods.getValues();
-    await setShowThankYouModal(true);
+    setShowThankYouModal(true);
     console.log(values);
   };
 
@@ -654,7 +652,7 @@ const SectionFormBooking = () => {
               onClose={toggleModalVoucher}
               onSelectVoucher={handleVoucherSelect}
               selectedVoucher={selectedVoucher}
-              vouchers={vouchers}
+              vouchers={PROMOTIONS}
             />
             <button
               type="button"

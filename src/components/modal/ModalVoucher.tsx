@@ -1,21 +1,16 @@
 'use client';
+
 import SaleIc from '@/assets/svgs/arrow/sale.svg';
 import CustomImage from '@/components/CustomImage';
 import React, { useState } from 'react';
 import Title from '../Title/Title';
-
-type Voucher = {
-  discount: string;
-  minimum: string;
-  validDate: string;
-};
 
 type VoucherModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onSelectVoucher: (voucher: string) => void;
   selectedVoucher: string | null;
-  vouchers: Voucher[];
+  vouchers: any;
 };
 
 const VoucherModal: React.FC<VoucherModalProps> = ({
@@ -72,14 +67,15 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-          {vouchers.map((voucher, index) => (
-            <div key={index}>
+          {vouchers?.data?.map((voucher: any) => (
+            <div key={voucher.id}>
               <VoucherCard
-                discount={voucher.discount}
-                minimum={voucher.minimum}
-                validDate={voucher.validDate}
-                selected={selectedDiscount === voucher.discount}
-                onSelect={() => handleVoucherSelect(voucher.discount)}
+                name={voucher.name}
+                discount={voucher.formatted_discount}
+                minimum={voucher.description}
+                validDate={voucher.start_date}
+                selected={selectedDiscount === voucher.formatted_discount}
+                onSelect={() => handleVoucherSelect(voucher.formatted_discount)}
               />
             </div>
           ))}
@@ -96,39 +92,23 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
   );
 };
 
-type VoucherCardProps = {
-  discount: string;
-  minimum: string;
-  validDate: string;
-  selected: boolean;
-  onSelect: () => void; // Add onSelect prop
-};
-
-const VoucherCard: React.FC<VoucherCardProps> = ({
-  discount,
-  minimum,
-  validDate,
-  selected,
-  onSelect,
-}) => (
+const VoucherCard: React.FC<any> = ({ discount, minimum, name, validDate, selected, onSelect }) => (
   <div>
     <div
-      className={`flex h-[180px] cursor-pointer flex-col items-center justify-center rounded-3xl border p-4 text-center ${
+      className={`flex h-[220px] cursor-pointer flex-col items-center justify-center rounded-3xl border p-4 text-center ${
         selected ? 'border-[#3A449B] bg-[#e1e3f0]' : ''
       }`}
       onClick={onSelect} // Handle click to select voucher
     >
       <h3 className="text-gradient-hover text-[24px] font-bold leading-10 lg:text-[40px]">
-        Giảm {discount}
+        {name}
       </h3>
-      <p className="my-1 text-base font-medium text-black md:text-lg">
-        Cho đơn hàng &gt; {minimum}
-      </p>
-      <p className="text-sm text-[#4F4F4F] md:text-base">Có hiệu lực đến {validDate}</p>
+      <p className="my-2 text-base font-medium text-black md:text-lg">{minimum}</p>
+      <p className="text-sm text-[#4F4F4F] md:text-base">Có hiệu lực đến: {validDate}</p>
     </div>
     <div className="mt-2 text-center">
       <p className={`text-sm text-black md:text-base ${selected ? 'text-[#3A449B]' : ''}`}>
-        Voucher giảm {discount} %
+        Voucher giảm {discount}
       </p>
     </div>
   </div>
