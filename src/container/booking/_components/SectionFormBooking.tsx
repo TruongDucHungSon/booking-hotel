@@ -65,16 +65,19 @@ const SectionFormBooking = () => {
   const [isModalOpenServiceBooking, setModalOpenServiceBooking] = useState(false);
 
   const [isProductModalOpen, setProductModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const handleSelectProduct = (product: Product) => {
-    setSelectedProduct(product);
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+
+  const handleSelectProduct = (products: Product[]) => {
+    setSelectedProducts(products); // Sets the selected products array
+  };
+
+  const handleRemoveProduct = (productId: string) => {
+    setSelectedProducts((prevProducts) =>
+      prevProducts.filter((product) => product.id !== productId),
+    );
   };
 
   const [selectedVoucher, setSelectedVoucher] = useState<string | null>(null);
-  const handleRemoveProduct = () => {
-    setSelectedProduct(null); // Clears the selected product
-  };
-  console.log(selectedProduct);
 
   const [isModalOpenVoucher, setIsModalOpenVoucher] = useState(false);
   const toggleModalVoucher = () => {
@@ -687,7 +690,7 @@ const SectionFormBooking = () => {
               onClick={() => setProductModalOpen(true)}
               className="ml-2 flex items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-2 text-[#3A449B]"
             >
-              {isEmpty(selectedProduct) ? 'Sản phẩm mua kèm' : 'Chọn lại sản phẩm'}
+              {isEmpty(selectedProducts) ? 'Sản phẩm mua kèm' : 'Chọn lại sản phẩm'}
               <CustomImage width={18} height={18} src={BoxIc} alt="Arrow Down" />
             </button>
 
@@ -695,40 +698,42 @@ const SectionFormBooking = () => {
               isOpen={isProductModalOpen}
               onClose={() => setProductModalOpen(false)}
               onSelectProduct={handleSelectProduct}
-              selectedProduct={selectedProduct}
+              selectedProduct={selectedProducts}
               products={productsBooking}
             />
           </div>
-          {!isEmpty(selectedProduct) && (
+          {!isEmpty(selectedProducts) && (
             <div className="mb-4 flex w-full flex-col gap-3 md:gap-6">
-              <div key={selectedProduct.id} className="flex items-start gap-3 md:gap-6">
-                <div className="rounded-[32px] border border-[#E3E3E3] bg-white p-[24px]">
-                  <CustomImage
-                    src={selectedProduct.imageUrl}
-                    alt="cart"
-                    width={100}
-                    height={100}
-                    className="size-[80px]"
-                  />
+              {selectedProducts.map((product) => (
+                <div key={product.id} className="flex items-start gap-3 md:gap-6">
+                  <div className="rounded-[32px] border border-[#E3E3E3] bg-white p-[24px]">
+                    <CustomImage
+                      src={product.imageUrl}
+                      alt="cart"
+                      width={100}
+                      height={100}
+                      className="size-[80px]"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-base font-semibold md:text-xl">{product.name}</h3>
+                    <p className="mt-1 text-sm font-bold text-red-500 md:text-base">
+                      <span className="text-sm font-medium text-black md:text-base">Giá: </span>
+                      {`${product.price}.000`}
+                      <span className="text-sm font-medium text-black md:text-base"> VND</span>
+                    </p>
+                  </div>
+                  <div onClick={() => handleRemoveProduct(product.id)}>
+                    <CustomImage
+                      src={deleteIc}
+                      alt="delete"
+                      width={24}
+                      height={24}
+                      className="size-4 cursor-pointer md:size-5"
+                    />
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-base font-semibold md:text-xl">{selectedProduct.name}</h3>
-                  <p className="mt-1 text-sm font-bold text-red-500 md:text-base">
-                    <span className="text-sm font-medium text-black md:text-base">Giá: </span>
-                    {`${selectedProduct.price}.000`}
-                    <span className="text-sm font-medium text-black md:text-base"> VND</span>
-                  </p>
-                </div>
-                <div onClick={handleRemoveProduct}>
-                  <CustomImage
-                    src={deleteIc}
-                    alt="delete"
-                    width={24}
-                    height={24}
-                    className="size-4 cursor-pointer md:size-5"
-                  />
-                </div>
-              </div>
+              ))}
             </div>
           )}
 

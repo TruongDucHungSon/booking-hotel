@@ -7,14 +7,14 @@ export type Product = {
   name: string;
   price: number;
   imageUrl: string;
-  originalPrice: number; // URL for product image
+  originalPrice: number;
 };
 
 type ProductModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSelectProduct: (product: Product) => void;
-  selectedProduct: Product | null;
+  onSelectProduct: (products: Product[]) => void; // Change to array of products
+  selectedProduct: Product[]; // Change to array of selected products
   products: Product[];
 };
 
@@ -25,20 +25,25 @@ const ProductModal: React.FC<ProductModalProps> = ({
   selectedProduct,
   products,
 }) => {
-  const [selectedId, setSelectedId] = useState<string | null>(selectedProduct?.id || null);
+  const [selectedIds, setSelectedIds] = useState<string[]>(
+    selectedProduct.map((product) => product.id),
+  );
 
   if (!isOpen) return null;
 
   const handleProductSelect = (product: Product) => {
-    setSelectedId(product.id);
+    setSelectedIds(
+      (prevSelectedIds) =>
+        prevSelectedIds.includes(product.id)
+          ? prevSelectedIds.filter((id) => id !== product.id) // Remove if already selected
+          : [...prevSelectedIds, product.id], // Add if not selected
+    );
   };
 
   const handleApplyProduct = () => {
-    const product = products.find((p) => p.id === selectedId);
-    if (product) {
-      onSelectProduct(product);
-      onClose(); // Close modal after selection
-    }
+    const selectedProducts = products.filter((product) => selectedIds.includes(product.id));
+    onSelectProduct(selectedProducts);
+    onClose(); // Close modal after selection
   };
 
   return (
@@ -59,7 +64,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
             <div key={product.id}>
               <ProductCard
                 product={product}
-                selected={selectedId === product.id}
+                selected={selectedIds.includes(product.id)} // Update to check if in selectedIds
                 onSelect={() => handleProductSelect(product)}
               />
             </div>
@@ -80,7 +85,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
 type ProductCardProps = {
   product: Product;
   selected: boolean;
-  onSelect: () => void; // Add onSelect prop
+  onSelect: () => void;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, selected, onSelect }) => (
@@ -88,7 +93,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, selected, onSelect }
     className={`cursor-pointer rounded-3xl border p-4 text-center ${
       selected ? 'border-[#3A449B]' : 'border-[#E8E8E8]'
     }`}
-    onClick={onSelect} // Handle click to select product
+    onClick={onSelect}
   >
     <div className="flex items-start gap-4 rounded-3xl bg-white" key={product.id}>
       <CustomImage
