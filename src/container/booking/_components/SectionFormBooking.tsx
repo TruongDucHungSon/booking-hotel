@@ -28,6 +28,7 @@ import { useLocationData } from '@/services/location/Location.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useStaffData } from '@/services/staff/Staff.service';
 import { productsBooking, roomsData, serviceLocations, servicesData } from '@/utils/constants';
+import { formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
@@ -625,7 +626,7 @@ const SectionFormBooking = () => {
                     <p className="mt-1 font-medium">
                       Giá:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {selectedService.price}
+                        {formatPrice(selectedService.price)}
                       </span>
                       <span> VND / Lần</span>
                     </p>
@@ -713,6 +714,7 @@ const SectionFormBooking = () => {
                       width={100}
                       height={100}
                       className="size-[80px]"
+                      classNameImg="rounded-2xl"
                     />
                   </div>
                   <div className="flex-1">
