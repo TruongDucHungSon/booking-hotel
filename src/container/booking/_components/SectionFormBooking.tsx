@@ -71,6 +71,10 @@ const SectionFormBooking = () => {
   };
 
   const [selectedVoucher, setSelectedVoucher] = useState<string | null>(null);
+  const handleRemoveProduct = () => {
+    setSelectedProduct(null); // Clears the selected product
+  };
+  console.log(selectedProduct);
 
   const [isModalOpenVoucher, setIsModalOpenVoucher] = useState(false);
   const toggleModalVoucher = () => {
@@ -658,12 +662,17 @@ const SectionFormBooking = () => {
           </div>
 
           <div className="my-3 grid grid-cols-2 gap-4 text-sm md:my-6 md:text-base">
-            <button
-              type="button"
-              onClick={toggleModalVoucher}
-              className="flex items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-3 text-[#3A449B]"
-            >
-              Voucher giảm giá <CustomImage width={18} height={18} src={SaleIc} alt="Arrow Down" />
+            <button type="button" onClick={toggleModalVoucher}>
+              {isEmpty(selectedVoucher) ? (
+                <div className="flex items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-3 text-[#3A449B]">
+                  Voucher giảm giá
+                  <CustomImage width={18} height={18} src={SaleIc} alt="Arrow Down" />{' '}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-3 text-[#3A449B]">
+                  Giảm {selectedVoucher}
+                </div>
+              )}
             </button>
 
             <VoucherModal
@@ -678,9 +687,10 @@ const SectionFormBooking = () => {
               onClick={() => setProductModalOpen(true)}
               className="ml-2 flex items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-2 text-[#3A449B]"
             >
-              Sản phẩm mua kèm
+              {isEmpty(selectedProduct) ? 'Sản phẩm mua kèm' : 'Chọn lại sản phẩm'}
               <CustomImage width={18} height={18} src={BoxIc} alt="Arrow Down" />
             </button>
+
             <ProductModal
               isOpen={isProductModalOpen}
               onClose={() => setProductModalOpen(false)}
@@ -689,6 +699,38 @@ const SectionFormBooking = () => {
               products={productsBooking}
             />
           </div>
+          {!isEmpty(selectedProduct) && (
+            <div className="mb-4 flex w-full flex-col gap-3 md:gap-6">
+              <div key={selectedProduct.id} className="flex items-start gap-3 md:gap-6">
+                <div className="rounded-[32px] border border-[#E3E3E3] bg-white p-[24px]">
+                  <CustomImage
+                    src={selectedProduct.imageUrl}
+                    alt="cart"
+                    width={100}
+                    height={100}
+                    className="size-[80px]"
+                  />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-base font-semibold md:text-xl">{selectedProduct.name}</h3>
+                  <p className="mt-1 text-sm font-bold text-red-500 md:text-base">
+                    <span className="text-sm font-medium text-black md:text-base">Giá: </span>
+                    {`${selectedProduct.price}.000`}
+                    <span className="text-sm font-medium text-black md:text-base"> VND</span>
+                  </p>
+                </div>
+                <div onClick={handleRemoveProduct}>
+                  <CustomImage
+                    src={deleteIc}
+                    alt="delete"
+                    width={24}
+                    height={24}
+                    className="size-4 cursor-pointer md:size-5"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-col gap-4 border-b pb-4 text-sm text-black/85 md:text-base">
             <p className="flex justify-between">
