@@ -3,6 +3,7 @@ import check from '@/assets/svgs/arrow/check1.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import { useServiceData } from '@/services/services/Services.Service';
+import { formatPrice } from '@/utils/helpers';
 import { find, get, head, isEmpty, isEqual, map } from 'lodash';
 import { FC, useEffect, useMemo, useState } from 'react';
 
@@ -137,7 +138,7 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
                   <span className="font-normal"> phút</span>
                 </p>
                 <p className="text-xs font-semibold lg:text-sm">
-                  {service.price} <span className="font-normal">VND/LẦN</span>
+                  {formatPrice(service.price)} <span className="font-normal">VND/LẦN</span>
                 </p>
               </div>
               <div className="mt-2 space-y-1 text-sm text-gray-600">
