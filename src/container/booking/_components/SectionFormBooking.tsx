@@ -27,24 +27,18 @@ import SelectionModalForm from '@/components/modal/SelectionModalForm';
 import { useLocationData } from '@/services/location/Location.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useStaffData } from '@/services/staff/Staff.service';
-import { productsBooking, roomsData, serviceLocations, servicesData } from '@/utils/constants';
+import {
+  NUMBER_PEOPLE,
+  productsBooking,
+  roomsData,
+  serviceLocations,
+  servicesData,
+} from '@/utils/constants';
 import { formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
-import {
-  filter,
-  find,
-  forEach,
-  head,
-  isEmpty,
-  isNaN,
-  isNil,
-  map,
-  split,
-  times,
-  toNumber,
-} from 'lodash';
+import { filter, find, forEach, head, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
@@ -114,7 +108,7 @@ const SectionFormBooking = () => {
   } = useForm<any>({
     resolver: yupResolver(
       yup.object().shape({
-        serviceLocation: yup.number().required(),
+        location_id: yup.number().required(),
         selectedTime: yup.string().required(),
         room: yup.string(),
         services: yup.mixed(),
@@ -133,7 +127,7 @@ const SectionFormBooking = () => {
   });
   const [showThankYouModal, setShowThankYouModal] = useState(false);
 
-  const location = watch('serviceLocation');
+  const location = watch('location_id');
   const selectedTime = watch('selectedTime');
   const room = watch('room');
   const currentServices = watch('services');
@@ -410,10 +404,10 @@ const SectionFormBooking = () => {
                   Số lượng người
                 </label>
                 <select
-                  {...register('numPeople')}
+                  {...register('number_of_people')}
                   className="mt-2 w-full rounded-xl border px-4 py-[10px]"
                 >
-                  {times(5, (index) => (
+                  {map(NUMBER_PEOPLE, (index) => (
                     <option key={index} value={index + 1} className="text-sm md:text-base">
                       {index + 1} người
                     </option>
@@ -850,7 +844,7 @@ const SectionFormBooking = () => {
       </div>
       {showThankYouModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="relative w-full max-w-[60%] rounded-3xl bg-white p-10 lg:px-16 lg:py-12">
+          <div className="sidebar-scroll over relative h-[70%] w-full max-w-[90%] overflow-y-scroll rounded-3xl bg-white p-10 lg:max-w-[60%] lg:px-16 lg:py-12">
             {/* Modal Title */}
             <Title>Thông tin thanh toán</Title>
 

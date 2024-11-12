@@ -823,3 +823,5 @@ export const availableTimes = [
   '21:30',
   '22:00',
 ];
+
+export const NUMBER_PEOPLE = [1, 2, 3, 4, 5];

@@ -35,20 +35,20 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
   // Load booking data from Redux
   const { handleSubmit, watch, setValue } = useForm<{
     store: string;
-    serviceLocation: number;
+    location_id: number;
     staff: string;
     startDate: string;
     selectedTime: string;
   }>({
     defaultValues: {
       store: get(head(LOCATIONS?.data), 'name', ''),
-      serviceLocation: 1,
+      location_id: 1,
       staff: get(head(STAFFS?.data), 'name', ''),
       selectedTime: '',
     },
   });
 
-  const location = watch('serviceLocation');
+  const location = watch('location_id');
   const startDate = watch('startDate');
   const selectedTime = watch('selectedTime');
 
@@ -90,7 +90,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                     <li
                       key={location.value}
                       onClick={() => {
-                        setValue('serviceLocation', location.value);
+                        setValue('location_id', location.value);
                         locationHandlers.setFalse();
                       }}
                       className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"

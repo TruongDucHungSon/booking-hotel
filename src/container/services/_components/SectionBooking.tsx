@@ -28,7 +28,7 @@ const SectionFormBooking = () => {
   const { data: DATA_STAFFS } = useStaffData();
   const STAFFS: any = DATA_STAFFS || [];
 
-  const location = methods.watch('serviceLocation');
+  const location = methods.watch('location_id');
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
@@ -61,7 +61,7 @@ const SectionFormBooking = () => {
                 <li
                   key={location.value}
                   onClick={() => {
-                    methods.setValue('serviceLocation', location.value);
+                    methods.setValue('location_id', location.value);
                     locationHandlers.setFalse();
                   }}
                   className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
