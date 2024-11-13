@@ -931,7 +931,7 @@ const SectionFormBooking = () => {
               onClick={() => setShowThankYouModal(false)}
               className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-lg bg-[#3A449B] py-2 text-white transition-all duration-300 hover:opacity-90"
             >
-              Thanh toán
+              Đặt lịch
             </button>
           </div>
         </div>
