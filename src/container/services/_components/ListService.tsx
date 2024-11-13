@@ -93,25 +93,31 @@ const ListService = () => {
       {/* Dynamically change title and services based on the selected package */}
       <div className="mx-auto mb-8 py-6 lg:mb-[56px] lg:py-12">
         <motion.div
-          key={selectedPackage?.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
+          key={selectedPackage?.id}
         >
           <Title>{selectedPackage ? selectedPackage.name : 'Gói Massage Thư Giãn'}</Title>
         </motion.div>
 
         <div className="mt-4 flex flex-col items-center justify-center lg:mt-8 lg:flex-row">
           <div className="flex w-[80%] justify-center md:w-[50%] lg:w-1/2">
-            <div className="relative hidden md:block lg:max-w-[530px]">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative hidden md:block lg:max-w-[530px]"
+            >
               <CustomImage
                 src={sv7.src || selectedPackage?.image?.url || ''}
                 alt="massage"
                 width={500}
                 height={500}
               />
-            </div>
+            </motion.div>
           </div>
 
           {/* Right Section: Services */}
