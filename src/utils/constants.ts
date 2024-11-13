@@ -786,10 +786,12 @@ export const serviceLocations = [
   {
     label: 'Massage tại cửa hàng',
     value: 1,
+    service_type: 'in-store',
   },
   {
     label: 'Massage tại nhà',
     value: 2,
+    service_type: 'at-home',
   },
 ];
 

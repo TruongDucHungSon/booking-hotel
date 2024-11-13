@@ -5,6 +5,7 @@ export const API_ENDPOINT = {
   GET_SERVICE: '/api/service-packages',
   GET_STAFF: '/api/staffs',
   GET_PROMOTION: '/api/promotions',
+  GET_ROOM: '/api/rooms/available',
 };
 
 export const STALE_TIME: number = 5 * 60 * 1000;

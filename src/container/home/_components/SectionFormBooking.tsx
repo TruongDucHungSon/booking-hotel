@@ -35,24 +35,27 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
   // Load booking data from Redux
   const { handleSubmit, watch, setValue } = useForm<{
     store: string;
-    location_id: number;
+    location_id: string;
     staff: string;
     startDate: string;
     selectedTime: string;
   }>({
     defaultValues: {
       store: get(head(LOCATIONS?.data), 'name', ''),
-      location_id: 1,
+      location_id: 'in-store',
       staff: get(head(STAFFS?.data), 'name', ''),
       selectedTime: '',
     },
   });
 
   const location = watch('location_id');
+  console.log(location);
+
   const startDate = watch('startDate');
   const selectedTime = watch('selectedTime');
+  const store = watch('store');
 
-  const handleNavigate = () => router.push(location === 1 ? '/dich-vu' : '/dat-lich');
+  const handleNavigate = () => router.push(location === 'in-store' ? '/dich-vu' : '/dat-lich');
 
   const onSubmit = (data: any) => {
     console.log(data);
@@ -75,7 +78,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                 className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none lg:text-base"
               >
                 <CustomImage width={18} height={18} src={LocationIc} alt="Arrow Down" />
-                {find(serviceLocations, { value: location })?.label}
+                {find(serviceLocations, { service_type: location })?.label}
                 <CustomImage
                   width={18}
                   height={18}
@@ -90,7 +93,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                     <li
                       key={location.value}
                       onClick={() => {
-                        setValue('location_id', location.value);
+                        setValue('location_id', location.service_type);
                         locationHandlers.setFalse();
                       }}
                       className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
@@ -103,7 +106,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
             </div>
 
             {/* Store Dropdown */}
-            {location === 1 ? (
+            {location === 'in-store' ? (
               <div className="relative w-full lg:w-1/3">
                 <button
                   type="button"
@@ -111,7 +114,8 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-sm"
                 >
                   <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
-                  {watch('store') || 'Chọn cửa hàng'}
+                  {(LOCATIONS?.data && find(LOCATIONS.data, { id: store })?.name) ||
+                    'Chọn cửa hàng'}
                   <CustomImage
                     width={18}
                     height={18}
@@ -126,7 +130,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                       <li
                         key={location.id}
                         onClick={() => {
-                          setValue('store', location.name);
+                          setValue('store', location.id);
                           storeHandlers.setFalse();
                         }}
                         className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"

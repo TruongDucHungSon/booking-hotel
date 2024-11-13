@@ -10,7 +10,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 const BookingProvider = ({ children }: React.PropsWithChildren) => {
   const methods = useForm<any>({
     defaultValues: {
-      location_id: 1,
+      location_id: 'in-store',
       startDate: dayjs().toISOString(),
     },
   });

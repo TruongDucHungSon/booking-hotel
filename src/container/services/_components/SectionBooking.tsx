@@ -29,6 +29,7 @@ const SectionFormBooking = () => {
   const STAFFS: any = DATA_STAFFS || [];
 
   const location = methods.watch('location_id');
+  const store = methods.watch('store');
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
@@ -46,7 +47,7 @@ const SectionFormBooking = () => {
             className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none lg:text-base"
           >
             <CustomImage width={18} height={18} src={LocationIc} alt="Arrow Down" />
-            {find(serviceLocations, { value: location })?.label}
+            {find(serviceLocations, { service_type: location })?.label}
             <CustomImage
               width={18}
               height={18}
@@ -61,7 +62,7 @@ const SectionFormBooking = () => {
                 <li
                   key={location.value}
                   onClick={() => {
-                    methods.setValue('location_id', location.value);
+                    methods.setValue('location_id', location.service_type);
                     locationHandlers.setFalse();
                   }}
                   className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-base"
@@ -74,7 +75,7 @@ const SectionFormBooking = () => {
         </div>
 
         {/* Store Dropdown */}
-        {location === 1 ? (
+        {location === 'in-store' ? (
           <div className="relative w-full lg:w-1/3">
             <button
               type="button"
@@ -82,7 +83,7 @@ const SectionFormBooking = () => {
               className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-sm"
             >
               <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
-              {methods.watch('store') || 'Chọn cửa hàng'}
+              {(LOCATIONS?.data && find(LOCATIONS.data, { id: store })?.name) || 'Chọn cửa hàng'}
               <CustomImage
                 width={18}
                 height={18}
@@ -97,7 +98,7 @@ const SectionFormBooking = () => {
                   <li
                     key={location.id}
                     onClick={() => {
-                      methods.setValue('store', location.name);
+                      methods.setValue('store', location.id);
                       storeHandlers.setFalse();
                     }}
                     className="cursor-pointer rounded-xl px-4 py-2 text-xs transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white lg:text-sm"

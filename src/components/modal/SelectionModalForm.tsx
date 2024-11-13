@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import RoomSrc2 from '@/assets/images/room/r2.png';
+import React, { useEffect, useState } from 'react';
 import CustomImage from '../../components/CustomImage';
 import Title from '../Title/Title';
 
@@ -11,7 +12,7 @@ interface RoomSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectRoom: (room: RoomProps) => void; // Update to include bed count
-  rooms: RoomProps[];
+  rooms: any[];
   title: string;
   sutTitle1: string;
   sutTitle2: string;
@@ -28,8 +29,14 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
   sutTitle2,
   sutTitle3,
 }) => {
-  const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
-
+  const [selectedRoom, setSelectedRoom] = useState<any | null>(null);
+  const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
+  const [selectedType, setSelectedType] = useState<string>('Phòng thường');
+  useEffect(() => {
+    // Filter rooms based on the selected type
+    const filtered = rooms.filter((room) => room.type_text === selectedType);
+    setFilteredRooms(filtered);
+  }, [selectedType, rooms]);
   if (!isOpen) return null;
 
   return (
@@ -48,15 +55,28 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
           và
           <span className="text-[#EF5F5F]">{sutTitle3}</span>
         </p>
+
+        {/* Room type buttons for filtering */}
+        <div className="mb-5 flex justify-center gap-4 lg:mb-8">
+          {['Phòng thường', 'Phòng VIP', 'Phòng đôi'].map((type) => (
+            <button
+              key={type}
+              onClick={() => setSelectedType(type)}
+              className={`rounded-full px-4 py-2 ${selectedType === type ? 'bg-[#3A449B] text-white' : 'bg-gray-200 text-gray-600'}`}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
         <div className="grid-col1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {rooms.map((room) => (
+          {filteredRooms.map((room) => (
             <div
-              key={room.name}
+              key={room.id}
               onClick={() => setSelectedRoom(room)} // Set the selected room
               className={`group cursor-pointer overflow-hidden rounded-3xl transition-all duration-300`}
             >
               <CustomImage
-                src={room.image.src}
+                src={RoomSrc2.src || room.image.src}
                 alt={room.name}
                 width={1000}
                 height={500}
@@ -64,7 +84,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
                 classNameImg="rounded-3xl"
               />
               <p
-                className={`mt-2 text-center text-sm md:text-base ${selectedRoom?.name === room.name ? 'text-[#3A449B]' : 'group-hover:text-[#3A449B]'}`}
+                className={`mt-2 text-center text-sm md:text-base ${selectedRoom?.name === room.name ? 'font-semibold text-[#3A449B]' : 'group-hover:text-[#3A449B]'}`}
               >
                 {room.name}
               </p>

@@ -26,6 +26,7 @@ import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm from '@/components/modal/SelectionModalForm';
 import { useLocationData } from '@/services/location/Location.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
+import { useRoomsData } from '@/services/room/Rooms.Service';
 import { useStaffData } from '@/services/staff/Staff.service';
 import {
   NUMBER_PEOPLE,
@@ -108,7 +109,7 @@ const SectionFormBooking = () => {
   } = useForm<any>({
     resolver: yupResolver(
       yup.object().shape({
-        location_id: yup.number().required(),
+        location_id: yup.string().required(),
         selectedTime: yup.string().required(),
         room: yup.string(),
         services: yup.mixed(),
@@ -128,12 +129,19 @@ const SectionFormBooking = () => {
   const [showThankYouModal, setShowThankYouModal] = useState(false);
 
   const location = watch('location_id');
+
   const selectedTime = watch('selectedTime');
   const room = watch('room');
   const currentServices = watch('services');
   const selectedService = watch('service');
   const selectedCategory = watch('category');
   const staff = watch('staff');
+  const store = watch('store');
+
+  const { data: DATA_ROOMS } = useRoomsData(store);
+  const ROOMS: any = DATA_ROOMS || [];
+
+  console.log(ROOMS);
 
   const timeValue = useMemo(() => {
     if (isEmpty(selectedTime)) return;
@@ -162,14 +170,28 @@ const SectionFormBooking = () => {
   }, [room, setValue]);
 
   useEffect(() => {
-    if (location === 2 && isEmpty(staff)) setValue('staffs', head(staffs));
+    if (location === 'at-home' && isEmpty(staff)) setValue('staffs', head(staffs));
   }, [staffs, location, setValue]);
 
   const handleBook: SubmitHandler<any> = (data) => {
     forEach(data, (value, key) => methods.setValue(key, value));
     const values = methods.getValues();
     setShowThankYouModal(true);
-    console.log(values);
+
+    const orderData = {
+      service_type: values.location_id,
+      guest_info: {
+        name: values.fullName,
+        phone_number: values.phoneNumber,
+        gender: values.gender,
+      },
+      location_id: parseInt(values.store),
+      number_of_people: parseInt(values.number_of_people), // Use form data if present, otherwise use USER_DATA
+      notes: values.note,
+      address: values.address,
+      booking_time: timeValue,
+    };
+    console.log(orderData);
   };
 
   return (
@@ -193,7 +215,7 @@ const SectionFormBooking = () => {
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-[#3A449B] focus:border-[#3A449B] focus:outline-none md:text-base"
                 >
                   <CustomImage width={18} height={18} src={LocationIc} alt="Location Icon" />
-                  {find(serviceLocations, { value: location })?.label}
+                  {find(serviceLocations, { service_type: location })?.label}
                   <CustomImage
                     width={18}
                     height={18}
@@ -208,7 +230,7 @@ const SectionFormBooking = () => {
                       <li
                         key={location.value}
                         onClick={() => {
-                          setValue('serviceLocation', location.value);
+                          setValue('location_id', location.service_type);
                           locationHandlers.setFalse();
                         }}
                         className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
@@ -220,7 +242,7 @@ const SectionFormBooking = () => {
                 )}
               </div>
 
-              {location === 1 && (
+              {location === 'in-store' && (
                 <div className="relative w-full">
                   <button
                     type="button"
@@ -228,7 +250,9 @@ const SectionFormBooking = () => {
                     className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
                   >
                     <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
-                    {watch('store') || 'Chọn cửa hàng'}
+                    {(LOCATIONS?.data && find(LOCATIONS.data, { id: store })?.name) ||
+                      'Chọn cửa hàng'}
+
                     <CustomImage
                       width={18}
                       height={18}
@@ -248,7 +272,7 @@ const SectionFormBooking = () => {
                         <li
                           key={storeOption.id}
                           onClick={() => {
-                            setValue('store', storeOption.name);
+                            methods.setValue('store', storeOption.id);
                             storeHandlers.setFalse();
                           }}
                           className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
@@ -260,7 +284,7 @@ const SectionFormBooking = () => {
                   )}
                 </div>
               )}
-              {location === 2 && (
+              {location === 'at-home' && (
                 <>
                   <div className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base">
                     <CustomImage width={18} height={18} src={addIc} alt="Location Icon" />
@@ -469,7 +493,7 @@ const SectionFormBooking = () => {
             </div>
 
             {/* Room choice */}
-            <div className={`relative mb-4 w-full ${location === 2 ? 'hidden' : 'block'}`}>
+            <div className={`relative mb-4 w-full ${location === 'at-home' ? 'hidden' : 'block'}`}>
               <button
                 type="button"
                 onClick={openModalRoom}
@@ -493,7 +517,7 @@ const SectionFormBooking = () => {
               onSelectRoom={(v) => {
                 setValue('room', v.name);
               }}
-              rooms={roomsData}
+              rooms={ROOMS}
               title="Đặt phòng"
               sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
               sutTitle2="chỉ chấp nhận đặt phòng sau một tuần"
