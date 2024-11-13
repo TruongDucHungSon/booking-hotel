@@ -838,7 +838,7 @@ const SectionFormBooking = () => {
             type="submit"
             className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border bg-[#3A449B] text-center text-base text-white transition duration-300 ease-in-out hover:bg-blue-900 md:h-12"
           >
-            Thanh toán
+            Đặt lịch
           </button>
           <div className="mt-6">
             <div className="mb-4 flex items-center gap-2 text-sm font-semibold md:text-base">
