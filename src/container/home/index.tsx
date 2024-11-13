@@ -25,7 +25,7 @@ const HomePage = () => {
   // Intersection observer options
   const options = {
     root: null, // observe in the viewport
-    threshold: 0.07, // Trigger when 50% of the element is visible
+    threshold: 0.1, // Trigger when 50% of the element is visible
   };
 
   // Handle visibility change of each section
@@ -61,7 +61,7 @@ const HomePage = () => {
     initial: { opacity: 0 },
     animate: { opacity: visibleSections[index] ? 1 : 0 },
     exit: { opacity: 0 },
-    transition: { duration: 0.4, delay: 0.1 * index },
+    transition: { duration: 0.4, delay: 0.08 * index },
   });
 
   return (
