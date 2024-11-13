@@ -1,5 +1,6 @@
 import RoomSrc2 from '@/assets/images/room/r2.png';
 import { AnimatePresence, motion } from 'framer-motion';
+import { get, head } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import CustomImage from '../../components/CustomImage';
 import Title from '../Title/Title';
@@ -29,7 +30,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
   sutTitle2,
   sutTitle3,
 }) => {
-  const [selectedRoom, setSelectedRoom] = useState<any | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<any | null>(get(head(rooms), 'name', ''));
   const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
   const [selectedType, setSelectedType] = useState<string>('Phòng thường');
   useEffect(() => {
@@ -40,51 +41,47 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
-      <div className="sidebar-scroll relative h-[70%] w-[90%] overflow-y-scroll rounded-3xl bg-white px-12 py-6 shadow-lg">
-        <Title>{title}</Title>
-        <button
-          className="absolute right-6 top-6 text-2xl text-gray-600 hover:text-gray-800"
-          onClick={onClose}
-        >
-          &times;
-        </button>
-        <p className="mb-6 mt-[10px] flex flex-wrap items-center justify-center gap-2 text-center text-xs font-semibold text-[#1B1B1B] md:text-base">
-          {sutTitle1}
-          <span className="text-[#EF5F5F]">{sutTitle2}</span>
-          và
-          <span className="text-[#EF5F5F]">{sutTitle3}</span>
-        </p>
+    <AnimatePresence>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
+        <div className="sidebar-scroll relative h-[70%] w-[90%] overflow-y-scroll rounded-3xl bg-white px-12 py-6 shadow-lg">
+          <Title>{title}</Title>
+          <button
+            className="absolute right-6 top-6 text-2xl text-gray-600 hover:text-gray-800"
+            onClick={onClose}
+          >
+            &times;
+          </button>
+          <p className="mb-6 mt-[10px] flex flex-wrap items-center justify-center gap-2 text-center text-xs font-semibold text-[#1B1B1B] md:text-base">
+            {sutTitle1}
+            <span className="text-[#EF5F5F]">{sutTitle2}</span>
+            và
+            <span className="text-[#EF5F5F]">{sutTitle3}</span>
+          </p>
 
-        {/* Room type buttons for filtering */}
-        <div className="mb-5 flex justify-center gap-4 lg:mb-8">
-          {['Phòng thường', 'Phòng VIP', 'Phòng đôi'].map((type) => (
-            <button
-              key={type}
-              onClick={() => setSelectedType(type)}
-              className={`rounded-full px-4 py-2 ${
-                selectedType === type ? 'bg-[#3A449B] text-white' : 'bg-gray-200 text-gray-600'
-              }`}
-            >
-              {type}
-            </button>
-          ))}
-        </div>
+          {/* Room type buttons for filtering */}
+          <div className="mb-5 flex justify-center gap-4 lg:mb-8">
+            {['Phòng thường', 'Phòng VIP', 'Phòng đôi'].map((type) => (
+              <button
+                key={type}
+                onClick={() => setSelectedType(type)}
+                className={`rounded-full px-4 py-2 ${
+                  selectedType === type ? 'bg-[#3A449B] text-white' : 'bg-gray-200 text-gray-600'
+                }`}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
 
-        {/* Room grid with fade-in/out effect */}
-        <motion.div layout className="grid-col1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <AnimatePresence>
+          {/* Room grid with fade-in/out effect */}
+          <motion.div layout className="grid-col1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredRooms.map((room) => (
               <motion.div
                 key={room.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{
-                  opacity: 0,
-                  scale: 0.9,
-                  transition: { duration: 0.4, ease: 'easeInOut' },
-                }}
-                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                initial={{ opacity: 0.5 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.7 }}
                 onClick={() => setSelectedRoom(room)}
                 className={`group cursor-pointer overflow-hidden rounded-3xl transition-all duration-300`}
               >
@@ -109,28 +106,28 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
                 </p>
               </motion.div>
             ))}
-          </AnimatePresence>
-        </motion.div>
+          </motion.div>
 
-        <div className="mt-4 flex flex-col gap-2">
-          <button
-            type="button"
-            className={`*: mx-auto w-[220px] rounded-3xl bg-[#3A449B] px-6 py-2 text-sm text-white md:text-base ${
-              !selectedRoom ? 'cursor-not-allowed opacity-50' : ''
-            }`}
-            onClick={() => {
-              if (selectedRoom) {
-                onSelectRoom(selectedRoom);
-                onClose();
-              }
-            }}
-            disabled={!selectedRoom}
-          >
-            Chọn
-          </button>
+          <div className="mt-4 flex flex-col gap-2">
+            <button
+              type="button"
+              className={`*: mx-auto w-[220px] rounded-3xl bg-[#3A449B] px-6 py-2 text-sm text-white md:text-base ${
+                !selectedRoom ? 'cursor-not-allowed opacity-50' : ''
+              }`}
+              onClick={() => {
+                if (selectedRoom) {
+                  onSelectRoom(selectedRoom);
+                  onClose();
+                }
+              }}
+              disabled={!selectedRoom}
+            >
+              Chọn
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </AnimatePresence>
   );
 };
 
