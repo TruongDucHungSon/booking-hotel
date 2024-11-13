@@ -1,8 +1,8 @@
 import RoomSrc2 from '@/assets/images/room/r2.png';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import CustomImage from '../../components/CustomImage';
 import Title from '../Title/Title';
-
 export interface RoomProps {
   name: string;
   image: { src: string }; // URL to the room image
@@ -62,47 +62,69 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
             <button
               key={type}
               onClick={() => setSelectedType(type)}
-              className={`rounded-full px-4 py-2 ${selectedType === type ? 'bg-[#3A449B] text-white' : 'bg-gray-200 text-gray-600'}`}
+              className={`rounded-full px-4 py-2 ${
+                selectedType === type ? 'bg-[#3A449B] text-white' : 'bg-gray-200 text-gray-600'
+              }`}
             >
               {type}
             </button>
           ))}
         </div>
-        <div className="grid-col1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredRooms.map((room) => (
-            <div
-              key={room.id}
-              onClick={() => setSelectedRoom(room)} // Set the selected room
-              className={`group cursor-pointer overflow-hidden rounded-3xl transition-all duration-300`}
-            >
-              <CustomImage
-                src={RoomSrc2.src || room.image.src}
-                alt={room.name}
-                width={1000}
-                height={500}
-                className={`max-h-[180px] overflow-hidden rounded-3xl ${selectedRoom?.name === room.name ? 'border-2 border-[#3A449B]' : ''}`}
-                classNameImg="rounded-3xl"
-              />
-              <p
-                className={`mt-2 text-center text-sm md:text-base ${selectedRoom?.name === room.name ? 'font-semibold text-[#3A449B]' : 'group-hover:text-[#3A449B]'}`}
+
+        {/* Room grid with fade-in/out effect */}
+        <motion.div layout className="grid-col1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <AnimatePresence>
+            {filteredRooms.map((room) => (
+              <motion.div
+                key={room.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.9,
+                  transition: { duration: 0.4, ease: 'easeInOut' },
+                }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                onClick={() => setSelectedRoom(room)}
+                className={`group cursor-pointer overflow-hidden rounded-3xl transition-all duration-300`}
               >
-                {room.name}
-              </p>
-            </div>
-          ))}
-        </div>
+                <CustomImage
+                  src={RoomSrc2.src || room.image.src}
+                  alt={room.name}
+                  width={1000}
+                  height={500}
+                  className={`max-h-[180px] overflow-hidden rounded-3xl ${
+                    selectedRoom?.name === room.name ? 'border-2 border-[#3A449B]' : ''
+                  }`}
+                  classNameImg="rounded-3xl"
+                />
+                <p
+                  className={`mt-2 text-center text-sm md:text-base ${
+                    selectedRoom?.name === room.name
+                      ? 'font-semibold text-[#3A449B]'
+                      : 'group-hover:text-[#3A449B]'
+                  }`}
+                >
+                  {room.name}
+                </p>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
 
         <div className="mt-4 flex flex-col gap-2">
           <button
             type="button"
-            className={`*: mx-auto w-[220px] rounded-3xl bg-[#3A449B] px-6 py-2 text-sm text-white md:text-base ${!selectedRoom ? 'cursor-not-allowed opacity-50' : ''}`}
+            className={`*: mx-auto w-[220px] rounded-3xl bg-[#3A449B] px-6 py-2 text-sm text-white md:text-base ${
+              !selectedRoom ? 'cursor-not-allowed opacity-50' : ''
+            }`}
             onClick={() => {
               if (selectedRoom) {
-                onSelectRoom(selectedRoom); // Call the select room function with bed count
+                onSelectRoom(selectedRoom);
                 onClose();
               }
             }}
-            disabled={!selectedRoom} // Disable if no room is selected
+            disabled={!selectedRoom}
           >
             Chọn
           </button>
