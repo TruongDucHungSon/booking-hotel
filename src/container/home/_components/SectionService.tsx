@@ -1,13 +1,13 @@
 'use client';
+import sv1 from '@/assets/images/new/sv1.png';
 import CustomImage from '@/components/CustomImage';
-import { SERVICE } from '@/utils/constants';
 import Link from 'next/link';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Title from '../../../components/Title/Title';
 
-const SectionService = () => {
+const SectionService = ({ services }: any) => {
   return (
     <section className="pb-10 lg:pb-20">
       <Title className="mb-8">Dịch vụ Nổi bật tại bloom massage</Title>
@@ -28,24 +28,25 @@ const SectionService = () => {
             1024: { slidesPerView: 5 },
           }}
         >
-          {SERVICE.map((service) => (
+          {services?.map((service: any) => (
             <SwiperSlide key={service.id}>
               <div className="pb-14">
                 <div className="rounded-bl-[20px] rounded-br-[20px] rounded-tl-[300px] rounded-tr-[300px] border border-[#e7e7e7] p-2">
                   <CustomImage
-                    src={service.image.src}
+                    src={sv1.src || service.image.src}
                     alt={'service.title'}
                     width={1000}
                     height={500}
-                    className="rounded-bl-[14px] rounded-br-[14px] rounded-tl-[300px] rounded-tr-[300px]"
+                    className="h-[180px] rounded-bl-[14px] rounded-br-[14px] lg:h-[286px]"
+                    classNameImg="rounded-tl-[300px] rounded-tr-[300px]"
                   />
                 </div>
                 <div className="mt-4 text-center">
                   <h3 className="mb-2 text-sm font-semibold uppercase text-primary md:text-base">
-                    {service.title}
+                    {service.name}
                   </h3>
                   <Link
-                    href={service.path}
+                    href={'/dich-vu'}
                     className="group flex items-center justify-center gap-2 text-sm font-medium text-[#3A449B] hover:underline md:text-base"
                   >
                     Đặt lịch ngay

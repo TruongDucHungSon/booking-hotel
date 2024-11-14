@@ -74,8 +74,8 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
                 discount={voucher.formatted_discount}
                 minimum={voucher.description}
                 validDate={voucher.start_date}
-                selected={selectedDiscount === voucher.formatted_discount}
-                onSelect={() => handleVoucherSelect(voucher.formatted_discount)}
+                selected={selectedDiscount === voucher.discount_value}
+                onSelect={() => handleVoucherSelect(voucher.discount_value)}
               />
             </div>
           ))}

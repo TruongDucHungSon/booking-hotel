@@ -43,17 +43,15 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
     defaultValues: {
       store: get(head(LOCATIONS?.data), 'name', ''),
       location_id: 'in-store',
-      staff: get(head(STAFFS?.data), 'name', ''),
       selectedTime: '',
     },
   });
 
   const location = watch('location_id');
-  console.log(location);
-
   const startDate = watch('startDate');
   const selectedTime = watch('selectedTime');
   const store = watch('store');
+  const staff = watch('staff');
 
   const handleNavigate = () => router.push(location === 'in-store' ? '/dich-vu' : '/dat-lich');
 
@@ -149,7 +147,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                   className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
                 >
                   <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
-                  {watch('staff') || 'Chọn nhân viên'}
+                  {(STAFFS?.data && find(STAFFS?.data, { id: staff })?.name) || 'Chọn nhân viên'}
                   <CustomImage
                     width={18}
                     height={18}
@@ -164,7 +162,7 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
                       <li
                         key={staffOption.id}
                         onClick={() => {
-                          setValue('staff', staffOption.name);
+                          setValue('staff', staffOption.id);
 
                           staffHandlers.setFalse();
                         }}

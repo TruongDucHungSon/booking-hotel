@@ -1,8 +1,9 @@
 'use client';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useLocationData } from '@/services/location/Location.Service';
+import { useServiceData } from '@/services/services/Services.Service';
 import { motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SectionBanner from './_components/SectionBanner';
 import SectionContact from './_components/SectionContact';
 import SectionCustomer from './_components/SectionCustomer';
@@ -15,6 +16,8 @@ import SectionService from './_components/SectionService';
 const HomePage = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
+  const { data: DATA_SERVICES } = useServiceData();
+  const SERVICES: any = useMemo(() => DATA_SERVICES?.data || [], [DATA_SERVICES]);
 
   // Store the visibility state for each section
   const [visibleSections, setVisibleSections] = useState<boolean[]>(new Array(8).fill(false));
@@ -103,7 +106,7 @@ const HomePage = () => {
         }}
         {...createInViewAnimation(3)}
       >
-        <SectionService />
+        <SectionService services={SERVICES} />
       </motion.div>
 
       {/* Section Sale */}

@@ -10,7 +10,7 @@ const Footer = () => {
           alt="logo"
           width={2000}
           height={500}
-          className="abs-center z-40 h-[118px] w-[166px]"
+          className="abs-center z-40 w-[100px] lg:h-[118px] lg:w-[166px]"
         />
       </div>
       <div className="flex h-fit flex-col items-center justify-between bg-custom-gradient py-0 text-white lg:py-3">

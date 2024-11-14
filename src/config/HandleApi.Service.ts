@@ -3,7 +3,7 @@ import axios, { AxiosInstance } from 'axios';
 import { isEmpty } from 'lodash';
 
 const publicRequest: AxiosInstance = axios.create({
-  baseURL: 'https://qa1.mecaheo.com', // Đảm bảo baseURL chính xác
+  baseURL: 'https://api.aksoft.vn', // Đảm bảo baseURL chính xác
   timeout: 5000, // Tăng timeout nếu cần thiết
   headers: {
     Accept: 'application/json',

@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import qr from '@/assets/images/banner/qr.png';
+import acb from '@/assets/images/banner/acb.png';
+import action from '@/assets/images/banner/action.png';
+import momo from '@/assets/images/banner/momo.png';
+import more from '@/assets/images/banner/more.png';
+import vcb from '@/assets/images/banner/vcb.png';
 import sv1 from '@/assets/images/new/sv1.png';
-import bed from '@/assets/svgs/arrow/bed.svg';
 import BoxIc from '@/assets/svgs/arrow/box.svg';
 import box1 from '@/assets/svgs/arrow/box1.svg';
 import check from '@/assets/svgs/arrow/check1.svg';
@@ -11,7 +14,6 @@ import ArrowIc from '@/assets/svgs/arrow/down.svg';
 import LocationIc from '@/assets/svgs/arrow/location.svg';
 import massa from '@/assets/svgs/arrow/massa.svg';
 import SaleIc from '@/assets/svgs/arrow/sale.svg';
-import service from '@/assets/svgs/arrow/service.svg';
 import StoreIc from '@/assets/svgs/arrow/store.svg';
 import voucher from '@/assets/svgs/arrow/voucher.svg';
 import addIc from '@/assets/svgs/search/add.svg';
@@ -19,32 +21,27 @@ import downBlue from '@/assets/svgs/search/dropdowBlu.svg';
 import useIc from '@/assets/svgs/search/use.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
-import ProductModal, { Product } from '@/components/modal/ModalProduct';
+import ProductModal from '@/components/modal/ModalProduct';
 import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm from '@/components/modal/SelectionModalForm';
 import { useLocationData } from '@/services/location/Location.Service';
+import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useRoomsData } from '@/services/room/Rooms.Service';
 import { useStaffData } from '@/services/staff/Staff.service';
-import {
-  NUMBER_PEOPLE,
-  productsBooking,
-  roomsData,
-  serviceLocations,
-  servicesData,
-} from '@/utils/constants';
+import { NUMBER_PEOPLE, serviceLocations, servicesData } from '@/utils/constants';
 import { formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
+import { motion } from 'framer-motion';
 import { filter, find, forEach, head, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
-
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
@@ -52,7 +49,10 @@ const SectionFormBooking = () => {
   const PROMOTIONS: any = DATA_PROMOTIONS || [];
 
   const { data: DATA_STAFFS } = useStaffData();
-  const staffs: any = DATA_STAFFS || [];
+  const staffs: any = DATA_STAFFS?.data || [];
+
+  const { data: DATA_PRODUCTS } = useProductData();
+  const PRODUCTS: any = DATA_PRODUCTS?.data || [];
 
   const methods = useFormContext();
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
@@ -61,9 +61,9 @@ const SectionFormBooking = () => {
   const [isModalOpenServiceBooking, setModalOpenServiceBooking] = useState(false);
 
   const [isProductModalOpen, setProductModalOpen] = useState(false);
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
 
-  const handleSelectProduct = (products: Product[]) => {
+  const handleSelectProduct = (products: any[]) => {
     setSelectedProducts(products); // Sets the selected products array
   };
 
@@ -98,7 +98,12 @@ const SectionFormBooking = () => {
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
   const [isOpenstaff, staffHandlers] = useBoolean(false);
-
+  const fadeAnimation = {
+    initial: { opacity: 0, scale: 0.95 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.95 },
+    transition: { duration: 0.3 },
+  };
   const {
     register,
     handleSubmit,
@@ -118,7 +123,7 @@ const SectionFormBooking = () => {
         gender: yup.string().required(),
         fullName: yup.string().required(),
         address: yup.string(),
-        store: yup.string().required(),
+        store: yup.string(),
         phoneNumber: yup
           .string()
           .required()
@@ -127,6 +132,7 @@ const SectionFormBooking = () => {
     ),
   });
   const [showThankYouModal, setShowThankYouModal] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState('counter');
 
   const location = watch('location_id');
 
@@ -137,11 +143,45 @@ const SectionFormBooking = () => {
   const selectedCategory = watch('category');
   const staff = watch('staff');
   const store = watch('store');
+  const nameService = selectedService?.name || 'Chưa chọn dịch vụ';
 
-  const { data: DATA_ROOMS } = useRoomsData(store);
+  // Hàm tính tổng giá của sản phẩm
+  const calculateTotalPrice = (products: any) => {
+    return products.reduce((total: any, product: any) => total + parseInt(product.price), 0);
+  };
+
+  // Tính toán giá dịch vụ và sản phẩm
+  const priceService = formatPrice(selectedService?.price);
+  const totalPriceProducts = formatPrice(calculateTotalPrice(selectedProducts));
+
+  // Khai báo state cho tổng giá ban đầu (chưa áp dụng voucher)
+  const [totalPrice, setTotalPrice] = useState(
+    parseInt(priceService) + parseInt(totalPriceProducts),
+  );
+
+  // useEffect để cập nhật totalPrice khi selectedVoucher thay đổi
+  useEffect(() => {
+    let NewTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
+    if (selectedVoucher) {
+      const voucherValue = parseInt(selectedVoucher);
+      console.log(voucherValue);
+
+      if (voucherValue < 100) {
+        NewTotalPrice = Math.round(NewTotalPrice - (NewTotalPrice * voucherValue) / 100);
+      }
+      if (voucherValue > 100) {
+        NewTotalPrice = NewTotalPrice - parseInt(formatPrice(voucherValue), 10);
+      }
+    }
+
+    setTotalPrice(NewTotalPrice); // Cập nhật lại giá trị totalPrice
+  }, [selectedVoucher, priceService, totalPriceProducts]);
+  console.log(totalPrice);
+  const initTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
+  const sale = formatPrice(initTotalPrice - totalPrice);
+
+  const { data: DATA_ROOMS } = useRoomsData(store || 1);
   const ROOMS: any = DATA_ROOMS || [];
-
-  console.log(ROOMS);
 
   const timeValue = useMemo(() => {
     if (isEmpty(selectedTime)) return;
@@ -166,11 +206,11 @@ const SectionFormBooking = () => {
   }, [methods, reset]);
 
   useEffect(() => {
-    if (isEmpty(room)) setValue('room', head(roomsData)?.name);
+    if (isEmpty(room)) setValue('room', head(DATA_ROOMS)?.name);
   }, [room, setValue]);
 
   useEffect(() => {
-    if (location === 'at-home' && isEmpty(staff)) setValue('staffs', head(staffs));
+    if (location === 'at-home' && isEmpty(staff)) setValue('staff', staffs[0]?.name);
   }, [staffs, location, setValue]);
 
   const handleBook: SubmitHandler<any> = (data) => {
@@ -315,7 +355,7 @@ const SectionFormBooking = () => {
                       className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
                     >
                       <CustomImage width={18} height={18} src={useIc} alt="staff Icon" />
-                      {staff}
+                      {(staffs && find(staffs, { id: staff })?.name) || 'Chọn nhân viên'}
                       <CustomImage
                         width={18}
                         height={18}
@@ -326,12 +366,12 @@ const SectionFormBooking = () => {
                     </button>
                     {isOpenstaff && (
                       <ul className="sidebar-scroll absolute z-10 mt-2 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
-                        {map(staffs?.data, (item) => (
+                        {map(staffs, (item) => (
                           <li
                             key={item.id}
                             onClick={() => {
                               staffHandlers.setFalse();
-                              setValue('staff', item.name);
+                              setValue('staff', item.id);
                             }}
                             className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white md:text-base"
                           >
@@ -658,7 +698,10 @@ const SectionFormBooking = () => {
 
                     <div className="flex w-full flex-col">
                       <button
-                        onClick={() => setModalOpenServiceBooking(true)}
+                        onClick={() => {
+                          setModalOpenServiceBooking(true);
+                          // Reset the selected service value (if needed)
+                        }}
                         type="button"
                         className="text-medium mt-4 flex h-10 w-full items-center justify-center rounded-2xl border border-[#3A449B] text-center text-sm text-[#3A449B] md:h-12 md:text-base"
                       >
@@ -692,7 +735,10 @@ const SectionFormBooking = () => {
                 </div>
               ) : (
                 <div className="flex items-center justify-center rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-3 text-[#3A449B]">
-                  Giảm {selectedVoucher}
+                  Giảm{' '}
+                  {formatPrice(selectedVoucher) === '100.000'
+                    ? `${formatPrice(selectedVoucher)} VND`
+                    : `${selectedVoucher}%`}
                 </div>
               )}
             </button>
@@ -718,7 +764,7 @@ const SectionFormBooking = () => {
               onClose={() => setProductModalOpen(false)}
               onSelectProduct={handleSelectProduct}
               selectedProduct={selectedProducts}
-              products={productsBooking}
+              products={PRODUCTS}
             />
           </div>
           {!isEmpty(selectedProducts) && (
@@ -739,7 +785,7 @@ const SectionFormBooking = () => {
                     <h3 className="text-base font-semibold md:text-xl">{product.name}</h3>
                     <p className="mt-1 text-sm font-bold text-red-500 md:text-base">
                       <span className="text-sm font-medium text-black md:text-base">Giá: </span>
-                      {`${product.price}.000`}
+                      {formatPrice(product.price)}
                       <span className="text-sm font-medium text-black md:text-base"> VND</span>
                     </p>
                   </div>
@@ -767,11 +813,11 @@ const SectionFormBooking = () => {
                   src={massa}
                   alt="Arrow Down"
                 />{' '}
-                Dịch vụ massage (2 người)
+                {nameService}
               </p>
-              <span className="font-semibold">700.000 VND</span>
+              <span className="font-semibold">{priceService} VND</span>
             </p>
-            <p className="flex justify-between">
+            {/* <p className="flex justify-between">
               <p className="flex items-center gap-2">
                 <CustomImage
                   className="h-6 w-6"
@@ -783,8 +829,8 @@ const SectionFormBooking = () => {
                 Giá giường
               </p>
               <span className="font-semibold">100.000 VND</span>
-            </p>
-            <p className="flex justify-between">
+            </p> */}
+            {/* <p className="flex justify-between">
               <p className="flex items-center gap-2">
                 <CustomImage
                   className="h-6 w-6"
@@ -796,7 +842,7 @@ const SectionFormBooking = () => {
                 Giá dịch vụ
               </p>
               <span className="font-semibold">90.000 VND</span>
-            </p>
+            </p> */}
             <p className="flex justify-between">
               <p className="flex items-center gap-2">
                 <CustomImage
@@ -808,7 +854,7 @@ const SectionFormBooking = () => {
                 />{' '}
                 Sản phẩm mua kèm
               </p>
-              <span className="font-semibold">60.000 VND</span>
+              <span className="font-semibold">{formatPrice(totalPriceProducts)}.000 VND</span>
             </p>
             <p className="flex justify-between text-black/85">
               <p className="flex items-center gap-2">
@@ -822,16 +868,21 @@ const SectionFormBooking = () => {
                 />
                 Voucher giảm giá
               </p>
-              <span className="font-semibold text-[#DA0000]">-50.000 VND</span>
+              <span className="font-semibold text-[#DA0000]">
+                -
+                {formatPrice(selectedVoucher) === '100.000'
+                  ? `${formatPrice(selectedVoucher)} VND`
+                  : `${selectedVoucher}%` || 0}
+              </span>
             </p>
           </div>
 
           <div className="mb-6 mt-4">
             <div className="flex items-center justify-between text-base font-semibold md:text-xl">
-              <p> Tổng thanh toán:</p> <p className="text-[#3A449B]">900.000 VND</p>
+              <p> Tổng thanh toán:</p> <p className="text-[#3A449B]">{totalPrice}.000 VND</p>
             </div>
             <p className="text-right text-[13px] font-medium leading-4 text-[#DA0000]">
-              Bạn đã tiết kiệm được 50K
+              Bạn đã tiết kiệm được {sale}.000 VND
             </p>
           </div>
           <button
@@ -868,72 +919,146 @@ const SectionFormBooking = () => {
       </div>
       {showThankYouModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="sidebar-scroll over relative h-[70%] w-full max-w-[90%] overflow-y-scroll rounded-3xl bg-white p-10 lg:max-w-[60%] lg:px-16 lg:py-12">
+          <form className="sidebar-scroll over relative w-full max-w-[90%] overflow-y-scroll rounded-3xl bg-white p-10 lg:max-w-[60%] lg:px-16 lg:py-12">
             {/* Modal Title */}
-            <Title>Thông tin thanh toán</Title>
+            <Title>Hình thức thanh toán</Title>
 
-            <div className="mt-5 grid grid-cols-1 gap-8 md:grid-cols-2 lg:mt-6">
-              {/* Left Section - Payment Information Form */}
-              <form>
-                <label className="mb-1 block text-sm font-medium">Chủ tài khoản</label>
-                <input
-                  type="text"
-                  value="HOANG LE QUANG"
-                  readOnly
-                  className="mb-4 w-full rounded-xl border border-[#E8E8E8] px-3 py-2 text-black"
-                />
+            <div className="mt-4 rounded-lg">
+              {/* MoMo Payment Option */}
+              <div>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="momo"
+                        className="form-radio size-4 accent-[#3A449B] lg:size-5"
+                        onChange={() => setSelectedPayment('momo')}
+                      />
+                      <span className="text-sm font-semibold md:text-base lg:text-lg">Ví MoMo</span>
+                    </label>
+                    <p className="text-xs font-medium lg:text-sm">
+                      Thanh toán bằng QR qua ví điện tử MoMo
+                    </p>
+                  </div>
+                  <CustomImage
+                    src={momo.src}
+                    alt="momo"
+                    width={60}
+                    height={60}
+                    className="hidden size-7 sm:block lg:size-8"
+                  />
+                </div>
+                {selectedPayment === 'momo' && (
+                  <motion.div {...fadeAnimation}>
+                    <CustomImage
+                      src={action.src}
+                      alt="momo"
+                      width={500}
+                      height={500}
+                      className="mx-auto mt-3 size-[250px]"
+                    />
+                  </motion.div>
+                )}
+              </div>
 
-                <label className="mb-1 block text-sm font-medium">Số tài khoản</label>
-                <input
-                  type="text"
-                  value="0123456789"
-                  readOnly
-                  className="text-sm- mb-4 w-full rounded-xl border border-[#E8E8E8] px-3 py-2 text-black"
-                />
+              {/* Bank Transfer Payment Option */}
+              <div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="mt-4 flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="bank"
+                        className="form-radio size-4 accent-[#3A449B] lg:size-5"
+                        onChange={() => setSelectedPayment('bank')}
+                      />
+                      <span className="text-sm font-semibold md:text-base lg:text-lg">
+                        Chuyển Khoản Ngân Hàng
+                      </span>
+                    </label>
+                    <p className="text-xs font-medium lg:w-[356px] lg:text-sm">
+                      Chuyển tiền mặt tại quầy giao dịch hoặc chuyển khoản qua Internet Banking và
+                      trạm ATM.
+                    </p>
+                  </div>
+                  <div className="hidden items-center gap-2 sm:flex">
+                    <CustomImage
+                      src={vcb.src}
+                      alt="vcb"
+                      width={80}
+                      height={80}
+                      className="size-7 lg:size-8"
+                    />
+                    <CustomImage
+                      src={acb.src}
+                      alt="acb"
+                      width={60}
+                      height={60}
+                      className="size-7 lg:size-9"
+                    />
+                    <CustomImage
+                      src={more.src}
+                      alt="more"
+                      width={60}
+                      height={60}
+                      className="size-7 lg:size-8"
+                    />
+                  </div>
+                </div>
+                {selectedPayment === 'bank' && (
+                  <motion.div {...fadeAnimation}>
+                    <CustomImage
+                      src={action.src}
+                      alt="bank"
+                      width={500}
+                      height={500}
+                      className="mx-auto mt-3 size-[250px]"
+                    />
+                  </motion.div>
+                )}
+              </div>
 
-                <label className="mb-1 block text-sm font-medium">Số tiền</label>
-                <input
-                  type="text"
-                  value="900.000đ"
-                  readOnly
-                  className="mb-4 w-full rounded-xl border border-[#E8E8E8] px-3 py-2 text-black"
-                />
-
-                <label className="mb-1 block text-sm font-medium">Nội dung chuyển tiền</label>
-                <input
-                  type="text"
-                  value="HD7475"
-                  readOnly
-                  className="mb-4 w-full rounded-xl border border-[#E8E8E8] px-3 py-2 text-black"
-                />
-              </form>
-
-              {/* Right Section - QR Code */}
-              <div className="flex flex-col items-center rounded-[32px] bg-[#3A449B] p-6 text-white">
-                <h3 className="mb-4 text-base font-semibold lg:text-lg">
-                  Quét mã QR để thanh toán
-                </h3>
-                <CustomImage
-                  src={qr.src}
-                  alt="QR Code"
-                  width={300}
-                  height={300}
-                  className="mb-4 h-[200px] w-[200px]"
-                />
-                <p className="text-center text-xs md:text-sm">
-                  Sử dụng ứng dụng ngân hàng hoặc ví điện tử hoặc Camera hỗ trợ QR code để quét mã
+              {/* Counter Payment Option */}
+              <div>
+                <label className="mt-4 flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="counter"
+                    className="form-radio size-4 accent-[#3A449B] lg:size-5"
+                    onChange={() => setSelectedPayment('counter')}
+                    checked={selectedPayment === 'counter'}
+                  />
+                  <span className="text-sm font-semibold md:text-base lg:text-lg">
+                    Tại Quầy Lễ Tân
+                  </span>
+                </label>
+                <p className="mt-1 text-xs font-medium lg:text-sm">
+                  Thanh toán trực tiếp tại quầy lễ tân của chúng tôi khi bạn đến nhận phòng
                 </p>
+                <div className="mt-4 rounded-[7px] border border-[#17C653] bg-[#eafff1] px-[14px] py-[17px]">
+                  <p className="text-xs font-semibold text-[#17C653] md:text-sm">
+                    Lưu ý trước khi thanh toán
+                  </p>
+                  <p className="text-xs font-medium text-[#000000]">
+                    Sau khi đặt phòng thành công, bạn có thể đến cơ sở của chúng tôi để thanh toán
+                    và bắt đầu sử dụng dịch vụ.
+                  </p>
+                </div>
               </div>
             </div>
 
             {/* Payment Button */}
             <button
               onClick={() => setShowThankYouModal(false)}
-              className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-lg bg-[#3A449B] py-2 text-white transition-all duration-300 hover:opacity-90"
+              className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
             >
-              Đặt lịch
+              Thanh Toán
             </button>
-          </div>
+          </form>
         </div>
       )}
     </form>

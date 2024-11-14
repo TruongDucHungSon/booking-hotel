@@ -12,7 +12,8 @@ export const useRoomsData = (locationId: number): UseQueryResult<any[], Error> =
       });
       return response.data;
     },
-    staleTime: 1000 * 60 * 5,
-    retry: 2,
+    staleTime: 1000 * 60 * 5, // Data remains fresh for 5 minutes
+    refetchOnWindowFocus: false, // Prevent refetching when the window is refocused
+    refetchOnReconnect: false,
   });
 };

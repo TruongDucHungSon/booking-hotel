@@ -7,6 +7,7 @@ import { formatPrice } from '@/utils/helpers';
 import { AnimatePresence, motion } from 'framer-motion';
 import { find, get, head, isEmpty, isEqual, map } from 'lodash';
 import { FC, useEffect, useMemo, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 interface Service {
   id: number;
@@ -45,6 +46,7 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
 }) => {
   const { data } = useServiceData();
   const services = useMemo(() => get(data, 'data', []), [data]);
+  const methods = useFormContext();
 
   const category = useMemo(() => find(services, { id: categoryId }), [categoryId, services]);
   const serviceValue = useMemo(() => {
@@ -66,6 +68,12 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
     if (isEmpty(selectedService) && !isEmpty(selectedCategory))
       setSelectedService(head(get(selectedCategory, 'services', [])));
   }, [selectedCategory, selectedService]);
+
+  useEffect(() => {
+    if (selectedService) {
+      methods.setValue('service', selectedService);
+    }
+  }, [selectedService, methods]);
 
   if (!isOpen) return null;
 
@@ -186,10 +194,12 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
             <div className="mt-6 flex justify-center">
               <button
                 onClick={() => {
+                  // If the selected service has changed, send the new selection to the parent component
                   if (!isEqual(serviceId, selectedService?.id)) {
                     onSelect({ category: selectedCategory, service: selectedService });
                   }
 
+                  // Close the modal after selecting
                   onClose();
                 }}
                 className="w-[220px] rounded-3xl bg-[#3A449B] px-4 py-2 text-base font-semibold text-white transition-colors duration-300 ease-in-out hover:bg-[#3A449B]/80"

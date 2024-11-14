@@ -8,8 +8,8 @@ const nextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'http', // Assuming your URL is using http
-        hostname: '36.50.135.197',
+        protocol: 'https', // Assuming your URL is using http
+        hostname: 'api.aksoft.vn',
         pathname: '/storage/**',
       },
       {

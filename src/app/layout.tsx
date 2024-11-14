@@ -1,14 +1,15 @@
 // src/app/layout.tsx
 
+import { BookingProvider } from '@/components/Providers';
 import Footer from '@/layout/Footer';
 import { ReactQueryProvider } from '@/react-query/ReactQueryProvider';
 import { ReduxProvider } from '@/redux/ReduxProvider';
+import { AnimatePresence } from 'framer-motion';
 import 'leaflet/dist/leaflet.css';
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import DefaultLayout from '../../src/layout/';
 import './globals.css';
-import { BookingProvider } from '@/components/Providers';
 
 const plus_jakarta_sans = Plus_Jakarta_Sans({ subsets: ['latin'] });
 
@@ -25,9 +26,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ReactQueryProvider>
             <ReduxProvider>
               <BookingProvider>
-                <DefaultLayout />
-                {children}
-                <Footer />
+                <AnimatePresence>
+                  <DefaultLayout />
+                  {children}
+                  <Footer />
+                </AnimatePresence>
               </BookingProvider>
             </ReduxProvider>
           </ReactQueryProvider>

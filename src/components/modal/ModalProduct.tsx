@@ -1,21 +1,15 @@
 'use client';
 import CustomImage from '@/components/CustomImage';
+import { formatPrice } from '@/utils/helpers';
 import React, { useState } from 'react';
 import Title from '../Title/Title';
-export type Product = {
-  id: string;
-  name: string;
-  price: number;
-  imageUrl: string;
-  originalPrice: number;
-};
 
 type ProductModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSelectProduct: (products: Product[]) => void; // Change to array of products
-  selectedProduct: Product[]; // Change to array of selected products
-  products: Product[];
+  onSelectProduct: (products: any[]) => void; // Change to array of products
+  selectedProduct: any[]; // Change to array of selected products
+  products: any[];
 };
 
 const ProductModal: React.FC<ProductModalProps> = ({
@@ -31,7 +25,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleProductSelect = (product: Product) => {
+  const handleProductSelect = (product: any) => {
     setSelectedIds(
       (prevSelectedIds) =>
         prevSelectedIds.includes(product.id)
@@ -60,7 +54,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
         </div>
 
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
+          {products?.map((product: any) => (
             <div key={product.id}>
               <ProductCard
                 product={product}
@@ -83,7 +77,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
 };
 
 type ProductCardProps = {
-  product: Product;
+  product: any;
   selected: boolean;
   onSelect: () => void;
 };
@@ -110,9 +104,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, selected, onSelect }
         </h2>
         <div className="mb-1 flex items-start gap-3">
           <span className="text-gradient-hover text-sm font-bold lg:text-base">
-            {product.price}.000 / Hộp
+            {formatPrice(product.price)} VND / Hộp
           </span>
-          <span className="text-sm text-[#B7B7B7] line-through">{product.originalPrice}.000</span>
+          <span className="text-sm text-[#B7B7B7] line-through">
+            {formatPrice(product.original_price)} VND / Hộp
+          </span>
         </div>
         <button
           type="button"
