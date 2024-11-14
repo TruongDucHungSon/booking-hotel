@@ -952,7 +952,13 @@ const SectionFormBooking = () => {
           <form className="sidebar-scroll over relative h-[70%] w-full max-w-[90%] overflow-y-scroll rounded-3xl bg-white p-10 lg:max-w-[60%] lg:px-16 lg:py-12">
             {/* Modal Title */}
             <Title>Hình thức thanh toán</Title>
-
+            <button
+              type="button"
+              onClick={() => setShowThankYouModal(false)}
+              className="absolute right-6 top-6 text-[32px] text-xl font-bold"
+            >
+              &times;
+            </button>
             <div className="mt-4 rounded-lg">
               {/* MoMo Payment Option */}
               <div>
