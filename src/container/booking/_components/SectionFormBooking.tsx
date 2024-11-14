@@ -38,11 +38,13 @@ import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { filter, find, forEach, head, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
+import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
 const SectionFormBooking = () => {
+  const router = useRouter();
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
   const { data: DATA_PROMOTIONS } = usePromotionData();
@@ -62,7 +64,7 @@ const SectionFormBooking = () => {
 
   const [isProductModalOpen, setProductModalOpen] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState<any[]>([]);
-
+  const [showThankYouText, setShowThankYouText] = useState(false);
   const handleSelectProduct = (products: any[]) => {
     setSelectedProducts(products); // Sets the selected products array
   };
@@ -176,7 +178,6 @@ const SectionFormBooking = () => {
 
     setTotalPrice(NewTotalPrice); // Cập nhật lại giá trị totalPrice
   }, [selectedVoucher, priceService, totalPriceProducts]);
-  console.log(totalPrice);
   const initTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
   const sale = formatPrice(initTotalPrice - totalPrice);
 
@@ -212,6 +213,26 @@ const SectionFormBooking = () => {
   useEffect(() => {
     if (location === 'at-home' && isEmpty(staff)) setValue('staff', staffs[0]?.name);
   }, [staffs, location, setValue]);
+
+  const handlePayment = async () => {
+    // Check if selected payment is "momo" or "bank"
+    if (selectedPayment === 'momo' || selectedPayment === 'bank') {
+      await setShowThankYouModal(false); // Show thank-you modal
+      setShowThankYouText(true); // Show thank-you modal
+
+      setTimeout(() => {
+        router.push('/dich-vu');
+      }, 5000); // Delay in milliseconds (e.g., 2 seconds)
+    }
+    if (selectedPayment === 'counter') {
+      await setShowThankYouModal(false); // Show thank-you modal
+      setShowThankYouText(true); // Show thank-you modal
+
+      setTimeout(() => {
+        router.push('/dich-vu');
+      }, 5000); // Delay in milliseconds (e.g., 2 seconds)
+    }
+  };
 
   const handleBook: SubmitHandler<any> = (data) => {
     forEach(data, (value, key) => methods.setValue(key, value));
@@ -472,7 +493,7 @@ const SectionFormBooking = () => {
                   className="mt-2 w-full rounded-xl border px-4 py-[10px]"
                 >
                   {map(NUMBER_PEOPLE, (index) => (
-                    <option key={index} value={index + 1} className="text-sm md:text-base">
+                    <option key={index} value={index} className="text-sm md:text-base">
                       {index + 1} người
                     </option>
                   ))}
@@ -928,7 +949,7 @@ const SectionFormBooking = () => {
       </div>
       {showThankYouModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <form className="sidebar-scroll over relative w-full max-w-[90%] overflow-y-scroll rounded-3xl bg-white p-10 lg:max-w-[60%] lg:px-16 lg:py-12">
+          <form className="sidebar-scroll over relative h-[70%] w-full max-w-[90%] overflow-y-scroll rounded-3xl bg-white p-10 lg:max-w-[60%] lg:px-16 lg:py-12">
             {/* Modal Title */}
             <Title>Hình thức thanh toán</Title>
 
@@ -1062,12 +1083,31 @@ const SectionFormBooking = () => {
 
             {/* Payment Button */}
             <button
-              onClick={() => setShowThankYouModal(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                handlePayment();
+              }}
               className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
             >
               Thanh Toán
             </button>
           </form>
+        </div>
+      )}
+      {showThankYouText && (
+        <div className="z-60 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 text-center">
+            <h2 className="text-xl font-semibold text-[#3A449B]">Cảm ơn bạn!</h2>
+            <p className="mt-2 text-gray-700">
+              Lịch của bạn đã được đặt thành công. Xin mời bạn đến trải nghiệm dịch vụ
+            </p>
+            <button
+              onClick={() => setShowThankYouText(false)}
+              className="mt-4 rounded-lg bg-[#3A449B] px-4 py-2 text-white hover:opacity-90"
+            >
+              Đóng
+            </button>
+          </div>
         </div>
       )}
     </form>

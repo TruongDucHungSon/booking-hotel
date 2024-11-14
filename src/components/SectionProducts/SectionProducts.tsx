@@ -1,26 +1,32 @@
-import { products } from '@/utils/constants';
+import { useProductData } from '@/services/product/Products.Service';
 import Link from 'next/link';
 import CustomImage from '../CustomImage';
 import Title from '../Title/Title';
 
 const SectionProducts = () => {
+  const { data: DATA_PRODUCTS } = useProductData();
+  const PRODUCTS: any = DATA_PRODUCTS?.data || [];
+  const imageProduct =
+    'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D';
+
   return (
     <section className="container pb-10 lg:pb-20">
       <Title>Sản phẩm liên quan</Title>
       {/* list products */}
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {products.slice(0, 6).map((product) => (
+        {PRODUCTS?.map((product: any) => (
           <div
             className="flex gap-4 rounded-3xl border border-[#E8E8E8] bg-white p-4"
             key={product.id}
           >
             <Link href={'/san-pham/san-pham-tot'}>
               <CustomImage
-                src={product.image.src}
+                src={imageProduct || product.image.src}
                 height={300}
                 width={300}
                 alt={product.name}
                 className="mb-4 h-20 w-20"
+                classNameImg="rounded-lg"
               />
             </Link>
             <div>
@@ -31,7 +37,9 @@ const SectionProducts = () => {
                 <span className="text-gradient-hover text-sm font-bold lg:text-base">
                   {product.price} / Hộp
                 </span>
-                <span className="text-sm text-[#B7B7B7] line-through">{product.originalPrice}</span>
+                <span className="text-sm text-[#B7B7B7] line-through">
+                  {product.original_price}
+                </span>
               </div>
               <button
                 type="button"
