@@ -868,22 +868,31 @@ const SectionFormBooking = () => {
                 />
                 Voucher giảm giá
               </p>
-              <span className="font-semibold text-[#DA0000]">
-                -
-                {formatPrice(selectedVoucher) === '100.000'
-                  ? `${formatPrice(selectedVoucher)} VND`
-                  : `${selectedVoucher}%` || 0}
-              </span>
+              {selectedVoucher && (
+                <span className="font-semibold text-[#DA0000]">
+                  -
+                  {formatPrice(selectedVoucher) === '100.000'
+                    ? `${formatPrice(selectedVoucher)} VND`
+                    : `${selectedVoucher}%` || 0}
+                </span>
+              )}
             </p>
           </div>
 
           <div className="mb-6 mt-4">
             <div className="flex items-center justify-between text-base font-semibold md:text-xl">
-              <p> Tổng thanh toán:</p> <p className="text-[#3A449B]">{totalPrice}.000 VND</p>
+              <p> Tổng thanh toán:</p>{' '}
+              <p className="text-[#3A449B]">
+                {isEmpty(selectedVoucher)
+                  ? `${initTotalPrice}.000 VND`
+                  : `${formatPrice(totalPrice)}.000 VND` || '0'}
+              </p>
             </div>
-            <p className="text-right text-[13px] font-medium leading-4 text-[#DA0000]">
-              Bạn đã tiết kiệm được {sale}.000 VND
-            </p>
+            {selectedVoucher && (
+              <p className="text-right text-[13px] font-medium leading-4 text-[#DA0000]">
+                Bạn đã tiết kiệm được {sale} nghìn đồng
+              </p>
+            )}
           </div>
           <button
             type="submit"
