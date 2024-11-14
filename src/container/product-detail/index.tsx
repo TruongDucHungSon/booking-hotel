@@ -6,7 +6,10 @@ import check from '@/assets/svgs/arrow/check.svg';
 import pr1 from '@/assets/svgs/introduce/pr1.jpg';
 import CustomImage from '@/components/CustomImage/index';
 import SectionProducts from '@/components/SectionProducts/SectionProducts';
+import { useProductDetailData } from '@/services/product/Products.Service';
+import { formatPrice } from '@/utils/helpers';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import SwiperCore from 'swiper';
 import 'swiper/css';
@@ -16,6 +19,20 @@ import { Navigation, Pagination, Thumbs } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ProductDetailPage = () => {
+  const params = useParams();
+
+  const slugProductDetail = params.id;
+
+  const { data: DATA_PRODUCTS_DETAIL, refetch } = useProductDetailData(slugProductDetail);
+  const PRODUCTDETAIL: any = DATA_PRODUCTS_DETAIL?.data || [];
+  console.log(PRODUCTDETAIL);
+
+  useEffect(() => {
+    if (slugProductDetail) {
+      refetch(); // refetch data when the id changes
+    }
+  }, [slugProductDetail, refetch]);
+
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]); // Keep refs for sections
   const [activeSectionId, setActiveSectionId] = useState<number>(1);
@@ -255,9 +272,9 @@ const ProductDetailPage = () => {
                 Thương hiệu: <span className="font-medium text-[#3A449B]">{product.brand}</span>
               </span>
             </div>
-            <h1 className="mb-2 text-[26px] text-xl font-bold leading-8">{product.name}</h1>
+            <h1 className="mb-2 text-[26px] text-xl font-bold leading-8">{PRODUCTDETAIL.name}</h1>
             <div className="mt-3 border-b border-b-[#E4E4E4] pb-4 text-2xl font-bold text-[#3A449B] lg:text-3xl">
-              {product.price} <span className="ml-1 font-normal">/ hộp</span>
+              {formatPrice(PRODUCTDETAIL.price)} VND <span className="ml-1 font-normal">/ hộp</span>
             </div>
 
             {/* Product Description */}

@@ -30,6 +30,7 @@ const SectionFormBooking = () => {
 
   const location = methods.watch('location_id');
   const store = methods.watch('store');
+  const staff = methods.watch('staff');
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
@@ -117,7 +118,8 @@ const SectionFormBooking = () => {
               className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none lg:text-base"
             >
               <CustomImage width={18} height={18} src={StoreIc} alt="Arrow Down" />
-              {methods.watch('staff') || 'Chọn nhân viên'}
+              {(STAFFS?.data && find(STAFFS?.data, { id: staff })?.name) || 'Chọn nhân viên'}
+
               <CustomImage
                 width={18}
                 height={18}
@@ -132,7 +134,7 @@ const SectionFormBooking = () => {
                   <li
                     key={staffOption.id}
                     onClick={() => {
-                      methods.setValue('staff', staffOption.name);
+                      methods.setValue('staff', staffOption.id);
 
                       staffHandlers.setFalse();
                     }}

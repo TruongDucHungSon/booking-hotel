@@ -26,7 +26,7 @@ const ProductPage = () => {
               key={product.id}
             >
               <div className="flex justify-center overflow-hidden rounded-xl">
-                <Link href="/san-pham/san-pham-chuc-nang">
+                <Link href={`/san-pham/${product.id}`}>
                   <CustomImage
                     src={imageProduct || product.image.url}
                     alt="product"
