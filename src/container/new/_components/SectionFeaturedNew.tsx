@@ -1,6 +1,7 @@
 import QcSrc from '@/assets/images/new/qc.png';
 import CustomImage from '@/components/CustomImage';
 import { useArticlesData } from '@/services/article/Article.Service';
+import Link from 'next/link';
 const SectionFeaturedNew = () => {
   const { data: DATA_ARTICLES } = useArticlesData();
   const ARTICLES: any = DATA_ARTICLES?.data || [];
@@ -12,7 +13,9 @@ const SectionFeaturedNew = () => {
         <div className="grid grid-cols-1 gap-4">
           {ARTICLES.map((article: any) => (
             <div key={article.id} className="border-b border-b-[#E8E8E8] pb-2">
-              <p className="text-sm font-semibold text-black">{article.title}</p>
+              <Link href={`/tin-tuc/${article.id}`} className="text-sm font-semibold text-black">
+                {article.title}
+              </Link>
               <p className="line-clamp-2 text-sm text-[#7A7A9D]">{article.content}</p>
             </div>
           ))}
