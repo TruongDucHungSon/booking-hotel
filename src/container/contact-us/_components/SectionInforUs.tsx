@@ -182,6 +182,14 @@ const SectionInforUs: React.FC = () => {
                   rows={3}
                 ></textarea>
               </div>
+              <div className="mt-4 flex items-center justify-between">
+                <button
+                  type="button"
+                  className="h-12 w-fit rounded-lg bg-[#3A449B] px-8 py-2 text-center text-base font-medium text-white shadow-md transition-all duration-300 hover:bg-[#1c2681] hover:bg-gradient-to-l"
+                >
+                  Lưu thông tin
+                </button>
+              </div>
             </form>
           </div>
         </div>

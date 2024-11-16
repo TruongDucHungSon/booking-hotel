@@ -23,12 +23,13 @@ import ListService from './ListService';
 const SectionFormBooking = () => {
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
-  const methods = useFormContext();
 
   const { data: DATA_STAFFS } = useStaffData();
   const STAFFS: any = DATA_STAFFS || [];
 
+  const methods = useFormContext();
   const location = methods.watch('location_id');
+
   const store = methods.watch('store');
   const staff = methods.watch('staff');
 

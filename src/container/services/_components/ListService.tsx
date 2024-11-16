@@ -17,7 +17,7 @@ const ListService = () => {
   const { data: DATA_SERVICES } = useServiceData();
   const SERVICES: any = useMemo(() => DATA_SERVICES || [], [DATA_SERVICES]);
   const methods = useFormContext();
-
+  const location = methods.watch('location_id'); // Watch for location_id field
   // State to hold the selected package and its title
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
 
@@ -37,8 +37,13 @@ const ListService = () => {
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
-  // Filter the services of the selected package
-  const filteredServices = selectedPackage ? selectedPackage.services : [];
+  // Filter the services of the selected package and based on the location
+  const filteredServices = useMemo(() => {
+    if (!selectedPackage || !location) return [];
+    return selectedPackage.services.filter(
+      (service: any) => service.delivery_type === location, // Filter services by location
+    );
+  }, [selectedPackage, location]);
 
   // Handle the booking of a service
   const handleBook = (service: any) => {
@@ -61,11 +66,7 @@ const ListService = () => {
               onClick={() => handlePackageClick(pkg)} // Set selected package on click
             >
               <div
-                className={`flex justify-center overflow-hidden rounded-[28px] ${
-                  selectedPackage?.id === pkg.id
-                    ? 'border-2 border-[#3a449b]' // Active style: border and text color
-                    : 'border-transparent' // Default style
-                } `}
+                className={`flex justify-center overflow-hidden rounded-[28px] ${selectedPackage?.id === pkg.id ? 'border-2 border-[#3a449b]' : 'border-transparent'}`}
               >
                 <CustomImage
                   src={sv1.src || pkg.image?.thumbnail}
@@ -77,11 +78,7 @@ const ListService = () => {
                 />
               </div>
               <h3
-                className={`mt-2 text-center text-sm font-medium md:text-base lg:text-lg ${
-                  selectedPackage?.id === pkg.id
-                    ? 'font-semibold text-[#3a449b]' // Active style: border and text color
-                    : 'border-transparent' // Default style
-                }`}
+                className={`mt-2 text-center text-sm font-medium md:text-base lg:text-lg ${selectedPackage?.id === pkg.id ? 'font-semibold text-[#3a449b]' : 'border-transparent'}`}
               >
                 {pkg.name}
               </h3>
@@ -198,7 +195,7 @@ const ListService = () => {
                         >
                           <g clipPath="url(#clip0_1166_21082)">
                             <path
-                              d="M10.5999 12.7117L9.65993 11.7717L12.7133 8.71172H1.93327V7.37839H12.7133L9.65327 4.31839L10.5999 3.37839L15.9333 8.71172L10.5999 12.7117Z"
+                              d="M10.5999 12.7117L9.65993 11.7717L12.7133 8.71172H1.93327V7.37839H12.7133L9.65993 4.31838L10.5999 3.37838L15.5999 8.37838L10.5999 12.7117Z"
                               fill="#3A449B"
                             />
                           </g>
