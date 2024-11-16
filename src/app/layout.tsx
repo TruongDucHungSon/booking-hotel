@@ -8,6 +8,8 @@ import { AnimatePresence } from 'framer-motion';
 import 'leaflet/dist/leaflet.css';
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import DefaultLayout from '../../src/layout/';
 import './globals.css';
 
@@ -31,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   {children}
                   <Footer />
                 </AnimatePresence>
+                <ToastContainer />
               </BookingProvider>
             </ReduxProvider>
           </ReactQueryProvider>

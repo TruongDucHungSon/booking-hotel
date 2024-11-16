@@ -8,6 +8,8 @@ export const API_ENDPOINT = {
   GET_ROOM: '/api/rooms/available',
   GET_PRODUCTS: '/api/products',
   PRODUCTDETAIL: '/api/products',
+  POST_BOOKING: '/api/bookings',
+  GET_ARTICLES: '/api/articles',
 };
 
 export const STALE_TIME: number = 5 * 60 * 1000;

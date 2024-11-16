@@ -3,15 +3,40 @@
 import cartIc from '@/assets/svgs/introduce/cart.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
+import { addToCart } from '@/redux/cart/slide';
 import { useProductData } from '@/services/product/Products.Service';
 import { formatPrice } from '@/utils/helpers';
 import Link from 'next/link';
-
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 const ProductPage = () => {
-  const { data: DATA_PRODUCTS } = useProductData();
-  const PRODUCTS: any = DATA_PRODUCTS?.data || [];
   const imageProduct =
     'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D';
+  const { data: DATA_PRODUCTS } = useProductData();
+  const PRODUCTS: any = DATA_PRODUCTS?.data || [];
+  const dispatch = useDispatch();
+
+  const handleAddToCart = (product: any) => {
+    dispatch(
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+        image: imageProduct,
+      }),
+    );
+    toast.success(`Sản phẩm ${product.name}  đã được thêm vào giỏ hàng !`, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   return (
     <main className="w-full bg-[#f5f6fa]">
       <div className="container py-10 lg:py-20">
@@ -26,19 +51,20 @@ const ProductPage = () => {
               key={product.id}
             >
               <div className="flex justify-center overflow-hidden rounded-xl">
-                <Link href={`/san-pham/${product.id}`}>
+                <Link href={`/san-pham/${[product.id]}`} as={`/san-pham/${product.id}`}>
                   <CustomImage
                     src={imageProduct || product.image.url}
                     alt="product"
                     width={500}
                     height={500}
                     className="h-[200px] cursor-pointer object-contain transition-transform duration-300 group-hover:scale-110"
+                    classNameImg="rounded-xl"
                   />
                 </Link>
               </div>
               <div className="mt-2">
                 <Link
-                  href="/san-pham/san-pham-chuc-nang"
+                  href={`/san-pham/${product.id}`}
                   className="text-lg font-normal text-black hover:text-[#3A449B] lg:text-base"
                 >
                   {product.name}
@@ -52,10 +78,13 @@ const ProductPage = () => {
                   {formatPrice(product.original_price)} VND
                 </span>
               </div>
-              <div className="mt-4 flex items-center justify-between">
+              <div
+                className="mt-4 flex items-center justify-between"
+                onClick={() => handleAddToCart(product)}
+              >
                 <CustomImage
                   src={cartIc}
-                  alt="call"
+                  alt="cart icon"
                   className="h-12 w-12 cursor-pointer transition duration-300 hover:scale-110 hover:opacity-80"
                 />
                 <button

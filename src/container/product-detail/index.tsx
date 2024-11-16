@@ -6,11 +6,14 @@ import check from '@/assets/svgs/arrow/check.svg';
 import pr1 from '@/assets/svgs/introduce/pr1.jpg';
 import CustomImage from '@/components/CustomImage/index';
 import SectionProducts from '@/components/SectionProducts/SectionProducts';
+import { addToCart } from '@/redux/cart/slide';
 import { useProductDetailData } from '@/services/product/Products.Service';
 import { formatPrice } from '@/utils/helpers';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 import SwiperCore from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -20,12 +23,11 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 const ProductDetailPage = () => {
   const params = useParams();
-
+  const dispatch = useDispatch();
   const slugProductDetail = params.id;
 
   const { data: DATA_PRODUCTS_DETAIL, refetch } = useProductDetailData(slugProductDetail);
   const PRODUCTDETAIL: any = DATA_PRODUCTS_DETAIL?.data || [];
-  console.log(PRODUCTDETAIL);
 
   useEffect(() => {
     if (slugProductDetail) {
@@ -180,6 +182,26 @@ const ProductDetailPage = () => {
     thumbnails: [pr1, pr1, pr1, pr1, pr1, pr1, pr1],
   };
 
+  const handleAddToCart = (product: any) => {
+    dispatch(
+      addToCart({
+        id: PRODUCTDETAIL.id,
+        name: PRODUCTDETAIL.name,
+        price: PRODUCTDETAIL.price,
+        quantity: 1,
+      }),
+    );
+    toast.success(`Sản phẩm ${product.name}  đã được thêm vào giỏ hàng !`, {
+      position: 'top-right',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   return (
     <main>
       <div className="container py-10 lg:py-20">
@@ -314,7 +336,10 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-            <div className="mt-5 grid grid-cols-1 gap-3 text-sm md:grid-cols-2 md:text-base">
+            <div
+              onClick={() => handleAddToCart(PRODUCTDETAIL)}
+              className="mt-5 grid grid-cols-1 gap-3 text-sm md:grid-cols-2 md:text-base"
+            >
               <button
                 type="button"
                 className="flex h-12 items-center justify-center gap-3 rounded-[22px] border-2 border-[#3A449B] bg-[#3A449B] px-4 py-[10px] font-semibold text-white transition-all duration-300 ease-in-out hover:bg-blue-900 md:h-[60px]"

@@ -1,8 +1,10 @@
 import { combineReducers } from '@reduxjs/toolkit'; // Import combineReducers from @reduxjs/toolkit
+import cartReducer from '../redux/cart/slide';
 import bookingReducer from '../redux/formBooking/slice';
 // Combine reducers from different slices into a single root reducer
 const rootReducer = combineReducers({
   booking: bookingReducer,
+  cart: cartReducer,
 });
 
 // Define type for the root reducer
