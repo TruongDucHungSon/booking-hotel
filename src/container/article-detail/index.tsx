@@ -97,8 +97,8 @@ const ArticleDetailPage = () => {
           <CustomImage
             src={
               ARTICLESDETAIL.featured_image
-                ? ARTICLESDETAIL.featured_image
-                : 'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?w=500&auto=format&fit=crop&q=60'
+                ? 'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?w=500&auto=format&fit=crop&q=60'
+                : ARTICLESDETAIL.featured_image
             }
             alt="SeABank event"
             width={800}
@@ -145,8 +145,8 @@ const ArticleDetailPage = () => {
                   <CustomImage
                     src={
                       ARTICLESDETAIL.featured_image
-                        ? ARTICLESDETAIL.featured_image
-                        : 'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?w=500&auto=format&fit=crop&q=60'
+                        ? 'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?w=500&auto=format&fit=crop&q=60'
+                        : ARTICLESDETAIL.featured_image
                     }
                     alt="Related News"
                     width={400}
