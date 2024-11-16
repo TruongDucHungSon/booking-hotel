@@ -13,19 +13,11 @@ import Service4 from '../assets/images/service/sv4.png';
 import Service5 from '../assets/images/service/sv5.png';
 import pr1 from '../assets/svgs/introduce/pr1.jpg';
 
-import RoomSrc1 from '@/assets/images/room/r1.png';
-import RoomSrc2 from '@/assets/images/room/r2.png';
-import RoomSrc3 from '@/assets/images/room/r3.png';
-import RoomSrc4 from '@/assets/images/room/r4.png';
-import RoomSrc5 from '@/assets/images/room/r5.png';
-import RoomSrc6 from '@/assets/images/room/r6.png';
-
 import sv1 from '@/assets/images/new/sv1.png';
 import sv2 from '@/assets/images/new/sv2.png';
 import sv3 from '@/assets/images/new/sv3.png';
 import sv4 from '@/assets/images/new/sv4.png';
 import sv5 from '@/assets/images/new/sv5.png';
-import { RoomProps } from '@/components/modal/SelectionModalForm';
 
 export const Navigation = [
   {
@@ -764,23 +756,6 @@ export const typeServices = [
     type: 'Massage tại nhà',
   },
 ] as const;
-
-export const roomsData: RoomProps[] = [
-  { name: 'Phòng Luxury VIP 1 ', image: RoomSrc1 },
-  { name: 'Phòng Luxury VIP 2', image: RoomSrc2 },
-  { name: 'Phòng Luxury VIP 3', image: RoomSrc3 },
-  { name: 'Phòng Luxury VIP 4', image: RoomSrc4 },
-  { name: 'Phòng Luxury VIP 5', image: RoomSrc5 },
-  { name: 'Phòng Luxury VIP 6', image: RoomSrc6 },
-];
-export const bedsData: RoomProps[] = [
-  { name: 'Giường Luxury Thượng Hạng 1 ', image: RoomSrc1 },
-  { name: 'Giường Luxury Thượng Hạng 2', image: RoomSrc2 },
-  { name: 'Giường Luxury Thượng Hạng 3', image: RoomSrc3 },
-  { name: 'Giường Luxury Thượng Hạng 4', image: RoomSrc4 },
-  { name: 'Giường Luxury Thượng Hạng 5', image: RoomSrc5 },
-  { name: 'Giường Luxury Thượng Hạng 6', image: RoomSrc6 },
-];
 
 export const serviceLocations = [
   {

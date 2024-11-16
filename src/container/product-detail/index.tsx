@@ -42,7 +42,6 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev));
-
   // IntersectionObserver setup
   useEffect(() => {
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {

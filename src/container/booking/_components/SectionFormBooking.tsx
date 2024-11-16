@@ -25,7 +25,8 @@ import ProductModal from '@/components/modal/ModalProduct';
 import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
-import SelectionModalForm from '@/components/modal/SelectionModalForm';
+import SelectionModalForm, { RoomProps } from '@/components/modal/SelectionModalForm';
+import { usePostBooking } from '@/services/booking/Booking.Service';
 import { useLocationData } from '@/services/location/Location.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
@@ -146,7 +147,11 @@ const SectionFormBooking = () => {
   const staff = watch('staff');
   const store = watch('store');
   const nameService = selectedService?.name || 'Chưa chọn dịch vụ';
-
+  const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
+  const handleSelectRoom = (room: RoomProps) => {
+    setSelectedRoom(room);
+  };
+  console.log('Selected room:', selectedService);
   // Hàm tính tổng giá của sản phẩm
   const calculateTotalPrice = (products: any) => {
     return products.reduce((total: any, product: any) => total + parseInt(product.price), 0);
@@ -233,26 +238,49 @@ const SectionFormBooking = () => {
       }, 5000); // Delay in milliseconds (e.g., 2 seconds)
     }
   };
-
+  const { mutate } = usePostBooking();
   const handleBook: SubmitHandler<any> = (data) => {
     forEach(data, (value, key) => methods.setValue(key, value));
     const values = methods.getValues();
     setShowThankYouModal(true);
 
-    const orderData = {
-      service_type: values.location_id,
+    const formData = {
+      room_id: selectedRoom?.id,
+      // service_type: values.location_id || 'in-store', // <== This might be `values.delivery_type` if location_id is not correct
       guest_info: {
         name: values.fullName,
         phone_number: values.phoneNumber,
         gender: values.gender,
       },
       location_id: parseInt(values.store),
-      number_of_people: parseInt(values.number_of_people), // Use form data if present, otherwise use USER_DATA
+      number_of_people: parseInt(values.number_of_people),
       notes: values.note,
       address: values.address,
       booking_time: timeValue,
+      staff_id: 9,
+      packages: [
+        {
+          package_id: selectedService?.id,
+          quantity: 1,
+        },
+      ],
+      services: currentServices?.map((item: any) => ({
+        service_id: parseInt(item.id),
+        quantity: item.quantity,
+      })),
+      delivery_type: 'in-store', // Should map directly to `service_type` in DB if this is the correct interpretation
     };
-    console.log(orderData);
+    console.log(formData);
+
+    mutate(formData, {
+      onSuccess: (response: any) => {
+        console.log('Booking successful:', response);
+        reset(); // Reset the form after successful booking
+      },
+      onError: (error: any) => {
+        console.error('Booking failed:', error);
+      },
+    });
   };
 
   return (
@@ -453,7 +481,7 @@ const SectionFormBooking = () => {
                     <input
                       type="radio"
                       className="accent-[#3A449B]"
-                      value="Nam"
+                      value="male"
                       {...register('gender')}
                     />
                     <span className="ml-2 text-sm md:text-base">Nam</span>
@@ -461,7 +489,7 @@ const SectionFormBooking = () => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      value="Nữ"
+                      value="female"
                       className="accent-[#3A449B]"
                       {...register('gender')}
                     />
@@ -470,7 +498,7 @@ const SectionFormBooking = () => {
                   <label className="flex items-center">
                     <input
                       type="radio"
-                      value="Khác"
+                      value="orther"
                       className="accent-[#3A449B]"
                       {...register('gender')}
                     />
@@ -564,9 +592,12 @@ const SectionFormBooking = () => {
                 <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
               </button>
               {/* Display selected room */}
-              {room && (
-                <div className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] text-xs font-medium leading-4 text-black/85 md:text-base">
-                  {room}
+              {selectedRoom && (
+                <div
+                  key={selectedRoom.id}
+                  className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] text-xs font-medium leading-4 text-black/85 md:text-base"
+                >
+                  {selectedRoom.name}
                 </div>
               )}
             </div>
@@ -575,9 +606,7 @@ const SectionFormBooking = () => {
             <SelectionModalForm
               isOpen={isModalOpenRoom}
               onClose={closeModalRoom}
-              onSelectRoom={(v) => {
-                setValue('room', v.name);
-              }}
+              onSelectRoom={handleSelectRoom}
               rooms={ROOMS}
               title="Đặt phòng"
               sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"

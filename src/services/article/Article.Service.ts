@@ -17,6 +17,21 @@ export const useArticlesData = (): UseQueryResult<any, Error> => {
     refetchOnReconnect: false,
   });
 };
+export const useArticleDCategoryData = (id: any): UseQueryResult<any, Error> => {
+  return useQuery<any, Error>({
+    queryKey: ['article-detail'], // Query key as an object with 'queryKey' property
+    queryFn: async () => {
+      return publicRequest.request({
+        method: 'GET',
+        url: `${API_ENDPOINT.GET_ARTICLES}/category/${id}`,
+      });
+    },
+    staleTime: 1000 * 60 * 5, // Data remains fresh for 5 minutes
+    refetchOnWindowFocus: false, // Prevent refetching when the window is refocused
+    refetchOnReconnect: false,
+  });
+};
+
 export const useArticleDetailData = (id: any): UseQueryResult<any, Error> => {
   return useQuery<any, Error>({
     queryKey: ['article-detail'], // Query key as an object with 'queryKey' property

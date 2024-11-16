@@ -1,16 +1,19 @@
 import QcSrc from '@/assets/images/new/qc.png';
 import CustomImage from '@/components/CustomImage';
-import { featuredArticles } from '@/utils/constants';
+import { useArticlesData } from '@/services/article/Article.Service';
 const SectionFeaturedNew = () => {
+  const { data: DATA_ARTICLES } = useArticlesData();
+  const ARTICLES: any = DATA_ARTICLES?.data || [];
+
   return (
     <section>
       <div className="">
         <h2 className="mb-4 text-lg font-bold md:text-xl">Bài Viết Nổi Bật</h2>
         <div className="grid grid-cols-1 gap-4">
-          {featuredArticles.map((article) => (
-            <div key={article.title} className="border-b border-b-[#E8E8E8] pb-2">
+          {ARTICLES.map((article: any) => (
+            <div key={article.id} className="border-b border-b-[#E8E8E8] pb-2">
               <p className="text-sm font-semibold text-black">{article.title}</p>
-              <p className="line-clamp-2 text-sm text-[#7A7A9D]">{article.date}</p>
+              <p className="line-clamp-2 text-sm text-[#7A7A9D]">{article.content}</p>
             </div>
           ))}
         </div>

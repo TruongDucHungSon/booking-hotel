@@ -5,17 +5,17 @@ const nextConfig = {
       {
         protocol: 'https', // or 'http' if the domain uses it
         hostname: 'images.unsplash.com',
-        pathname: '/**',
+        pathname: '/**', // Allow all paths under this hostname
       },
       {
-        protocol: 'https', // Assuming your URL is using http
+        protocol: 'https', // Assuming your URL is using https
         hostname: 'api.aksoft.vn',
-        pathname: '/storage/**',
+        pathname: '/**', // Ensure this path is correct for your images
       },
       {
         protocol: 'https', // Update to 'https' if your QA domain uses https
         hostname: 'qa1.mecaheo.com',
-        pathname: '/storage/**',
+        pathname: '/storage/**', // Ensure this path is correct for your images
       },
     ],
   },

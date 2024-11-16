@@ -1,19 +1,22 @@
 import RoomSrc2 from '@/assets/images/room/r2.png';
 import { AnimatePresence, motion } from 'framer-motion';
-import { get, head } from 'lodash';
+import { head } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import CustomImage from '../../components/CustomImage';
 import Title from '../Title/Title';
+
 export interface RoomProps {
+  id?: number;
   name: string;
-  image: { src: string }; // URL to the room image
+  image: { src: string };
+  type_text: string;
 }
 
 interface RoomSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectRoom: (room: RoomProps) => void; // Update to include bed count
-  rooms: any[];
+  onSelectRoom: (room: any) => void;
+  rooms: RoomProps[];
   title: string;
   sutTitle1: string;
   sutTitle2: string;
@@ -30,14 +33,15 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
   sutTitle2,
   sutTitle3,
 }) => {
-  const [selectedRoom, setSelectedRoom] = useState<any | null>(get(head(rooms), 'name', ''));
-  const [filteredRooms, setFilteredRooms] = useState<any[]>([]);
+  const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(head(rooms) || null);
+  const [filteredRooms, setFilteredRooms] = useState<RoomProps[]>([]);
   const [selectedType, setSelectedType] = useState<string>('Phòng thường');
+
   useEffect(() => {
-    // Filter rooms based on the selected type
     const filtered = rooms.filter((room) => room.type_text === selectedType);
     setFilteredRooms(filtered);
   }, [selectedType, rooms]);
+
   if (!isOpen) return null;
 
   return (
@@ -52,9 +56,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
             &times;
           </button>
           <p className="mb-6 mt-[10px] flex flex-wrap items-center justify-center gap-2 text-center text-xs font-semibold text-[#1B1B1B] md:text-base">
-            {sutTitle1}
-            <span className="text-[#EF5F5F]">{sutTitle2}</span>
-            và
+            {sutTitle1} <span className="text-[#EF5F5F]">{sutTitle2}</span> và{' '}
             <span className="text-[#EF5F5F]">{sutTitle3}</span>
           </p>
 
@@ -83,21 +85,20 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.7 }}
                 onClick={() => setSelectedRoom(room)}
-                className={`group cursor-pointer overflow-hidden rounded-3xl transition-all duration-300`}
+                className={`group cursor-pointer overflow-hidden rounded-3xl transition-all duration-300 ${
+                  selectedRoom?.id === room.id ? 'border-2 border-[#3A449B]' : ''
+                }`}
               >
                 <CustomImage
                   src={RoomSrc2.src || room.image.src}
                   alt={room.name}
                   width={1000}
                   height={500}
-                  className={`max-h-[180px] overflow-hidden rounded-3xl ${
-                    selectedRoom?.name === room.name ? 'border-2 border-[#3A449B]' : ''
-                  }`}
-                  classNameImg="rounded-3xl"
+                  className="max-h-[180px] overflow-hidden rounded-3xl"
                 />
                 <p
                   className={`mt-2 text-center text-sm md:text-base ${
-                    selectedRoom?.name === room.name
+                    selectedRoom?.id === room.id
                       ? 'font-semibold text-[#3A449B]'
                       : 'group-hover:text-[#3A449B]'
                   }`}
@@ -111,7 +112,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
           <div className="mt-4 flex flex-col gap-2">
             <button
               type="button"
-              className={`*: mx-auto w-[220px] rounded-3xl bg-[#3A449B] px-6 py-2 text-sm text-white md:text-base ${
+              className={`mx-auto w-[220px] rounded-3xl bg-[#3A449B] px-6 py-2 text-sm text-white md:text-base ${
                 !selectedRoom ? 'cursor-not-allowed opacity-50' : ''
               }`}
               onClick={() => {

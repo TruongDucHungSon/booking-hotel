@@ -1,19 +1,25 @@
+import RoomSrc2 from '@/assets/images/room/r2.png';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
-import { newsArticles } from '@/utils/constants';
+import { useArticlesData } from '@/services/article/Article.Service';
+import { formatDateString } from '@/utils/helpers';
 import Link from 'next/link';
 
 const SectionListNews = () => {
+  const { data: DATA_ARTICLES } = useArticlesData();
+  const ARTICLES: any = DATA_ARTICLES?.data || [];
+  console.log(ARTICLES);
+
   return (
     <section>
       <Title>Tin tức</Title>
       <div className="mt-3 md:mt-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {newsArticles.map((article, index) => (
-            <div key={index} className="rounded-3xl border border-[#E8E8E8] bg-white">
-              <Link href={'/tin-tuc/1'} className="text-sm font-semibold md:text-base">
+          {ARTICLES.map((article: any) => (
+            <div key={article.id} className="rounded-3xl border border-[#E8E8E8] bg-white">
+              <Link href={`/tin-tuc/${article.id}`} className="text-sm font-semibold md:text-base">
                 <CustomImage
-                  src={article.image}
+                  src={RoomSrc2.src || `https://api.aksoft.vn/${article.featured_image}`}
                   alt={article.title}
                   width={200}
                   height={200}
@@ -27,10 +33,10 @@ const SectionListNews = () => {
                   {article.title}
                 </Link>
                 <p className="mb-2 mt-1 line-clamp-3 text-xs text-[#343434] md:mb-4 md:mt-2 md:text-sm">
-                  {article.description}
+                  {article.content}
                 </p>
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-[#343434]">{article.date}</p>
+                  <p className="text-xs text-[#343434]">{formatDateString(article.created_at)}</p>
                   <Link
                     href={'/tin-tuc/1'}
                     className="group flex items-center justify-center gap-2 text-sm font-medium text-[#3A449B] hover:underline md:text-base"
@@ -68,7 +74,7 @@ const SectionListNews = () => {
             </div>
           ))}
         </div>
-        <div className="mt-8 flex justify-center">
+        {/* <div className="mt-8 flex justify-center">
           <Link
             href="/dich-vu"
             className="group mx-auto flex w-[260px] items-center justify-center gap-2 rounded-2xl bg-[#3A449B] px-6 py-[12px] font-medium text-white"
@@ -89,7 +95,7 @@ const SectionListNews = () => {
               </svg>
             </span>
           </Link>
-        </div>
+        </div> */}
       </div>
     </section>
   );

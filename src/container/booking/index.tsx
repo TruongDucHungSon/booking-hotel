@@ -1,5 +1,4 @@
 'use client';
-import SectionProducts from '@/components/SectionProducts/SectionProducts';
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import SectionFormBooking from '../booking/_components/SectionFormBooking';
@@ -66,14 +65,6 @@ const BookingPage = () => {
       </motion.div>
 
       {/* Section Products */}
-      <motion.div
-        ref={(el: HTMLDivElement | null) => {
-          sectionRefs.current[1] = el;
-        }}
-        {...createInViewAnimation(1)}
-      >
-        <SectionProducts />
-      </motion.div>
     </main>
   );
 };
