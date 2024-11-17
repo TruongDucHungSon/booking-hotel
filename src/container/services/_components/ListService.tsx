@@ -15,68 +15,68 @@ import { useFormContext } from 'react-hook-form';
 const ListService = () => {
   const router = useRouter();
   const { data: DATA_SERVICES } = useServiceData();
-  const SERVICES: any = useMemo(() => DATA_SERVICES || [], [DATA_SERVICES]);
   const methods = useFormContext();
-  const location = methods.watch('location_id'); // Watch for location_id field
-  // State to hold the selected package and its title
+  const location = methods.watch('location_id'); // Watching location_id
+
+  // Filter services based on selected location
+  const SERVICES = useMemo(() => {
+    return (
+      DATA_SERVICES?.data?.filter((pkg: any) =>
+        pkg.services.some((service: any) => service.delivery_type === location),
+      ) || []
+    );
+  }, [DATA_SERVICES, location]);
+
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
 
-  // Set the first package as the default selected package when the component mounts
+  // Set the first package that matches the location as the default selected package
   useEffect(() => {
-    if (SERVICES?.data?.length) {
-      setSelectedPackage(SERVICES?.data[0]); // Set the first package as the default
+    if (SERVICES.length) {
+      setSelectedPackage(SERVICES[0]);
     }
   }, [SERVICES]);
-
-  // Handle package click to filter the services and change the title
-  const handlePackageClick = (pkg: any) => {
-    setSelectedPackage(pkg);
-  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
-  // Filter the services of the selected package and based on the location
+  // Filter services based on selected package and location
   const filteredServices = useMemo(() => {
     if (!selectedPackage || !location) return [];
-    return selectedPackage.services.filter(
-      (service: any) => service.delivery_type === location, // Filter services by location
-    );
+    return selectedPackage.services.filter((service: any) => service.delivery_type === location);
   }, [selectedPackage, location]);
 
-  // Handle the booking of a service
+  // Handle package click to update selected package
+  const handlePackageClick = (pkg: any) => {
+    setSelectedPackage(pkg);
+  };
+
+  // Handle booking by setting form values and redirecting
   const handleBook = (service: any) => {
     methods.setValue('service', service);
     methods.setValue('category', selectedPackage);
-
     router.push('/dat-lich');
   };
 
   return (
     <section className="mt-[28px] lg:mt-[56px]">
-      {/* Display all packages initially */}
+      {/* Display packages */}
       <div className="mt-6 w-full">
-        {/* Container with scrollable behavior on smaller screens */}
-        <div className="scroll-snap-x sidebar-scroll md:scroll-snap-x-start lg:scroll-snap-none flex space-x-6 overflow-x-auto lg:space-x-8 lg:overflow-x-visible">
-          {SERVICES?.data?.map((pkg: any) => (
+        <div className="flex space-x-6 overflow-x-auto lg:space-x-8 lg:overflow-x-visible">
+          {SERVICES.map((pkg: any) => (
             <div
               key={pkg.id}
-              className={`scroll-snap-start group mb-4 max-w-sm transform cursor-pointer rounded-3xl transition-all duration-300`} // snap-align applied here
-              onClick={() => handlePackageClick(pkg)} // Set selected package on click
+              className={`cursor-pointer rounded-[28px] transition-all duration-300 ${selectedPackage?.id === pkg.id ? 'border-2 border-[#3a449b]' : 'border-transparent'}`}
+              onClick={() => handlePackageClick(pkg)}
             >
-              <div
-                className={`flex justify-center overflow-hidden rounded-[28px] ${selectedPackage?.id === pkg.id ? 'border-2 border-[#3a449b]' : 'border-transparent'}`}
-              >
-                <CustomImage
-                  src={sv1.src || pkg.image?.thumbnail}
-                  alt="service"
-                  width={500}
-                  height={500}
-                  className="h-[100px] w-[250px] lg:w-[[calc(100%/20%)]]"
-                  classNameImg="rounded-3xl"
-                />
-              </div>
+              <CustomImage
+                src={sv1.src || pkg.image?.thumbnail}
+                alt="service"
+                width={500}
+                height={500}
+                className="h-[100px] w-[250px] lg:w-[[calc(100%/20%)]]"
+                classNameImg="rounded-3xl"
+              />
               <h3
                 className={`mt-2 text-center text-sm font-medium md:text-base lg:text-lg ${selectedPackage?.id === pkg.id ? 'font-semibold text-[#3a449b]' : 'border-transparent'}`}
               >
@@ -87,7 +87,7 @@ const ListService = () => {
         </div>
       </div>
 
-      {/* Dynamically change title and services based on the selected package */}
+      {/* Display selected package title and services */}
       <div className="mx-auto mb-8 py-6 lg:mb-[56px] lg:py-12">
         <motion.div
           initial={{ opacity: 0 }}
@@ -100,6 +100,7 @@ const ListService = () => {
         </motion.div>
 
         <div className="mt-4 flex flex-col items-center justify-center lg:mt-8 lg:flex-row">
+          {/* Left: Image of selected package */}
           <div className="flex w-[80%] justify-center md:w-[50%] lg:w-1/2">
             <motion.div
               initial={{ opacity: 0 }}
@@ -117,7 +118,7 @@ const ListService = () => {
             </motion.div>
           </div>
 
-          {/* Right Section: Services */}
+          {/* Right: Services of selected package */}
           <div className="mt-4 w-full md:mt-8 lg:w-1/2">
             <motion.div
               key={selectedPackage?.id}
@@ -126,9 +127,9 @@ const ListService = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 1 }}
             >
-              {filteredServices?.map((service: any) => (
+              {filteredServices.map((service: any) => (
                 <div key={service.id} className="mb-8 rounded-3xl border border-[#E4E4E7] p-6">
-                  <h2 className="flex items-center text-base font-semibold text-primary md:text-lg">
+                  <h2 className="text-base font-semibold text-primary md:text-lg">
                     {service.name}
                   </h2>
                   <div className="my-4 flex h-10 items-center justify-between rounded-xl bg-custom-gradient px-4 py-[10px] text-white">

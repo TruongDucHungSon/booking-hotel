@@ -15,6 +15,7 @@ interface Service {
   duration: string;
   price: string;
   description: string[];
+  delivery_type: string; // Added to track service location type
 }
 
 interface Category {
@@ -47,26 +48,36 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
   const { data } = useServiceData();
   const services = useMemo(() => get(data, 'data', []), [data]);
   const methods = useFormContext();
+  const location = methods.watch('location_id');
+  // Watching location_id
 
   const category = useMemo(() => find(services, { id: categoryId }), [categoryId, services]);
   const serviceValue = useMemo(() => {
     const services = get(category, 'services', []);
-
     if (isEmpty(services)) return null;
-
     return find(services, { id: serviceId });
   }, [category, serviceId]);
 
   const [selectedCategory, setSelectedCategory] = useState<any>(category);
   const [selectedService, setSelectedService] = useState<any>(serviceValue);
 
-  useEffect(() => {
-    if (isEmpty(selectedCategory) && !isEmpty(services)) setSelectedCategory(head(services));
-  }, [selectedCategory, services]);
+  // Filter categories based on the location type (at-home or in-store)
+  const filteredCategories = useMemo(() => {
+    return services.filter((category: any) =>
+      category.services.some((service: any) => service.delivery_type === location),
+    );
+  }, [services, location]);
 
   useEffect(() => {
-    if (isEmpty(selectedService) && !isEmpty(selectedCategory))
+    if (isEmpty(selectedCategory) && !isEmpty(filteredCategories)) {
+      setSelectedCategory(head(filteredCategories));
+    }
+  }, [selectedCategory, filteredCategories]);
+
+  useEffect(() => {
+    if (isEmpty(selectedService) && !isEmpty(selectedCategory)) {
       setSelectedService(head(get(selectedCategory, 'services', [])));
+    }
   }, [selectedCategory, selectedService]);
 
   useEffect(() => {
@@ -103,9 +114,9 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
               cùng một lúc.
             </p>
 
-            {/* Category filter */}
+            {/* Category filter based on location */}
             <div className="sidebar-scroll mb-4 flex snap-x snap-mandatory gap-6 overflow-visible overflow-x-auto lg:grid-cols-5">
-              {map(services, (item) => (
+              {map(filteredCategories, (item) => (
                 <motion.div
                   key={item.id}
                   className="mb-2 flex min-w-[calc(23%-1rem)] flex-shrink-0 cursor-pointer snap-center flex-col items-center gap-2 md:gap-4"
@@ -181,7 +192,7 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
                         height={32}
                         className="h-6 w-6"
                       />
-                      <p className="w-[320px] text-xs md:text-sm">{service?.description}</p>
+                      <p className="w-[320px] text-xs md:text-sm">{service.description}</p>
                     </div>
                     <p className="mt-2 text-sm font-semibold text-[#18181B] md:mt-4 md:text-base">
                       Giá chưa bao gồm VAT & TIP.

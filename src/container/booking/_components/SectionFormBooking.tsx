@@ -319,7 +319,7 @@ const SectionFormBooking = () => {
                       <li
                         key={location.value}
                         onClick={() => {
-                          setValue('location_id', location.service_type);
+                          methods.setValue('location_id', location.service_type);
                           locationHandlers.setFalse();
                         }}
                         className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
