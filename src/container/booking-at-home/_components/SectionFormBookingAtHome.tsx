@@ -123,16 +123,23 @@ const SectionFormBookingAtHome = () => {
     ),
   });
   const [showThankYouModal, setShowThankYouModal] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState('counter');
-
-  const location = methods.watch('location_id');
-
   const selectedTime = watch('selectedTime');
   const currentServices = watch('services');
-  const selectedService = methods.watch('service');
+  const selectedService = watch('service');
 
   const selectedCategory = watch('category');
   const staff = watch('staff');
+  const [selectedPayment, setSelectedPayment] = useState('counter');
+  const location = methods.watch('location_id');
+
+  useEffect(() => {
+    if (location === 'in-store') {
+      router.push('/dat-lich');
+    } else if (location === 'at-home') {
+      router.push('/dat-lich-tai-nha');
+    }
+    setModalOpenServiceBooking(true);
+  }, [location]);
 
   const nameService = selectedService?.name || 'Chưa chọn dịch vụ';
 
@@ -193,14 +200,6 @@ const SectionFormBookingAtHome = () => {
   }, [methods, reset]);
 
   useEffect(() => {
-    if (location === 'at-home') {
-      router.push('/dat-lich-tai-nha');
-    } else if (location === 'in-store') {
-      router.push('/dat-lich');
-    }
-  }, [router, location]);
-
-  useEffect(() => {
     if (location === 'at-home' && isEmpty(staff)) methods.setValue('staff', staffs[0]?.id);
   }, [staffs, location, setValue]);
 
@@ -230,7 +229,6 @@ const SectionFormBookingAtHome = () => {
     setShowThankYouModal(true);
 
     const formData = {
-      // service_type: values.location_id || 'in-store', // <== This might be `values.delivery_type` if location_id is not correct
       guest_info: {
         name: values.fullName,
         phone_number: values.phoneNumber,

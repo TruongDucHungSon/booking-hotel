@@ -43,6 +43,7 @@ import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
 const SectionFormBooking = () => {
   const router = useRouter();
+
   const { data: DATA_LOCATIONS } = useLocationData();
   const LOCATIONS: any = DATA_LOCATIONS || [];
   const { data: DATA_PROMOTIONS } = usePromotionData();
@@ -131,21 +132,13 @@ const SectionFormBooking = () => {
   const [selectedPayment, setSelectedPayment] = useState('counter');
 
   const location = methods.watch('location_id');
-  console.log(location);
-
   const selectedTime = watch('selectedTime');
   const room = watch('room');
   const currentServices = watch('services');
-  const selectedService = methods.watch('service');
 
+  const selectedService = watch('service');
   const selectedCategory = watch('category');
   const store = watch('store');
-
-  const nameService = selectedService?.name || 'Chưa chọn dịch vụ';
-  const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
-  const handleSelectRoom = (room: RoomProps) => {
-    setSelectedRoom(room);
-  };
 
   useEffect(() => {
     if (location === 'in-store') {
@@ -153,7 +146,13 @@ const SectionFormBooking = () => {
     } else if (location === 'at-home') {
       router.push('/dat-lich-tai-nha');
     }
-  }, [router, location]);
+  }, [location]);
+
+  const nameService = selectedService?.name || 'Chưa chọn dịch vụ';
+  const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
+  const handleSelectRoom = (room: RoomProps) => {
+    setSelectedRoom(room);
+  };
 
   const calculateTotalPrice = (products: any) => {
     return products.reduce((total: any, product: any) => total + parseInt(product.price), 0);
@@ -170,21 +169,20 @@ const SectionFormBooking = () => {
 
   // useEffect để cập nhật totalPrice khi selectedVoucher thay đổi
   useEffect(() => {
-    let NewTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
+    let newTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
+
     if (selectedVoucher) {
       const voucherValue = parseInt(selectedVoucher);
-      console.log(voucherValue);
-
       if (voucherValue < 100) {
-        NewTotalPrice = Math.round(NewTotalPrice - (NewTotalPrice * voucherValue) / 100);
-      }
-      if (voucherValue > 100) {
-        NewTotalPrice = NewTotalPrice - parseInt(formatPrice(voucherValue), 10);
+        newTotalPrice = Math.round(newTotalPrice - (newTotalPrice * voucherValue) / 100);
+      } else {
+        newTotalPrice = newTotalPrice - voucherValue;
       }
     }
 
-    setTotalPrice(NewTotalPrice); // Cập nhật lại giá trị totalPrice
+    setTotalPrice(newTotalPrice);
   }, [selectedVoucher, priceService, totalPriceProducts]);
+
   const initTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
   const sale = formatPrice(initTotalPrice - totalPrice);
 
@@ -211,11 +209,13 @@ const SectionFormBooking = () => {
 
   useEffect(() => {
     reset(methods.getValues());
-  }, [methods, reset]);
+  }, []);
 
   useEffect(() => {
-    if (isEmpty(room)) setValue('room', head(DATA_ROOMS)?.name);
-  }, [room, setValue]);
+    if (isEmpty(room) && ROOMS?.length > 0) {
+      setValue('room', head(DATA_ROOMS)?.id);
+    }
+  }, [DATA_ROOMS]);
 
   const handlePayment = async () => {
     // Check if selected payment is "momo" or "bank"
@@ -704,7 +704,7 @@ const SectionFormBooking = () => {
               onClose={() => setModalOpenServiceBooking(false)}
               onSelect={({ category, service }) => {
                 setValue('category', category);
-                methods.setValue('service', service);
+                setValue('service', service);
               }}
               serviceId={selectedService?.id}
               categoryId={selectedCategory?.id}

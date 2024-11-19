@@ -1,6 +1,6 @@
 import RoomSrc2 from '@/assets/images/room/r2.png';
 import { AnimatePresence, motion } from 'framer-motion';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import CustomImage from '../../components/CustomImage';
 import Title from '../Title/Title';
 
@@ -33,27 +33,21 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
   sutTitle3,
 }) => {
   const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
-  const [filteredRooms, setFilteredRooms] = useState<RoomProps[]>([]);
   const [selectedType, setSelectedType] = useState<string>('Phòng thường');
 
-  // Tối ưu hóa việc cập nhật danh sách phòng theo loại phòng được chọn
-  useEffect(() => {
-    const filtered = rooms.filter((room) => room.type_text === selectedType);
-    setFilteredRooms(filtered);
-  }, [selectedType, rooms]);
+  // Filter rooms directly inside the render method
+  const filteredRooms = rooms.filter((room) => room.type_text === selectedType);
 
-  // Tối ưu hóa hàm chọn phòng
   const handleRoomSelection = useCallback((room: RoomProps) => {
     setSelectedRoom(room);
   }, []);
 
-  // Tối ưu hóa hàm xác nhận phòng và đóng modal
   const handleConfirmSelection = useCallback(() => {
     if (selectedRoom) {
       onSelectRoom(selectedRoom);
       onClose();
     }
-  }, [onClose, onSelectRoom, selectedRoom]);
+  }, [onSelectRoom, selectedRoom, onClose]);
 
   if (!isOpen) return null;
 
@@ -73,7 +67,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
             <span className="text-[#EF5F5F]">{sutTitle3}</span>
           </p>
 
-          {/* Nút chọn loại phòng */}
+          {/* Room type selection buttons */}
           <div className="mb-5 flex justify-center gap-4 lg:mb-8">
             {['Phòng thường', 'Phòng VIP', 'Phòng đôi'].map((type) => (
               <button
@@ -88,7 +82,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
             ))}
           </div>
 
-          {/* Danh sách phòng */}
+          {/* Room list */}
           <motion.div layout className="grid-col1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredRooms.map((room) => (
               <motion.div
@@ -122,7 +116,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
             ))}
           </motion.div>
 
-          {/* Nút xác nhận chọn phòng */}
+          {/* Confirm button */}
           <div className="mt-4 flex flex-col gap-2">
             <button
               type="button"
