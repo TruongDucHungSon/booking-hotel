@@ -125,7 +125,7 @@ const SectionFormBookingAtHome = () => {
   const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState('counter');
 
-  const location = watch('location_id');
+  const location = methods.watch('location_id');
 
   const selectedTime = watch('selectedTime');
   const currentServices = watch('services');

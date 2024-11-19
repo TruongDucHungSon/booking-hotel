@@ -130,13 +130,13 @@ const SectionFormBooking = () => {
   const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState('counter');
 
-  const location = watch('location_id');
+  const location = methods.watch('location_id');
   console.log(location);
 
   const selectedTime = watch('selectedTime');
   const room = watch('room');
   const currentServices = watch('services');
-  const selectedService = watch('service');
+  const selectedService = methods.watch('service');
 
   const selectedCategory = watch('category');
   const store = watch('store');
