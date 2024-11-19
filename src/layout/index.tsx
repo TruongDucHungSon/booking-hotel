@@ -1,18 +1,22 @@
 'use client';
 
+import icCart from '@/assets/images/banner/ic-cart.svg';
+import { RootState } from '@/redux/rootReducers';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { IoCloseOutline } from 'react-icons/io5';
+import { useSelector } from 'react-redux';
 import LogoSrc from '../assets/images/logo/logo.png';
 import CallSvg from '../assets/svgs/call/call.svg';
-import SearchIcon from '../assets/svgs/search/ri_search-line.svg';
 import CustomImage from '../components/CustomImage/index';
 import { Navigation, NavigationProps } from '../utils/constants';
 const DefaultLayout = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const items = useSelector((state: RootState) => state.cart.items);
+  console.log(items);
 
   return (
     <header className="shadow-light-100 sticky left-0 right-0 top-0 z-[1000] bg-gradient lg:static">
@@ -50,13 +54,20 @@ const DefaultLayout = () => {
           {/* Mobile Menu Button */}
           <div className="absolute right-6 lg:hidden">
             <div className="flex cursor-pointer items-center gap-3">
-              <CustomImage
-                width={50}
-                height={50}
-                src={SearchIcon}
-                alt="search-icon"
-                className="size-8 cursor-pointer lg:size-10"
-              />
+              <div onClick={() => setIsMenuOpen(false)} className="relative">
+                <Link href={'/gio-hang'}>
+                  <CustomImage
+                    width={50}
+                    height={50}
+                    src={icCart}
+                    alt="search-icon"
+                    className="size-8 cursor-pointer"
+                  />
+                </Link>
+                <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-[#343434] text-xs font-semibold text-white">
+                  {items?.length || 0}
+                </span>
+              </div>
               {isMenuOpen ? (
                 <IoCloseOutline
                   size={28}
@@ -109,13 +120,20 @@ const DefaultLayout = () => {
 
           {/* Action Buttons */}
           <div className="hidden items-center gap-4 lg:flex">
-            <CustomImage
-              width={50}
-              height={50}
-              src={SearchIcon}
-              alt="search-icon"
-              className="h-10 w-10 cursor-pointer"
-            />
+            <div onClick={() => setIsMenuOpen(false)} className="relative">
+              <Link href={'/gio-hang'}>
+                <CustomImage
+                  width={50}
+                  height={50}
+                  src={icCart}
+                  alt="search-icon"
+                  className="size-8 cursor-pointer"
+                />
+              </Link>
+              <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-[#343434] text-xs font-semibold text-white">
+                {items?.length || 0}
+              </span>
+            </div>
             <div className="flex h-10 cursor-pointer items-center justify-center rounded-[12px] bg-[#3A449B] px-6 py-2 text-[16px] font-medium leading-[16.8px] text-white hover:opacity-80">
               <button type="button" className="flex items-center gap-2">
                 <CustomImage
