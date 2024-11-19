@@ -30,7 +30,7 @@ const ProductDetailPage = () => {
   const { data: DATA_PRODUCTS } = useProductData();
   const PRODUCTS: any = DATA_PRODUCTS?.data || [];
 
-  const filteredProducts = PRODUCTDETAIL?.category.id
+  const filteredProducts = PRODUCTDETAIL?.category?.id
     ? PRODUCTS.filter((product: any) => product.category.id === PRODUCTDETAIL?.category.id)
     : PRODUCTS;
 
