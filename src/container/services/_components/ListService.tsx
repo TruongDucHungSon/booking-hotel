@@ -55,7 +55,7 @@ const ListService = () => {
   const handleBook = (service: any) => {
     methods.setValue('service', service);
     methods.setValue('category', selectedPackage);
-    router.push('/dat-lich');
+    router.push(location === 'in-store' ? '/dat-lich' : '/dat-lich-tai-nha');
   };
 
   return (

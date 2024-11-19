@@ -25,7 +25,7 @@ export const formatDateString = (dateString: string) => {
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-based, so add 1)
   const year = date.getFullYear();
 
-  return `${day}/${month}/${year}`;
+  return `${year}/${month}/${day}`;
 };
 export function formatPrice(price: any) {
   const numericPrice = Number(price); // Ensure price is treated as a number

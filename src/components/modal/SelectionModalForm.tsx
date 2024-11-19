@@ -1,7 +1,6 @@
 import RoomSrc2 from '@/assets/images/room/r2.png';
 import { AnimatePresence, motion } from 'framer-motion';
-import { head } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import CustomImage from '../../components/CustomImage';
 import Title from '../Title/Title';
 
@@ -15,7 +14,7 @@ export interface RoomProps {
 interface RoomSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectRoom: (room: any) => void;
+  onSelectRoom: (room: RoomProps) => void;
   rooms: RoomProps[];
   title: string;
   sutTitle1: string;
@@ -33,14 +32,28 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
   sutTitle2,
   sutTitle3,
 }) => {
-  const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(head(rooms) || null);
+  const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
   const [filteredRooms, setFilteredRooms] = useState<RoomProps[]>([]);
   const [selectedType, setSelectedType] = useState<string>('Phòng thường');
 
+  // Tối ưu hóa việc cập nhật danh sách phòng theo loại phòng được chọn
   useEffect(() => {
     const filtered = rooms.filter((room) => room.type_text === selectedType);
     setFilteredRooms(filtered);
   }, [selectedType, rooms]);
+
+  // Tối ưu hóa hàm chọn phòng
+  const handleRoomSelection = useCallback((room: RoomProps) => {
+    setSelectedRoom(room);
+  }, []);
+
+  // Tối ưu hóa hàm xác nhận phòng và đóng modal
+  const handleConfirmSelection = useCallback(() => {
+    if (selectedRoom) {
+      onSelectRoom(selectedRoom);
+      onClose();
+    }
+  }, [onClose, onSelectRoom, selectedRoom]);
 
   if (!isOpen) return null;
 
@@ -60,7 +73,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
             <span className="text-[#EF5F5F]">{sutTitle3}</span>
           </p>
 
-          {/* Room type buttons for filtering */}
+          {/* Nút chọn loại phòng */}
           <div className="mb-5 flex justify-center gap-4 lg:mb-8">
             {['Phòng thường', 'Phòng VIP', 'Phòng đôi'].map((type) => (
               <button
@@ -75,7 +88,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
             ))}
           </div>
 
-          {/* Room grid with fade-in/out effect */}
+          {/* Danh sách phòng */}
           <motion.div layout className="grid-col1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredRooms.map((room) => (
               <motion.div
@@ -84,7 +97,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.7 }}
-                onClick={() => setSelectedRoom(room)}
+                onClick={() => handleRoomSelection(room)}
                 className={`group cursor-pointer overflow-hidden rounded-3xl transition-all duration-300 ${
                   selectedRoom?.id === room.id ? 'border-2 border-[#3A449B]' : ''
                 }`}
@@ -109,18 +122,14 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
             ))}
           </motion.div>
 
+          {/* Nút xác nhận chọn phòng */}
           <div className="mt-4 flex flex-col gap-2">
             <button
               type="button"
               className={`mx-auto w-[220px] rounded-3xl bg-[#3A449B] px-6 py-2 text-sm text-white md:text-base ${
                 !selectedRoom ? 'cursor-not-allowed opacity-50' : ''
               }`}
-              onClick={() => {
-                if (selectedRoom) {
-                  onSelectRoom(selectedRoom);
-                  onClose();
-                }
-              }}
+              onClick={handleConfirmSelection}
               disabled={!selectedRoom}
             >
               Chọn

@@ -53,7 +53,8 @@ const SectionFormBooking = ({ LOCATIONS }: any) => {
   const store = watch('store');
   const staff = watch('staff');
 
-  const handleNavigate = () => router.push(location === 'in-store' ? '/dich-vu' : '/dat-lich');
+  const handleNavigate = () =>
+    router.push(location === 'in-store' ? '/dich-vu' : '/dat-lich-tai-nha');
 
   const onSubmit = (data: any) => {
     console.log(data);

@@ -14,47 +14,44 @@ import ArrowIc from '@/assets/svgs/arrow/down.svg';
 import LocationIc from '@/assets/svgs/arrow/location.svg';
 import massa from '@/assets/svgs/arrow/massa.svg';
 import SaleIc from '@/assets/svgs/arrow/sale.svg';
-import StoreIc from '@/assets/svgs/arrow/store.svg';
 import voucher from '@/assets/svgs/arrow/voucher.svg';
+import addIc from '@/assets/svgs/search/add.svg';
 import downBlue from '@/assets/svgs/search/dropdowBlu.svg';
+import useIc from '@/assets/svgs/search/use.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import ProductModal from '@/components/modal/ModalProduct';
 import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
-import SelectionModalForm, { RoomProps } from '@/components/modal/SelectionModalForm';
 import { usePostBooking } from '@/services/booking/Booking.Service';
-import { useLocationData } from '@/services/location/Location.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
-import { useRoomsData } from '@/services/room/Rooms.Service';
+import { useStaffData } from '@/services/staff/Staff.service';
 import { NUMBER_PEOPLE, serviceLocations, servicesData } from '@/utils/constants';
 import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
-import { filter, find, forEach, head, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
+import { filter, find, forEach, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
-const SectionFormBooking = () => {
+const SectionFormBookingAtHome = () => {
   const router = useRouter();
-  const { data: DATA_LOCATIONS } = useLocationData();
-  const LOCATIONS: any = DATA_LOCATIONS || [];
   const { data: DATA_PROMOTIONS } = usePromotionData();
   const PROMOTIONS: any = DATA_PROMOTIONS || [];
+
+  const { data: DATA_STAFFS } = useStaffData();
+  const staffs: any = DATA_STAFFS?.data || [];
 
   const { data: DATA_PRODUCTS } = useProductData();
   const PRODUCTS: any = DATA_PRODUCTS?.data || [];
 
   const methods = useFormContext();
-  const [isModalOpenRoom, setModalOpenRoom] = useState(false);
-  const openModalRoom = () => setModalOpenRoom(true);
-  const closeModalRoom = () => setModalOpenRoom(false);
   const [isModalOpenServiceBooking, setModalOpenServiceBooking] = useState(false);
 
   const [isProductModalOpen, setProductModalOpen] = useState(false);
@@ -93,7 +90,7 @@ const SectionFormBooking = () => {
   };
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
-  const [isOpenStore, storeHandlers] = useBoolean(false);
+  const [isOpenstaff, staffHandlers] = useBoolean(false);
   const fadeAnimation = {
     initial: { opacity: 0, scale: 0.95 },
     animate: { opacity: 1, scale: 1 },
@@ -112,14 +109,12 @@ const SectionFormBooking = () => {
       yup.object().shape({
         location_id: yup.string().required(),
         selectedTime: yup.string().required(),
-        room: yup.string(),
         services: yup.mixed(),
         service: yup.mixed().nonNullable().required(),
-        staff: yup.string(),
+        staff: yup.string().required(),
         gender: yup.string().required(),
         fullName: yup.string().required(),
-        address: yup.string(),
-        store: yup.string(),
+        address: yup.string().required(),
         phoneNumber: yup
           .string()
           .required()
@@ -131,30 +126,17 @@ const SectionFormBooking = () => {
   const [selectedPayment, setSelectedPayment] = useState('counter');
 
   const location = watch('location_id');
-  console.log(location);
 
   const selectedTime = watch('selectedTime');
-  const room = watch('room');
   const currentServices = watch('services');
-  const selectedService = watch('service');
+  const selectedService = methods.watch('service');
 
   const selectedCategory = watch('category');
-  const store = watch('store');
+  const staff = watch('staff');
 
   const nameService = selectedService?.name || 'Chưa chọn dịch vụ';
-  const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
-  const handleSelectRoom = (room: RoomProps) => {
-    setSelectedRoom(room);
-  };
 
-  useEffect(() => {
-    if (location === 'in-store') {
-      router.push('/dat-lich');
-    } else if (location === 'at-home') {
-      router.push('/dat-lich-tai-nha');
-    }
-  }, [router, location]);
-
+  // Hàm tính tổng giá của sản phẩm
   const calculateTotalPrice = (products: any) => {
     return products.reduce((total: any, product: any) => total + parseInt(product.price), 0);
   };
@@ -188,9 +170,6 @@ const SectionFormBooking = () => {
   const initTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
   const sale = formatPrice(initTotalPrice - totalPrice);
 
-  const { data: DATA_ROOMS } = useRoomsData(store || 1);
-  const ROOMS: any = DATA_ROOMS || [];
-
   const timeValue = useMemo(() => {
     if (isEmpty(selectedTime)) return;
 
@@ -214,8 +193,16 @@ const SectionFormBooking = () => {
   }, [methods, reset]);
 
   useEffect(() => {
-    if (isEmpty(room)) setValue('room', head(DATA_ROOMS)?.name);
-  }, [room, setValue]);
+    if (location === 'at-home') {
+      router.push('/dat-lich-tai-nha');
+    } else if (location === 'in-store') {
+      router.push('/dat-lich');
+    }
+  }, [router, location]);
+
+  useEffect(() => {
+    if (location === 'at-home' && isEmpty(staff)) methods.setValue('staff', staffs[0]?.id);
+  }, [staffs, location, setValue]);
 
   const handlePayment = async () => {
     // Check if selected payment is "momo" or "bank"
@@ -243,18 +230,18 @@ const SectionFormBooking = () => {
     setShowThankYouModal(true);
 
     const formData = {
-      room_id: selectedRoom?.id,
       // service_type: values.location_id || 'in-store', // <== This might be `values.delivery_type` if location_id is not correct
       guest_info: {
         name: values.fullName,
         phone_number: values.phoneNumber,
         gender: values.gender,
       },
-      location_id: parseInt(values.store),
+      location_id: 2,
       number_of_people: parseInt(values.number_of_people),
       notes: values.note,
+      address: values.address,
       booking_time: `${formatDateString(values.startDate)} ${values.selectedTime}:00`,
-      staff_id: 9,
+      staff_id: parseInt(staff),
       packages: [
         {
           package_id: selectedService?.id,
@@ -267,11 +254,11 @@ const SectionFormBooking = () => {
       })),
       delivery_type: location, // Should map directly to `service_type` in DB if this is the correct interpretation
     };
+    console.log(formData);
 
     mutate(formData, {
       onSuccess: (response: any) => {
         console.log('Booking successful:', response);
-        reset(); // Reset the form after successful booking
       },
       onError: (error: any) => {
         console.error('Booking failed:', error);
@@ -282,7 +269,7 @@ const SectionFormBooking = () => {
   return (
     <form onSubmit={handleSubmit(handleBook)} className="mb-5 md:mb-10">
       {/* heading */}
-      <Title>thông tin đặt chỗ</Title>
+      <Title>thông tin đặt chỗ tại nhà</Title>
       <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
         Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi chỉ chấp nhận đặt phòng sau một tuần và
         chỉ có thể đặt tối đa hai người cùng một lúc.
@@ -327,46 +314,63 @@ const SectionFormBooking = () => {
                 )}
               </div>
 
-              <div className="relative w-full">
-                <button
-                  type="button"
-                  onClick={storeHandlers.toggle}
-                  className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
-                >
-                  <CustomImage width={18} height={18} src={StoreIc} alt="Store Icon" />
-                  {(LOCATIONS?.data && find(LOCATIONS.data, { id: store })?.name) ||
-                    'Chọn cửa hàng'}
-
+              <>
+                <div className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base">
+                  <CustomImage width={18} height={18} src={addIc} alt="Location Icon" />
+                  <input
+                    placeholder="Nhập địa chỉ"
+                    type="text"
+                    className="w-full border-none text-center outline-none"
+                    {...register('address')}
+                  />
                   <CustomImage
                     width={18}
                     height={18}
                     src={ArrowIc}
                     alt="Arrow Down"
-                    className={`transition-all duration-300 ${isOpenStore ? 'rotate-180' : ''}`}
+                    className={`transition-all duration-300`}
                   />
-                </button>
-                {errors.store ? (
+                </div>
+                {errors.address ? (
                   <div className="text-[12px] font-medium text-red-500">
-                    Quý khách vui lòng chọn địa điểm
+                    Quý khách vui lòng nhập địa chỉ
                   </div>
                 ) : null}
-                {isOpenStore && (
-                  <ul className="absolute z-10 mt-2 w-full rounded-xl border bg-white text-sm shadow-lg md:text-base">
-                    {LOCATIONS?.data?.map((storeOption: any) => (
-                      <li
-                        key={storeOption.id}
-                        onClick={() => {
-                          setValue('store', storeOption.id);
-                          storeHandlers.setFalse();
-                        }}
-                        className="cursor-pointer rounded-xl px-4 py-2 transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white"
-                      >
-                        {storeOption.name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+
+                <div className="relative mt-3 w-full md:mt-6">
+                  <button
+                    onClick={staffHandlers.toggle}
+                    type="button"
+                    className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-xs font-medium text-black shadow-sm focus:border-[#3A449B] focus:outline-none md:text-base"
+                  >
+                    <CustomImage width={18} height={18} src={useIc} alt="staff Icon" />
+                    {(staffs && find(staffs, { id: staff })?.name) || 'Chọn nhân viên'}
+                    <CustomImage
+                      width={18}
+                      height={18}
+                      src={ArrowIc}
+                      alt="Arrow Down"
+                      className={`transition-all duration-300 ${isOpenstaff ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  {isOpenstaff && (
+                    <ul className="sidebar-scroll absolute z-10 mt-2 h-[250px] w-full overflow-y-scroll rounded-xl border bg-white shadow-lg">
+                      {map(staffs, (item) => (
+                        <li
+                          key={item.id}
+                          onClick={() => {
+                            staffHandlers.setFalse();
+                            methods.setValue('staff', item.id);
+                          }}
+                          className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white md:text-base"
+                        >
+                          {item.name}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </>
             </div>
             <h2 className="mb-2 text-lg font-semibold text-[#18181B] md:mb-4 md:text-xl">
               THÔNG TIN KHÁCH HÀNG
@@ -516,38 +520,7 @@ const SectionFormBooking = () => {
               </div>
             </div>
 
-            {/* Room choice */}
-            <div className={`relative mb-4 w-full ${location === 'at-home' ? 'hidden' : 'block'}`}>
-              <button
-                type="button"
-                onClick={openModalRoom}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base"
-              >
-                Phòng massage
-                <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
-              </button>
-              {/* Display selected room */}
-              {selectedRoom && (
-                <div
-                  key={selectedRoom.id}
-                  className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] text-xs font-medium leading-4 text-black/85 md:text-base"
-                >
-                  {selectedRoom.name}
-                </div>
-              )}
-            </div>
-
             {/* Room Selection Modal */}
-            <SelectionModalForm
-              isOpen={isModalOpenRoom}
-              onClose={closeModalRoom}
-              onSelectRoom={handleSelectRoom}
-              rooms={ROOMS}
-              title="Đặt phòng"
-              sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
-              sutTitle2="chỉ chấp nhận đặt phòng sau một tuần"
-              sutTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
-            />
 
             <div>
               <label className="mb-1 block text-sm font-medium text-black md:text-base">
@@ -704,7 +677,7 @@ const SectionFormBooking = () => {
               onClose={() => setModalOpenServiceBooking(false)}
               onSelect={({ category, service }) => {
                 setValue('category', category);
-                methods.setValue('service', service);
+                setValue('service', service);
               }}
               serviceId={selectedService?.id}
               categoryId={selectedCategory?.id}
@@ -1084,4 +1057,4 @@ const SectionFormBooking = () => {
   );
 };
 
-export default SectionFormBooking;
+export default SectionFormBookingAtHome;
