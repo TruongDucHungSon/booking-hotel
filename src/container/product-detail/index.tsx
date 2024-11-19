@@ -2,16 +2,15 @@
 
 import bag from '@/assets/svgs/arrow/bag.svg';
 import cart from '@/assets/svgs/arrow/cart.svg';
-import check from '@/assets/svgs/arrow/check.svg';
 import pr1 from '@/assets/svgs/introduce/pr1.jpg';
 import CustomImage from '@/components/CustomImage/index';
 import SectionProducts from '@/components/SectionProducts/SectionProducts';
 import { addToCart } from '@/redux/cart/slide';
-import { useProductDetailData } from '@/services/product/Products.Service';
+import { useProductData, useProductDetailData } from '@/services/product/Products.Service';
 import { formatPrice } from '@/utils/helpers';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import SwiperCore from 'swiper';
@@ -28,6 +27,12 @@ const ProductDetailPage = () => {
 
   const { data: DATA_PRODUCTS_DETAIL, refetch } = useProductDetailData(slugProductDetail);
   const PRODUCTDETAIL: any = DATA_PRODUCTS_DETAIL?.data || [];
+  const { data: DATA_PRODUCTS } = useProductData();
+  const PRODUCTS: any = DATA_PRODUCTS?.data || [];
+
+  const filteredProducts = PRODUCTDETAIL?.category.id
+    ? PRODUCTS.filter((product: any) => product.category.id === PRODUCTDETAIL?.category.id)
+    : PRODUCTS;
 
   useEffect(() => {
     if (slugProductDetail) {
@@ -36,148 +41,43 @@ const ProductDetailPage = () => {
   }, [slugProductDetail, refetch]);
 
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
-  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]); // Keep refs for sections
-  const [activeSectionId, setActiveSectionId] = useState<number>(1);
+  // const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // const [activeSectionId, setActiveSectionId] = useState<number>(1);
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
   const [quantity, setQuantity] = useState<number>(1);
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : prev));
   // IntersectionObserver setup
-  useEffect(() => {
-    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = Number(entry.target.getAttribute('data-id'));
-          if (id !== undefined) setActiveSectionId(id);
-        }
-      });
-    };
+  // useEffect(() => {
+  //   const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+  //     entries.forEach((entry) => {
+  //       if (entry.isIntersecting) {
+  //         const id = Number(entry.target.getAttribute('data-id'));
+  //         if (id !== undefined) setActiveSectionId(id);
+  //       }
+  //     });
+  //   };
 
-    const observer = new IntersectionObserver(handleIntersection, {
-      rootMargin: '0px',
-      root: null,
-      threshold: 0.1, // Trigger when 20% of the title is visible
-    });
+  //   const observer = new IntersectionObserver(handleIntersection, {
+  //     rootMargin: '0px',
+  //     root: null,
+  //     threshold: 0.1,
+  //   });
 
-    // Observe only the titles
-    sectionRefs.current.forEach((section) => {
-      const title = section?.querySelector('h2'); // Observe h2 elements only
-      if (title) observer.observe(title);
-    });
+  //   sectionRefs.current.forEach((section) => {
+  //     const title = section?.querySelector('h2');
+  //     if (title) observer.observe(title);
+  //   });
 
-    return () => {
-      sectionRefs.current.forEach((section) => {
-        const title = section?.querySelector('h2');
-        if (title) observer.unobserve(title);
-      });
-    };
-  }, [sectionRefs]);
-
-  const productData = {
-    details: [
-      {
-        id: 1,
-        title: 'Mô tả sản phẩm',
-        items: [
-          'Làm sạch là một bước rất quan trọng trong quá trình chăm sóc da. Một ngày da mặt phải tiếp xúc với bụi bẩn, ô nhiễm từ môi trường bên ngoài và mồ hôi, bã nhờn, tế bào da chết,... từ chính da mặt tiết ra, lâu dần, sẽ gây ra tình trạng mụn, viêm da,... Do đó, cần thiết phải có một sản phẩm giúp loại bỏ hết những tác nhân gây hại đó ra khỏi làn da của chúng ta. Nếu bạn đang tìm một sản phẩm làm sạch sâu, an toàn lại dịu nhẹ thì Nước Tẩy Trang Oreal Micellar Water 400ml chính là sự lựa chọn hoàn hảo',
-        ],
-      },
-
-      {
-        id: 2,
-        title: 'Thành Phần',
-        items: [
-          "Nước Tẩy Trang L'Oreal Micellar Water 400ml Dưỡng Ẩm Cho Da Thường/Da Khô",
-          "Nước Tẩy Trang L'Oreal Micellar Water 400ml Làm Mát Da Cho Da Dầu/Da Hỗn Hợp",
-          "Nước Tẩy Trang L'Oreal Micellar Water 400ml Làm Sạch Sâu Trang Điểm",
-          "Nước Tẩy Trang L'Oreal Micellar Water 400ml Làm Sạch Sâu Trang Điểm",
-          "Nước Tẩy Trang L'Oreal Micellar Water 400ml Làm Sạch Sâu Trang Điểm",
-          "Nước Tẩy Trang L'Oreal Micellar Water 400ml Làm Sạch Sâu Trang Điểm",
-          "Nước Tẩy Trang L'Oreal Micellar Water 400ml Làm Sạch Sâu Trang Điểm",
-        ],
-      },
-      {
-        id: 3,
-        title: 'Công Dụng',
-        items: [
-          'Làm sạch da dịu nhẹ',
-          'Cân bằng độ ẩm và dưỡng ẩm cho da, cho da căng bóng, mềm mịn',
-        ],
-      },
-      {
-        id: 4,
-        title: 'Cách Dùng',
-        items: [
-          'Lắc đều trước khi sử dụng',
-          'Không cần rửa lại với nước',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-        ],
-      },
-      {
-        id: 5,
-        title: 'Tác dụng phụ',
-        items: [
-          'Lắc đều trước khi sử dụng',
-          'Không cần rửa lại với nước',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-        ],
-      },
-      {
-        id: 6,
-        title: 'Lưu ý',
-        items: [
-          'Lắc đều trước khi sử dụng',
-          'Không cần rửa lại với nước',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-        ],
-      },
-      {
-        id: 7,
-        title: 'Bảo quản',
-        items: [
-          'Lắc đều trước khi sử dụng',
-          'Không cần rửa lại với nước',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-          'Đóng nắp sau khi sử dụng',
-        ],
-      },
-    ],
-  };
+  //   return () => {
+  //     sectionRefs.current.forEach((section) => {
+  //       const title = section?.querySelector('h2');
+  //       if (title) observer.unobserve(title);
+  //     });
+  //   };
+  // }, [sectionRefs]);
 
   const product = {
-    name: 'Viên uống Calci K-2 Pharma World hỗ trợ giảm nguy cơ loãng xương (60 viên)',
-    sku: '01234567',
-    brand: 'Pharma World',
-    price: '470.000đ',
-    description: [
-      { title: 'Danh mục', text: 'Bổ sung Canxi & Vitamin D' },
-      { title: 'Dạng bào chế', text: 'Viên nén' },
-      { title: 'Quy cách', text: 'Hộp 60 viên' },
-      { title: 'Xuất xử thương hiệu', text: 'Mỹ' },
-      { title: 'Nhà sản xuất', text: 'ARNET PHẨMCEUTICAL' },
-      { title: 'Nước sản xuất', text: 'Hoa Kỳ' },
-      { title: 'Thành phần', text: 'Zinc, Magnesium, Vitamin D3, Vitamin K2, Calcium (Ca+)' },
-      {
-        title: 'Mô tả ngắn',
-        text: 'Pharma World Calci K2 bổ sung canxi và một số vitamin, khoáng chất giúp chắc xương, tăng khả năng hấp thụ canxi cho cơ thể, hỗ trợ giảm nguy cơ loãng xương.',
-      },
-      { title: 'Số đăng ký', text: '4938/2022/ĐKSP' },
-    ],
     thumbnails: [pr1, pr1, pr1, pr1, pr1, pr1, pr1],
   };
 
@@ -187,7 +87,7 @@ const ProductDetailPage = () => {
         id: PRODUCTDETAIL.id,
         name: PRODUCTDETAIL.name,
         price: PRODUCTDETAIL.price,
-        quantity: 1,
+        quantity: quantity,
       }),
     );
     toast.success(`Sản phẩm ${product.name}  đã được thêm vào giỏ hàng !`, {
@@ -217,7 +117,7 @@ const ProductDetailPage = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col gap-10 lg:flex-row">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-center">
           {/* Image Gallery */}
           <div className="w-full flex-1 lg:w-[45%]">
             <Swiper
@@ -231,7 +131,7 @@ const ProductDetailPage = () => {
             >
               {product.thumbnails.map((src, index) => (
                 <SwiperSlide key={index}>
-                  <div className="relative h-[300px] rounded-[32px] border border-[#E3E3E3] md:h-[500px] lg:h-[568px]">
+                  <div className="relative h-[300px] rounded-[32px] border border-[#E3E3E3] lg:h-[350px]">
                     <CustomImage
                       src={src.src}
                       alt={`Calci K-2 Image ${index + 1}`}
@@ -287,31 +187,39 @@ const ProductDetailPage = () => {
           <div className="flex-1">
             <div className="mb-4 flex flex-col items-start justify-between gap-1 text-xs text-[#B9BBBF] md:text-sm lg:flex-row lg:items-center">
               <span>
-                Mã sản phẩm: <span className="font-medium text-[#3A449B]">{product.sku}</span>
+                Mã sản phẩm: <span className="font-medium text-[#3A449B]">{PRODUCTDETAIL.id}</span>
               </span>
               <span>
-                Thương hiệu: <span className="font-medium text-[#3A449B]">{product.brand}</span>
+                Thương hiệu:{' '}
+                <span className="font-medium text-[#3A449B]">{PRODUCTDETAIL.name}</span>
               </span>
             </div>
             <h1 className="mb-2 text-[26px] text-xl font-bold leading-8">{PRODUCTDETAIL.name}</h1>
             <div className="mt-3 border-b border-b-[#E4E4E4] pb-4 text-2xl font-bold text-[#3A449B] lg:text-3xl">
-              {formatPrice(PRODUCTDETAIL.price)} VND <span className="ml-1 font-normal">/ hộp</span>
+              {formatPrice(PRODUCTDETAIL.price)} VND{' '}
+              <span className="ml-1 font-normal">/ Sản Phẩm</span>
             </div>
 
             {/* Product Description */}
             <div className="mt-4 flex flex-col gap-1 text-[16px] text-xs leading-9 md:gap-4 md:text-base">
-              <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-2">
                 <p className="w-[150px] font-semibold">Chọn đơn vị tính</p>
                 <span className="flex h-6 w-[73px] items-center justify-center rounded-[100px] border border-[#E3E3E3/80] bg-[#f9faff] text-sm text-[#626A6B] md:h-8 md:text-base">
                   Hộp
                 </span>
+              </div> */}
+              <div className="flex gap-3" key={PRODUCTDETAIL.title}>
+                <p className="w-[150px] font-semibold capitalize">Loại sản phẩm</p>
+                <p className="w-[450px]">{PRODUCTDETAIL?.category?.name}</p>
               </div>
-              {product.description.map((description) => (
-                <div className="flex gap-3" key={description.title}>
-                  <p className="w-[150px] font-semibold">{description.title}</p>
-                  <p className="w-[450px]">{description.text}</p>
-                </div>
-              ))}
+              <div className="flex gap-3" key={PRODUCTDETAIL.title}>
+                <p className="w-[150px] font-semibold capitalize">thành phần</p>
+                <p className="w-[450px]">{PRODUCTDETAIL.ingredients}</p>
+              </div>
+              <div className="flex gap-3" key={PRODUCTDETAIL.title}>
+                <p className="w-[150px] font-semibold capitalize">mô tả</p>
+                <p className="w-[450px]">{PRODUCTDETAIL.description}</p>
+              </div>
             </div>
 
             {/* Purchase Options */}
@@ -371,8 +279,7 @@ const ProductDetailPage = () => {
         {/* details product */}
         <div className="mt-[56px] rounded-3xl border border-[#E8E8E8] text-base">
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
-            {/* Sidebar */}
-            <div className="col-span-1 hidden border-r border-r-[#E0E0E0] p-6 md:block">
+            {/* <div className="col-span-1 hidden border-r border-r-[#E0E0E0] p-6 md:block">
               <ul>
                 {productData.details.map((section) => (
                   <li
@@ -393,10 +300,10 @@ const ProductDetailPage = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
 
             {/* Main content */}
-            <div className="sidebar-scroll col-span-3 h-[680px] overflow-y-scroll rounded-lg px-6 pb-6">
+            {/* <div className="sidebar-scroll col-span-3 h-[680px] overflow-y-scroll rounded-lg px-6 pb-6">
               {productData.details.map((section) => (
                 <div
                   key={section.id}
@@ -431,11 +338,11 @@ const ProductDetailPage = () => {
                   </ul>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
-      <SectionProducts />
+      <SectionProducts PRODUCTS={filteredProducts} />
     </main>
   );
 };

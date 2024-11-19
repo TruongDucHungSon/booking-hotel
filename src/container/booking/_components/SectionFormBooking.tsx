@@ -29,7 +29,8 @@ import { useLocationData } from '@/services/location/Location.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useRoomsData } from '@/services/room/Rooms.Service';
-import { NUMBER_PEOPLE, serviceLocations, servicesData } from '@/utils/constants';
+import { useSubServiceData } from '@/services/services/Services.Service';
+import { NUMBER_PEOPLE, serviceLocations } from '@/utils/constants';
 import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
@@ -48,7 +49,8 @@ const SectionFormBooking = () => {
   const LOCATIONS: any = DATA_LOCATIONS || [];
   const { data: DATA_PROMOTIONS } = usePromotionData();
   const PROMOTIONS: any = DATA_PROMOTIONS || [];
-
+  const { data: DATA_SUB_SERVICES } = useSubServiceData();
+  const SUB_SERVICES: any = DATA_SUB_SERVICES?.data || [];
   const { data: DATA_PRODUCTS } = useProductData();
   const PRODUCTS: any = DATA_PRODUCTS?.data || [];
 
@@ -563,6 +565,7 @@ const SectionFormBooking = () => {
               </button>
 
               <ServiceSelectionModal
+                location={location}
                 isOpen={isModalOpenService}
                 onClose={handleCloseModalService}
                 onSelectServices={(v) => {
@@ -573,7 +576,7 @@ const SectionFormBooking = () => {
 
                   setValue('services', result);
                 }}
-                services={servicesData}
+                services={SUB_SERVICES}
                 title="Đặt dịch vụ"
                 subTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
                 subTitle2="chỉ chấp nhận đặt phòng sau một tuần"
@@ -584,7 +587,7 @@ const SectionFormBooking = () => {
               <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-4">
                   {map(currentServices, ({ id, quantity }) => {
-                    const service = find(servicesData, { id });
+                    const service = find(DATA_SUB_SERVICES, { id });
 
                     if (isEmpty(service)) return null;
 

@@ -14,8 +14,25 @@ export const useServiceData = (): UseQueryResult<any, Error> => {
 
       return response || [];
     },
-    staleTime: 1000 * 60 * 5, // Data remains fresh for 5 minutes
-    refetchOnWindowFocus: false, // Prevent refetching when the window is refocused
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+};
+
+export const useSubServiceData = (): UseQueryResult<any, Error> => {
+  return useQuery<any, Error>({
+    queryKey: ['sub-service'], // Query key as an object with 'queryKey' property
+    queryFn: async () => {
+      const response = publicRequest.request({
+        method: 'GET',
+        url: API_ENDPOINT.GET_SUB_SERVICE,
+      });
+
+      return response || [];
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 };

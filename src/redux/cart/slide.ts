@@ -41,11 +41,14 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const existingItem = state.items.find((item) => item.id === action.payload.id);
+      const quantity = action.payload.quantity || 1; // Default to 1 if no quantity is provided
+
       if (existingItem) {
-        existingItem.quantity += action.payload.quantity;
+        existingItem.quantity += quantity;
       } else {
-        state.items.push(action.payload);
+        state.items.push({ ...action.payload, quantity });
       }
+
       saveCartToLocalStorage(state.items);
     },
     removeFromCart: (state, action: PayloadAction<number>) => {

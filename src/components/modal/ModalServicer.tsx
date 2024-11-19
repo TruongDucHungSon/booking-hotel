@@ -1,23 +1,20 @@
-import { StaticImageData } from 'next/image';
+'use client';
+
+import sv1 from '@/assets/images/new/sv1.png';
 import React, { useState } from 'react';
 import CustomImage from '../CustomImage';
 import Title from '../Title/Title';
-
-export interface Service {
-  id: string;
-  name: string;
-  image: StaticImageData | string;
-}
 
 interface ServiceSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectServices: (selectedServices: { [key: string]: number }) => void;
-  services: Service[];
+  services: any[];
   title: string;
   subTitle1: string;
   subTitle2: string;
   subTitle3: string;
+  location: string;
 }
 
 const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
@@ -29,19 +26,24 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
   subTitle1,
   subTitle2,
   subTitle3,
+  location,
 }) => {
   const [selectedServices, setSelectedServices] = useState<{ [key: string]: number }>({});
 
   if (!isOpen) return null;
 
-  const handleServiceClick = (service: Service) => {
+  // Filter services based on selected location (in-store or at-home)
+  const filteredServices = services?.filter((service) => service.delivery_type === location) || [];
+  console.log('Filtered services:', filteredServices);
+
+  const handleServiceClick = (service: any) => {
     setSelectedServices((prev) => ({
       ...prev,
       [service.id]: (prev[service.id] || 0) + 1,
     }));
   };
 
-  const handleServiceDelete = (service: Service) => {
+  const handleServiceDelete = (service: any) => {
     setSelectedServices((prev) => {
       const newServices = { ...prev };
       if (newServices[service.id] > 1) {
@@ -60,7 +62,7 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-20">
-      <div className="sidebar-scroll relative h-[70%] w-[95%] overflow-y-scroll rounded-xl bg-white px-12 py-6 text-xl shadow-lg md:w-[90%] md:rounded-3xl lg:h-auto">
+      <div className="sidebar-scroll relative h-[70%] w-[95%] overflow-y-scroll rounded-xl bg-white px-12 py-6 text-xl shadow-lg md:w-[90%] md:rounded-3xl">
         <Title>{title}</Title>
         <button
           className="absolute right-6 top-6 text-2xl text-gray-600 hover:text-gray-800"
@@ -75,7 +77,7 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
           <span className="text-[#EF5F5F]">{subTitle3}</span>
         </p>
         <div className="grid grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => (
+          {filteredServices.map((service) => (
             <div
               key={service.id}
               className="group cursor-pointer rounded-3xl transition-all duration-300"
@@ -84,7 +86,7 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
                 <CustomImage
                   width={180}
                   height={180}
-                  src={typeof service.image === 'string' ? service.image : service.image.src}
+                  src={sv1.src || ''}
                   alt={service.name}
                   className="h-[120px] w-[120px] rounded-3xl object-cover sm:w-full md:h-[160px]"
                   classNameImg="rounded-3xl"

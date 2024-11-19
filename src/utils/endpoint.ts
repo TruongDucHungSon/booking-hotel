@@ -3,6 +3,7 @@ export const API_ENDPOINT = {
   REFRESH: '/auth/refresh',
   GET_LOCATION: '/api/locations',
   GET_SERVICE: '/api/service-packages',
+  GET_SUB_SERVICE: '/api/services',
   GET_STAFF: '/api/staffs',
   GET_PROMOTION: '/api/promotions',
   GET_ROOM: '/api/rooms/available',
@@ -10,6 +11,7 @@ export const API_ENDPOINT = {
   PRODUCTDETAIL: '/api/products',
   POST_BOOKING: '/api/bookings',
   GET_ARTICLES: '/api/articles',
+  GET_CATEGORY: '/api/products/categories',
 };
 
 export const STALE_TIME: number = 5 * 60 * 1000;

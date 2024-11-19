@@ -1,15 +1,13 @@
 import { addToCart } from '@/redux/cart/slide';
-import { useProductData } from '@/services/product/Products.Service';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import CustomImage from '../CustomImage';
 import Title from '../Title/Title';
 
-const SectionProducts = () => {
+const SectionProducts = ({ PRODUCTS }: any) => {
   const dispatch = useDispatch();
-  const { data: DATA_PRODUCTS } = useProductData();
-  const PRODUCTS: any = DATA_PRODUCTS?.data || [];
+
   const imageProduct =
     'https://images.unsplash.com/photo-1526947425960-945c6e72858f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8c3BhJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D';
 

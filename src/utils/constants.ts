@@ -1,10 +1,3 @@
-import { Service } from '@/components/modal/ModalServicer';
-import p1 from '../assets/images/banner/p1.jpg';
-import p2 from '../assets/images/banner/p2.jpg';
-import p3 from '../assets/images/banner/p3.jpg';
-import p4 from '../assets/images/banner/p4.jpg';
-import p5 from '../assets/images/banner/p5.png';
-import p6 from '../assets/images/banner/p6.jpg';
 import New1 from '../assets/images/new/new1.png';
 import Service1 from '../assets/images/service/sv1.png';
 import Service2 from '../assets/images/service/sv2.png';
@@ -622,40 +615,6 @@ export const ServicesBooking = [
       },
     ],
   },
-];
-
-export const servicesData: Service[] = [
-  {
-    id: '1',
-    name: 'Service A',
-    image: p1,
-  },
-  {
-    id: '2',
-    name: 'Service B',
-    image: p2,
-  },
-  {
-    id: '3',
-    name: 'Service C',
-    image: p3,
-  },
-  {
-    id: '4',
-    name: 'Service D',
-    image: p4,
-  },
-  {
-    id: '5',
-    name: 'Service E',
-    image: p5,
-  },
-  {
-    id: '6',
-    name: 'Service S',
-    image: p6,
-  },
-  // Add more services as needed
 ];
 
 export const vouchers = [

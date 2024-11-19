@@ -27,8 +27,9 @@ import VoucherModal from '@/components/modal/ModalVoucher';
 import { usePostBooking } from '@/services/booking/Booking.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
+import { useSubServiceData } from '@/services/services/Services.Service';
 import { useStaffData } from '@/services/staff/Staff.service';
-import { NUMBER_PEOPLE, serviceLocations, servicesData } from '@/utils/constants';
+import { NUMBER_PEOPLE, serviceLocations } from '@/utils/constants';
 import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
@@ -44,6 +45,9 @@ const SectionFormBookingAtHome = () => {
   const router = useRouter();
   const { data: DATA_PROMOTIONS } = usePromotionData();
   const PROMOTIONS: any = DATA_PROMOTIONS || [];
+
+  const { data: DATA_SUB_SERVICES } = useSubServiceData();
+  const SUB_SERVICES: any = DATA_SUB_SERVICES || [];
 
   const { data: DATA_STAFFS } = useStaffData();
   const staffs: any = DATA_STAFFS?.data || [];
@@ -126,6 +130,7 @@ const SectionFormBookingAtHome = () => {
   const selectedTime = watch('selectedTime');
   const currentServices = watch('services');
   const selectedService = watch('service');
+  console.log(selectedService);
 
   const selectedCategory = watch('category');
   const staff = watch('staff');
@@ -534,6 +539,7 @@ const SectionFormBookingAtHome = () => {
               </button>
 
               <ServiceSelectionModal
+                location={location}
                 isOpen={isModalOpenService}
                 onClose={handleCloseModalService}
                 onSelectServices={(v) => {
@@ -544,7 +550,7 @@ const SectionFormBookingAtHome = () => {
 
                   setValue('services', result);
                 }}
-                services={servicesData}
+                services={SUB_SERVICES}
                 title="Đặt dịch vụ"
                 subTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
                 subTitle2="chỉ chấp nhận đặt phòng sau một tuần"
@@ -555,7 +561,7 @@ const SectionFormBookingAtHome = () => {
               <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-4">
                   {map(currentServices, ({ id, quantity }) => {
-                    const service = find(servicesData, { id });
+                    const service = find(SUB_SERVICES, { id });
 
                     if (isEmpty(service)) return null;
 
