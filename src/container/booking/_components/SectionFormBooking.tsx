@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import acb from '@/assets/images/banner/acb.png';
-import action from '@/assets/images/banner/action.png';
 import more from '@/assets/images/banner/more.png';
 import vcb from '@/assets/images/banner/vcb.png';
 import sv1 from '@/assets/images/new/sv1.png';
@@ -221,7 +220,9 @@ const SectionFormBooking = () => {
   }, [DATA_ROOMS]);
 
   const [idBooking, setIdBooking] = useState<number | null>(null);
+  const [paymentResponse, setPaymentResponse] = useState<any>(null); // State để lưu response của payment
   const postPaymentMutation = usePostPayment(idBooking);
+  const QrSrc = paymentResponse?.payment_url || '';
 
   // Triggering the postPaymentMutation with idBooking
   const { mutate: bookMutate } = usePostBooking();
@@ -274,14 +275,22 @@ const SectionFormBooking = () => {
   const handlePaymentSelection = (paymentMethod: string) => {
     setSelectedPayment(paymentMethod); // Set the selected payment method
 
-    // Post payment immediately when "payos" is selected
     if (paymentMethod === 'payos' && idBooking) {
       const paymentData = {
         payment_method: 'payos',
         return_url: `http://localhost:3000/dich-vu`, // Replace with your actual base URL or environment variable
         cancel_url: `http://localhost:3000`, // Replace with your actual cancel URL
       };
-      postPaymentMutation.mutate(paymentData); // Trigger payment mutation
+
+      // Trigger the payment mutation
+      postPaymentMutation.mutate(paymentData, {
+        onSuccess: (response: any) => {
+          setPaymentResponse(response?.data); // Lưu response vào state
+        },
+        onError: (error: any) => {
+          console.error('Payment failed:', error);
+        },
+      });
     }
   };
 
@@ -1022,13 +1031,17 @@ const SectionFormBooking = () => {
                 </div>
                 {selectedPayment === 'payos' && (
                   <motion.div {...fadeAnimation}>
-                    <CustomImage
-                      src={action.src}
-                      alt="bank"
-                      width={500}
-                      height={500}
-                      className="mx-auto mt-3 size-[250px]"
-                    />
+                    {QrSrc ? ( // Kiểm tra nếu URL hợp lệ trước khi render
+                      <CustomImage
+                        src={QrSrc}
+                        alt="bank"
+                        width={500}
+                        height={500}
+                        className="mx-auto mt-3 size-[250px]"
+                      />
+                    ) : (
+                      <p className="mt-3 text-center text-red-500">QR code không khả dụng</p>
+                    )}
                   </motion.div>
                 )}
               </div>
