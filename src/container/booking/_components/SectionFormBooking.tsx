@@ -115,7 +115,7 @@ const SectionFormBooking = () => {
       yup.object().shape({
         location_id: yup.string().required(),
         selectedTime: yup.string().required(),
-        room: yup.string(),
+        room: yup.string().required(),
         services: yup.mixed(),
         service: yup.mixed().nonNullable().required(),
         staff: yup.string(),
@@ -259,7 +259,7 @@ const SectionFormBooking = () => {
       staff_id: 9,
       packages: [
         {
-          package_id: selectedService?.id,
+          package_id: selectedCategory?.id,
           quantity: 1,
         },
       ],
@@ -528,6 +528,11 @@ const SectionFormBooking = () => {
                 Phòng massage
                 <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
               </button>
+              {errors.room ? (
+                <div className="text-[12px] font-medium text-red-500">
+                  Quý khách vui lòng chọn phòng
+                </div>
+              ) : null}
               {/* Display selected room */}
               {selectedRoom && (
                 <div
@@ -667,19 +672,19 @@ const SectionFormBooking = () => {
                   />
                   <div className="flex w-full flex-col items-start lg:w-[365px]">
                     <h3 className="text-sm font-semibold md:text-base lg:text-xl">
-                      {selectedService?.name || 'No Category'}
+                      {selectedCategory?.name || 'No Category'}
                     </h3>
                     <p className="mt-1 font-medium">
                       Giá:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {formatPrice(selectedService.price)}
+                        {formatPrice(selectedCategory.price.sale)}
                       </span>
                       <span> VND / Lần</span>
                     </p>
                     <p className="mt-1 font-medium">
                       Thời gian:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {selectedService.duration}
+                        {selectedService.duration.minutes}
                       </span>
                       <span> phút</span>
                     </p>

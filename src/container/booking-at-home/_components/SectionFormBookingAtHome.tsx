@@ -114,6 +114,7 @@ const SectionFormBookingAtHome = () => {
         location_id: yup.string().required(),
         selectedTime: yup.string().required(),
         services: yup.mixed(),
+        room: yup.string().required(),
         service: yup.mixed().nonNullable().required(),
         staff: yup.string().required(),
         gender: yup.string().required(),
@@ -247,7 +248,7 @@ const SectionFormBookingAtHome = () => {
       staff_id: parseInt(staff),
       packages: [
         {
-          package_id: selectedService?.id,
+          package_id: selectedCategory?.id,
           quantity: 1,
         },
       ],
@@ -363,7 +364,7 @@ const SectionFormBookingAtHome = () => {
                           key={item.id}
                           onClick={() => {
                             staffHandlers.setFalse();
-                            methods.setValue('staff', item.id);
+                            setValue('staff', item.id);
                           }}
                           className="cursor-pointer rounded-xl px-4 py-2 text-sm transition-all duration-300 ease-in-out hover:bg-[#3A449B] hover:text-white md:text-base"
                         >

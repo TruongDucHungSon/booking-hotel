@@ -34,7 +34,7 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
 
   // Filter services based on selected location (in-store or at-home)
   const filteredServices = services?.filter((service) => service.delivery_type === location) || [];
-  console.log('Filtered services:', filteredServices);
+  console.log('Filtered services:', location);
 
   const handleServiceClick = (service: any) => {
     setSelectedServices((prev) => ({
