@@ -115,7 +115,7 @@ const SectionFormBooking = () => {
       yup.object().shape({
         location_id: yup.string().required(),
         selectedTime: yup.string().required(),
-        room: yup.string().required(),
+        room: yup.string(),
         services: yup.mixed(),
         service: yup.mixed().nonNullable().required(),
         staff: yup.string(),
