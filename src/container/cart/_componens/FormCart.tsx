@@ -1,191 +1,133 @@
-'use client';
-import check from '@/assets/svgs/arrow/check1.svg';
-import CustomImage from '@/components/CustomImage';
-import Title from '@/components/Title/Title';
-import { useServiceData } from '@/services/services/Services.Service';
-import { formatPrice } from '@/utils/helpers';
-import { AnimatePresence, motion } from 'framer-motion';
-import { find, get, head, isEmpty, map } from 'lodash';
-import { FC, useEffect, useMemo, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
-interface Service {
-  id: number;
-  title: string;
-  duration: string;
-  price: string;
-  description: string[];
-  delivery_type: string;
-}
+const schema = yup.object().shape({
+  fullName: yup.string().required('Họ và tên là bắt buộc.'),
+  phone: yup
+    .string()
+    .required('Số điện thoại là bắt buộc.')
+    .matches(/^[0-9]+$/, 'Số điện thoại chỉ chứa số.')
+    .min(9, 'Số điện thoại phải có ít nhất 9 chữ số.'),
+  gender: yup.string().required('Vui lòng chọn giới tính.'),
+  email: yup.string().required('Email là bắt buộc.').email('Email không hợp lệ.'),
+  address: yup.string().required('Địa chỉ là bắt buộc.'),
+  note: yup.string().optional(),
+});
 
-interface Category {
-  categoryId: number;
-  image: string;
-  categoryTitle: string;
-  services: Service[];
-}
+const FormCart = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-export interface SelectedServiceBooking {
-  category: Category;
-}
-
-interface ServiceModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSelect: (category: Category) => void;
-  categoryId?: string | number;
-}
-
-const ModalServiceBooking: FC<ServiceModalProps> = ({ isOpen, onClose, onSelect, categoryId }) => {
-  const { data } = useServiceData();
-  const services = useMemo(() => get(data, 'data', []), [data]);
-
-  const methods = useFormContext();
-  const location = methods.watch('location_id');
-
-  const category = useMemo(() => find(services, { id: categoryId }), [categoryId, services]);
-  const [selectedCategory, setSelectedCategory] = useState<any>(category);
-
-  const filteredCategories = useMemo(() => {
-    return services.filter((category: any) =>
-      category.services.some((service: any) => service.delivery_type === location),
-    );
-  }, [services, location]);
-
-  useEffect(() => {
-    if (isEmpty(selectedCategory) && !isEmpty(filteredCategories)) {
-      setSelectedCategory(head(filteredCategories));
-    }
-  }, [selectedCategory, filteredCategories]);
-
-  useEffect(() => {
-    if (selectedCategory) {
-      methods.setValue('category', selectedCategory);
-    }
-  }, [selectedCategory, methods]);
-
-  if (!isOpen) return null;
+  const onSubmit = (data: any) => {
+    console.log(data); // Handle form submission here
+  };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="sidebar-scroll h-[75%] w-[90%] overflow-y-scroll rounded-3xl bg-white p-6 shadow-lg lg:h-[90%] lg:px-16 lg:py-12">
-            <div className="relative mb-2 flex items-center justify-center md:mb-4">
-              <Title>Chọn dịch vụ</Title>
-              <button
-                type="button"
-                onClick={onClose}
-                className="absolute right-0 top-0 text-[32px] text-xl font-bold"
-              >
-                &times;
-              </button>
-            </div>
-            <p className="mb-3 text-center text-sm text-[#1B1B1B] md:mb-6 md:text-base">
-              Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi chỉ có thể đặt tối đa 1 gói dịch
-              vụ cùng một lúc.
-            </p>
+    <div className="w-full lg:w-[70%]">
+      <h2 className="mb-2 text-base font-semibold md:text-lg lg:mb-4">Thông Tin Khách Hàng</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <label className="mb-1 block text-sm font-medium md:text-base">Họ và tên</label>
+          <input
+            type="text"
+            className="w-full rounded-xl border px-4 py-2"
+            placeholder="Trần Văn Mạnh"
+            {...register('fullName')}
+          />
+          {errors.fullName && <p className="text-sm text-red-500">{errors.fullName.message}</p>}
+        </div>
 
-            {/* Category filter based on location */}
-            <div className="sidebar-scroll mb-4 flex snap-x snap-mandatory gap-6 overflow-visible overflow-x-auto lg:grid-cols-5">
-              {map(filteredCategories, (item) => (
-                <motion.div
-                  key={item.id}
-                  className="mb-2 flex min-w-[calc(23%-1rem)] flex-shrink-0 cursor-pointer snap-center flex-col items-center gap-2 md:gap-4"
-                  onClick={() => setSelectedCategory(item)}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <CustomImage
-                    src={get(item, 'image.url', '')}
-                    width={200}
-                    height={200}
-                    alt="category service"
-                    className={`rounded-[26px] border-2 transition-all duration-300 ease-in-out ${
-                      item.id === selectedCategory?.id
-                        ? 'border-[#3A449B] opacity-100'
-                        : 'border-transparent opacity-60'
-                    }`}
-                    classNameImg="rounded-[24px]"
-                  />
-                  <button className="text-center">
-                    <p
-                      className={`text-center font-semibold transition-colors duration-300 ease-in-out ${
-                        item.id === selectedCategory?.id ? 'text-[#3A449B]' : 'text-[#18181B]'
-                      }`}
-                    >
-                      {item.name}
-                    </p>
-                  </button>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {map(get(selectedCategory, 'services', []), (service) => (
-                <motion.div
-                  key={service.id}
-                  className="rounded-3xl border border-gray-200 p-5 lg:p-6"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1 }}
-                >
-                  <h3 className="text-center text-base font-semibold text-[#18181B] md:text-lg">
-                    {service.name}
-                  </h3>
-                  <div className="my-4 flex items-center justify-between rounded-xl bg-custom-gradient px-2 py-[10px] text-sm text-white">
-                    <p className="text-xs font-semibold lg:text-sm">
-                      <span className="font-normal">Thời gian: </span>
-                      {service.duration} phút
-                    </p>
-                    <p className="text-xs font-semibold lg:text-sm">
-                      {formatPrice(service.price)} <span className="font-normal">VND/LẦN</span>
-                    </p>
-                  </div>
-                  <div className="mt-2 space-y-1 text-sm text-gray-600">
-                    <div className="flex items-center gap-3">
-                      <CustomImage
-                        src={check}
-                        alt="check"
-                        width={32}
-                        height={32}
-                        className="h-6 w-6"
-                      />
-                      <p className="w-[320px] text-xs md:text-sm">{service.description}</p>
-                    </div>
-                    <p className="mt-2 text-sm font-semibold text-[#18181B] md:mt-4 md:text-base">
-                      Giá chưa bao gồm VAT & TIP.
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="mt-6 flex justify-center">
-              <button
-                onClick={() => {
-                  onSelect(selectedCategory);
-                  onClose();
-                }}
-                className="w-[220px] rounded-3xl bg-[#3A449B] px-4 py-2 text-base font-semibold text-white transition-colors duration-300 ease-in-out hover:bg-[#3A449B]/80"
-              >
-                Đặt lịch
-              </button>
-            </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="mb-1 block text-sm font-medium md:text-base">Số điện thoại</label>
+            <input
+              type="text"
+              className="w-full rounded-xl border px-4 py-2"
+              placeholder="0123 456 789"
+              {...register('phone')}
+            />
+            {errors.phone && <p className="text-sm text-red-500">{errors.phone.message}</p>}
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium md:text-base">Giới tính</label>
+            <div className="flex items-center space-x-4">
+              <label className="text-sm md:text-base">
+                <input
+                  type="radio"
+                  value="Nam"
+                  {...register('gender')}
+                  className="mr-1 accent-[#3A449B]"
+                />{' '}
+                Nam
+              </label>
+              <label className="text-sm md:text-base">
+                <input
+                  type="radio"
+                  value="Nữ"
+                  {...register('gender')}
+                  className="mr-1 accent-[#3A449B]"
+                />{' '}
+                Nữ
+              </label>
+              <label className="text-sm md:text-base">
+                <input
+                  type="radio"
+                  value="Khác"
+                  {...register('gender')}
+                  className="mr-1 accent-[#3A449B]"
+                />{' '}
+                Khác
+              </label>
+            </div>
+            {errors.gender && <p className="text-sm text-red-500">{errors.gender.message}</p>}
+          </div>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium md:text-base">Email</label>
+          <input
+            type="email"
+            className="w-full rounded-xl border px-4 py-2"
+            placeholder="abc@gmail.com"
+            {...register('email')}
+          />
+          {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+        </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium md:text-base">Địa chỉ</label>
+          <input
+            type="text"
+            placeholder="Địa chỉ"
+            className="w-full rounded-xl border px-4 py-2"
+            {...register('address')}
+          />
+          {errors.address && <p className="text-sm text-red-500">{errors.address.message}</p>}
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium md:text-base">Ghi chú</label>
+          <textarea
+            className="w-full rounded-xl border px-4 py-2"
+            placeholder="VD: giao hàng giờ hành chính"
+            rows={3}
+            {...register('note')}
+          ></textarea>
+        </div>
+
+        <button type="submit" className="w-full rounded-xl bg-blue-500 py-2 text-white">
+          Gửi thông tin
+        </button>
+      </form>
+    </div>
   );
 };
 
-export default ModalServiceBooking;
+export default FormCart;
