@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import acb from '@/assets/images/banner/acb.png';
-import action from '@/assets/images/banner/action.png';
 import momo from '@/assets/images/banner/momo.png';
 import more from '@/assets/images/banner/more.png';
 import vcb from '@/assets/images/banner/vcb.png';
@@ -251,10 +250,10 @@ const SectionFormBookingAtHome = () => {
           quantity: 1,
         },
       ],
-      services: currentServices?.map((item: any) => ({
-        service_id: parseInt(item.id),
-        quantity: item.quantity,
-      })),
+      // services: currentServices?.map((item: any) => ({
+      //   service_id: parseInt(item.id),
+      //   quantity: item.quantity,
+      // })),
       delivery_type: location, // Should map directly to `service_type` in DB if this is the correct interpretation
     };
     console.log(formData);
@@ -930,7 +929,9 @@ const SectionFormBookingAtHome = () => {
                 {selectedPayment === 'momo' && (
                   <motion.div {...fadeAnimation}>
                     <CustomImage
-                      src={action.src}
+                      src={
+                        'https://img.vietqr.io/image/970422-VQRQAAVPC8942-vietqr_pro.jpg?addInfo=Test+thanh+toan+PayOS&amount=5000'
+                      }
                       alt="momo"
                       width={500}
                       height={500}
@@ -988,7 +989,9 @@ const SectionFormBookingAtHome = () => {
                 {selectedPayment === 'bank' && (
                   <motion.div {...fadeAnimation}>
                     <CustomImage
-                      src={action.src}
+                      src={
+                        'https://img.vietqr.io/image/970422-VQRQAAVPC8942-vietqr_pro.jpg?addInfo=Test+thanh+toan+PayOS&amount=5000'
+                      }
                       alt="bank"
                       width={500}
                       height={500}

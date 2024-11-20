@@ -3,9 +3,7 @@
 'use client';
 
 import addressIc from '@/assets/svgs/contact/address.svg';
-import mailIc from '@/assets/svgs/contact/mail.svg';
 import phoneIc from '@/assets/svgs/contact/phone.svg';
-import UseIc from '@/assets/svgs/contact/user.svg';
 import addressWhite from '@/assets/svgs/contact/white_address.svg';
 import callWhite from '@/assets/svgs/contact/white_call.svg';
 import WhiteDrIc from '@/assets/svgs/contact/white_dr.svg';
@@ -15,6 +13,7 @@ import { Branch, branches } from '@/utils/constants';
 import L from 'leaflet';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
+import FormContact from './FormContact';
 
 // Dynamically import react-leaflet components to avoid SSR issues
 const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
@@ -95,103 +94,7 @@ const SectionInforUs: React.FC = () => {
           </div>
 
           {/* Customer Information Form */}
-          <div>
-            <h3 className="mb-4 text-base font-semibold text-[#18181B] md:text-lg">
-              Thông Tin Khách Hàng
-            </h3>
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-[#18181b] md:text-base">
-                  Họ và tên
-                </label>
-                <div className="mt-[10px] flex items-center gap-2 rounded-xl border border-[#E8E8E8] px-4 py-[14px]">
-                  <CustomImage width={18} height={18} src={UseIc} alt="User" />
-                  <input
-                    type="text"
-                    placeholder="Tên của bạn"
-                    className="w-full rounded-lg outline-none"
-                  />
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-[#18181b] md:text-base">
-                    Số điện thoại
-                  </label>
-                  <div className="mt-[10px] flex items-center gap-2 rounded-xl border border-[#E8E8E8] px-4 py-[14px]">
-                    <CustomImage width={18} height={18} src={phoneIc} alt="User" />
-                    <input
-                      type="number"
-                      placeholder="Nhập số điện thoại của bạn"
-                      className="w-full rounded-lg text-sm outline-none md:text-base"
-                    />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-[#18181b] md:text-base">
-                    Giới tính
-                  </label>
-                  <div className="mt-[10px] flex gap-2">
-                    <label className="flex items-center text-sm md:text-base">
-                      <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Nam
-                    </label>
-                    <label className="flex items-center text-sm md:text-base">
-                      <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Nữ
-                    </label>
-                    <label className="flex items-center text-sm md:text-base">
-                      <input type="radio" name="gender" className="mr-1 accent-[#3A449B]" /> Khác
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#18181b] md:text-base">
-                  Email
-                </label>
-                <div className="mt-[10px] flex items-center gap-2 rounded-xl border border-[#E8E8E8] px-4 py-[14px]">
-                  <CustomImage width={18} height={18} src={mailIc} alt="Email" />
-                  <input
-                    type="email"
-                    placeholder="abc@gmail.com"
-                    className="w-full rounded-lg text-sm outline-none md:text-base"
-                  />
-                </div>
-              </div>
-              <div>
-                <label
-                  htmlFor="service"
-                  className="block text-sm font-medium text-[#18181b] md:text-base"
-                >
-                  Dịch vụ
-                </label>
-                <select
-                  id="service"
-                  className="mt-[10px] w-full rounded-lg border border-[#E8E8E8] px-4 py-[14px] text-sm md:text-base"
-                >
-                  <option>Massage tại cửa hàng</option>
-                  <option>Massage tại nhà</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#18181b] md:text-base">
-                  Ghi chú
-                </label>
-                <textarea
-                  placeholder="VD: liên hệ cho tôi ngay"
-                  className="mt-[10px] w-full rounded-lg border border-gray-300 p-2 text-sm md:text-base"
-                  rows={3}
-                ></textarea>
-              </div>
-              <div className="mt-4 flex items-center justify-between">
-                <button
-                  type="button"
-                  className="h-12 w-fit rounded-lg bg-[#3A449B] px-8 py-2 text-center text-base font-medium text-white shadow-md transition-all duration-300 hover:bg-[#1c2681] hover:bg-gradient-to-l"
-                >
-                  Lưu thông tin
-                </button>
-              </div>
-            </form>
-          </div>
+          <FormContact />
         </div>
 
         {/* Interactive Map */}

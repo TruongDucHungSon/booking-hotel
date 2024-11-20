@@ -187,14 +187,6 @@ const PageCart = () => {
                       </span>
                     </div>
                   </div>
-
-                  <motion.button
-                    type="button"
-                    className="mt-4 w-full rounded-full bg-[#3A449B] py-3 text-sm font-semibold text-white md:mt-6 md:text-base"
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    Đặt hàng
-                  </motion.button>
                 </div>
               </>
             )}
