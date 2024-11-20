@@ -12,8 +12,11 @@ export const API_ENDPOINT = {
   POST_BOOKING: '/api/bookings',
   GET_ARTICLES: '/api/articles',
   GET_CATEGORY: '/api/products/categories',
+  POST_PAYMENT: '/api/bookings',
 };
 
 export const STALE_TIME: number = 5 * 60 * 1000;
 export const CACHE_TIME: number = 10 * 60 * 1000;
 export const RETRY: number = 3;
+
+export const BASE_URL = 'https://api.aksoft.vn';

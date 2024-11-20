@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import acb from '@/assets/images/banner/acb.png';
-import momo from '@/assets/images/banner/momo.png';
 import more from '@/assets/images/banner/more.png';
 import vcb from '@/assets/images/banner/vcb.png';
 import sv1 from '@/assets/images/new/sv1.png';
@@ -24,6 +23,7 @@ import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import { usePostBooking } from '@/services/booking/Booking.Service';
+import { usePostPayment } from '@/services/payment/Payment.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useSubServiceData } from '@/services/services/Services.Service';
@@ -226,7 +226,11 @@ const SectionFormBookingAtHome = () => {
       }, 5000); // Delay in milliseconds (e.g., 2 seconds)
     }
   };
-  const { mutate } = usePostBooking();
+  const { mutate: bookMutate } = usePostBooking();
+
+  const [idBooking, setIdBooking] = useState<number | null>(null);
+  const postPaymentMutation = usePostPayment(idBooking);
+
   const handleBook: SubmitHandler<any> = (data) => {
     forEach(data, (value, key) => methods.setValue(key, value));
     const values = methods.getValues();
@@ -258,14 +262,32 @@ const SectionFormBookingAtHome = () => {
     };
     console.log(formData);
 
-    mutate(formData, {
+    bookMutate(formData, {
       onSuccess: (response: any) => {
-        console.log('Booking successful:', response);
+        const bookingId = response?.data?.id;
+        if (bookingId) {
+          setIdBooking(bookingId); // Set the booking ID after successful booking
+        }
+        reset(); // Reset the form after successful booking
       },
       onError: (error: any) => {
         console.error('Booking failed:', error);
       },
     });
+  };
+
+  const handlePaymentSelection = (paymentMethod: string) => {
+    setSelectedPayment(paymentMethod); // Set the selected payment method
+
+    // Post payment immediately when "payos" is selected
+    if (paymentMethod === 'payos' && idBooking) {
+      const paymentData = {
+        payment_method: 'payos',
+        return_url: `http://localhost:3000/dich-vu`, // Replace with your actual base URL or environment variable
+        cancel_url: `http://localhost:3000`, // Replace with your actual cancel URL
+      };
+      postPaymentMutation.mutate(paymentData); // Trigger payment mutation
+    }
   };
 
   return (
@@ -901,45 +923,6 @@ const SectionFormBookingAtHome = () => {
             </button>
             <div className="mt-4 rounded-lg">
               {/* MoMo Payment Option */}
-              <div>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="momo"
-                        className="form-radio size-4 accent-[#3A449B] lg:size-5"
-                        onChange={() => setSelectedPayment('momo')}
-                      />
-                      <span className="text-sm font-semibold md:text-base lg:text-lg">Ví MoMo</span>
-                    </label>
-                    <p className="text-xs font-medium lg:text-sm">
-                      Thanh toán bằng QR qua ví điện tử MoMo
-                    </p>
-                  </div>
-                  <CustomImage
-                    src={momo.src}
-                    alt="momo"
-                    width={60}
-                    height={60}
-                    className="hidden size-7 sm:block lg:size-8"
-                  />
-                </div>
-                {selectedPayment === 'momo' && (
-                  <motion.div {...fadeAnimation}>
-                    <CustomImage
-                      src={
-                        'https://img.vietqr.io/image/970422-VQRQAAVPC8942-vietqr_pro.jpg?addInfo=Test+thanh+toan+PayOS&amount=5000'
-                      }
-                      alt="momo"
-                      width={500}
-                      height={500}
-                      className="mx-auto mt-3 size-[250px]"
-                    />
-                  </motion.div>
-                )}
-              </div>
 
               {/* Bank Transfer Payment Option */}
               <div>
@@ -951,7 +934,7 @@ const SectionFormBookingAtHome = () => {
                         name="payment"
                         value="bank"
                         className="form-radio size-4 accent-[#3A449B] lg:size-5"
-                        onChange={() => setSelectedPayment('bank')}
+                        onChange={() => handlePaymentSelection('payos')}
                       />
                       <span className="text-sm font-semibold md:text-base lg:text-lg">
                         Chuyển Khoản Ngân Hàng

@@ -2,7 +2,6 @@
 'use client';
 import acb from '@/assets/images/banner/acb.png';
 import action from '@/assets/images/banner/action.png';
-import momo from '@/assets/images/banner/momo.png';
 import more from '@/assets/images/banner/more.png';
 import vcb from '@/assets/images/banner/vcb.png';
 import sv1 from '@/assets/images/new/sv1.png';
@@ -26,6 +25,7 @@ import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm, { RoomProps } from '@/components/modal/SelectionModalForm';
 import { usePostBooking } from '@/services/booking/Booking.Service';
 import { useLocationData } from '@/services/location/Location.Service';
+import { usePostPayment } from '@/services/payment/Payment.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useRoomsData } from '@/services/room/Rooms.Service';
@@ -141,7 +141,6 @@ const SectionFormBooking = () => {
   const selectedService = watch('service');
   const selectedCategory = watch('category');
   const store = watch('store');
-  console.log(room);
 
   useEffect(() => {
     if (location === 'in-store') {
@@ -221,34 +220,19 @@ const SectionFormBooking = () => {
     }
   }, [DATA_ROOMS]);
 
-  const handlePayment = async () => {
-    // Check if selected payment is "momo" or "bank"
-    if (selectedPayment === 'momo' || selectedPayment === 'bank') {
-      await setShowThankYouModal(false); // Show thank-you modal
-      setShowThankYouText(true); // Show thank-you modal
+  const [idBooking, setIdBooking] = useState<number | null>(null);
+  const postPaymentMutation = usePostPayment(idBooking);
 
-      setTimeout(() => {
-        router.push('/dich-vu');
-      }, 5000); // Delay in milliseconds (e.g., 2 seconds)
-    }
-    if (selectedPayment === 'counter') {
-      await setShowThankYouModal(false); // Show thank-you modal
-      setShowThankYouText(true); // Show thank-you modal
+  // Triggering the postPaymentMutation with idBooking
+  const { mutate: bookMutate } = usePostBooking();
 
-      setTimeout(() => {
-        router.push('/dich-vu');
-      }, 5000); // Delay in milliseconds (e.g., 2 seconds)
-    }
-  };
-  const { mutate } = usePostBooking();
   const handleBook: SubmitHandler<any> = (data) => {
-    forEach(data, (value, key) => methods.setValue(key, value));
-    const values = methods.getValues();
-    setShowThankYouModal(true);
+    forEach(data, (value, key) => methods.setValue(key, value)); // Set form values
+    const values = methods.getValues(); // Get form values
+    setShowThankYouModal(true); // Show the success modal
 
     const formData = {
       room_id: selectedRoom?.id,
-      // service_type: values.location_id || 'in-store', // <== This might be `values.delivery_type` if location_id is not correct
       guest_info: {
         name: values.fullName,
         phone_number: values.phoneNumber,
@@ -269,18 +253,36 @@ const SectionFormBooking = () => {
         service_id: parseInt(item.id),
         quantity: item.quantity,
       })),
-      delivery_type: location, // Should map directly to `service_type` in DB if this is the correct interpretation
+      delivery_type: location, // Ensure this maps correctly in the DB
     };
 
-    mutate(formData, {
+    // Trigger the booking mutation
+    bookMutate(formData, {
       onSuccess: (response: any) => {
-        console.log('Booking successful:', response);
+        const bookingId = response?.data?.id;
+        if (bookingId) {
+          setIdBooking(bookingId); // Set the booking ID after successful booking
+        }
         reset(); // Reset the form after successful booking
       },
       onError: (error: any) => {
         console.error('Booking failed:', error);
       },
     });
+  };
+
+  const handlePaymentSelection = (paymentMethod: string) => {
+    setSelectedPayment(paymentMethod); // Set the selected payment method
+
+    // Post payment immediately when "payos" is selected
+    if (paymentMethod === 'payos' && idBooking) {
+      const paymentData = {
+        payment_method: 'payos',
+        return_url: `http://localhost:3000/dich-vu`, // Replace with your actual base URL or environment variable
+        cancel_url: `http://localhost:3000`, // Replace with your actual cancel URL
+      };
+      postPaymentMutation.mutate(paymentData); // Trigger payment mutation
+    }
   };
 
   return (
@@ -935,16 +937,16 @@ const SectionFormBooking = () => {
             </button>
             <div className="mt-4 rounded-lg">
               {/* MoMo Payment Option */}
-              <div>
+              {/* <div>
                 <div className="flex items-start justify-between">
                   <div>
                     <label className="flex items-center space-x-2">
                       <input
                         type="radio"
                         name="payment"
-                        value="momo"
+                        value="payos"
                         className="form-radio size-4 accent-[#3A449B] lg:size-5"
-                        onChange={() => setSelectedPayment('momo')}
+                        onChange={() => setSelectedPayment('payos')}
                       />
                       <span className="text-sm font-semibold md:text-base lg:text-lg">Ví MoMo</span>
                     </label>
@@ -960,7 +962,7 @@ const SectionFormBooking = () => {
                     className="hidden size-7 sm:block lg:size-8"
                   />
                 </div>
-                {selectedPayment === 'momo' && (
+                {selectedPayment === 'payos' && (
                   <motion.div {...fadeAnimation}>
                     <CustomImage
                       src={action.src}
@@ -971,7 +973,7 @@ const SectionFormBooking = () => {
                     />
                   </motion.div>
                 )}
-              </div>
+              </div> */}
 
               {/* Bank Transfer Payment Option */}
               <div>
@@ -981,9 +983,9 @@ const SectionFormBooking = () => {
                       <input
                         type="radio"
                         name="payment"
-                        value="bank"
+                        value="payos"
                         className="form-radio size-4 accent-[#3A449B] lg:size-5"
-                        onChange={() => setSelectedPayment('bank')}
+                        onChange={() => handlePaymentSelection('payos')}
                       />
                       <span className="text-sm font-semibold md:text-base lg:text-lg">
                         Chuyển Khoản Ngân Hàng
@@ -1018,7 +1020,7 @@ const SectionFormBooking = () => {
                     />
                   </div>
                 </div>
-                {selectedPayment === 'bank' && (
+                {selectedPayment === 'payos' && (
                   <motion.div {...fadeAnimation}>
                     <CustomImage
                       src={action.src}
@@ -1065,7 +1067,6 @@ const SectionFormBooking = () => {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                handlePayment();
               }}
               className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
             >
