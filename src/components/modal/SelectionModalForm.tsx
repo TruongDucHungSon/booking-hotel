@@ -1,6 +1,7 @@
 import RoomSrc2 from '@/assets/images/room/r2.png';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useCallback, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 import CustomImage from '../../components/CustomImage';
 import Title from '../Title/Title';
 
@@ -37,6 +38,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
 
   // Filter rooms directly inside the render method
   const filteredRooms = rooms.filter((room) => room.type_text === selectedType);
+  const methods = useFormContext();
 
   const handleRoomSelection = useCallback((room: RoomProps) => {
     setSelectedRoom(room);
@@ -45,6 +47,8 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
   const handleConfirmSelection = useCallback(() => {
     if (selectedRoom) {
       onSelectRoom(selectedRoom);
+      methods.setValue('room', selectedRoom);
+
       onClose();
     }
   }, [onSelectRoom, selectedRoom, onClose]);

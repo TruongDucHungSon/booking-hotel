@@ -33,8 +33,9 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
   if (!isOpen) return null;
 
   // Filter services based on selected location (in-store or at-home)
-  const filteredServices = services?.filter((service) => service.delivery_type === location) || [];
-  console.log('Filtered services:', location);
+  const filteredServices = Array.isArray(services)
+    ? services.filter((service) => service.delivery_type === location)
+    : [];
 
   const handleServiceClick = (service: any) => {
     setSelectedServices((prev) => ({
@@ -76,41 +77,50 @@ const ServiceSelectionModal: React.FC<ServiceSelectionModalProps> = ({
           và
           <span className="text-[#EF5F5F]">{subTitle3}</span>
         </p>
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {filteredServices.map((service) => (
-            <div
-              key={service.id}
-              className="group cursor-pointer rounded-3xl transition-all duration-300"
-            >
-              <div onClick={() => handleServiceClick(service)}>
-                <CustomImage
-                  width={180}
-                  height={180}
-                  src={sv1.src || ''}
-                  alt={service.name}
-                  className="h-[120px] w-[120px] rounded-3xl object-cover sm:w-full md:h-[160px]"
-                  classNameImg="rounded-3xl"
-                />
-                <div className="mt-2 flex flex-col items-center justify-center gap-2 text-center text-sm text-gray-700 group-hover:text-[#3A449B] md:flex-row md:gap-5 md:text-base">
-                  <p>{service.name}</p>
-                  {selectedServices[service.id] && (
-                    <span className="text-center text-xs font-medium text-[#3A449B] md:text-sm">
-                      Đã chọn: {selectedServices[service.id]}
-                    </span>
-                  )}
+
+        {/* Show a message if there are no services */}
+        {filteredServices.length === 0 ? (
+          <p className="h-[200px] text-center text-lg font-semibold text-primary">
+            Không có dịch vụ nào.
+          </p>
+        ) : (
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredServices.map((service) => (
+              <div
+                key={service.id}
+                className="group cursor-pointer rounded-3xl transition-all duration-300"
+              >
+                <div onClick={() => handleServiceClick(service)}>
+                  <CustomImage
+                    width={180}
+                    height={180}
+                    src={sv1.src || ''}
+                    alt={service.name}
+                    className="h-[120px] w-[120px] rounded-3xl object-cover sm:w-full md:h-[160px]"
+                    classNameImg="rounded-3xl"
+                  />
+                  <div className="mt-2 flex flex-col items-center justify-center gap-2 text-center text-sm text-gray-700 group-hover:text-[#3A449B] md:flex-row md:gap-5 md:text-base">
+                    <p>{service.name}</p>
+                    {selectedServices[service.id] && (
+                      <span className="text-center text-xs font-medium text-[#3A449B] md:text-sm">
+                        Đã chọn: {selectedServices[service.id]}
+                      </span>
+                    )}
+                  </div>
                 </div>
+                {selectedServices[service.id] && (
+                  <button
+                    onClick={() => handleServiceDelete(service)}
+                    className="mx-auto mt-2 flex items-center justify-center text-center text-xs text-red-500 md:text-sm"
+                  >
+                    Giảm số lượng
+                  </button>
+                )}
               </div>
-              {selectedServices[service.id] && (
-                <button
-                  onClick={() => handleServiceDelete(service)}
-                  className="mx-auto mt-2 flex items-center justify-center text-center text-xs text-red-500 md:text-sm"
-                >
-                  Giảm số lượng
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
         <div className="mt-3 text-center md:mt-6">
           <button
             type="button"

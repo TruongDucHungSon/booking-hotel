@@ -115,7 +115,7 @@ const SectionFormBooking = () => {
       yup.object().shape({
         location_id: yup.string().required(),
         selectedTime: yup.string().required(),
-        room: yup.string(),
+        room: yup.string().required(),
         services: yup.mixed(),
         service: yup.mixed().nonNullable().required(),
         staff: yup.string(),
@@ -141,6 +141,7 @@ const SectionFormBooking = () => {
   const selectedService = watch('service');
   const selectedCategory = watch('category');
   const store = watch('store');
+  console.log(room);
 
   useEffect(() => {
     if (location === 'in-store') {
@@ -154,6 +155,7 @@ const SectionFormBooking = () => {
   const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
   const handleSelectRoom = (room: RoomProps) => {
     setSelectedRoom(room);
+    setValue('room', room.id);
   };
 
   const calculateTotalPrice = (products: any) => {
@@ -672,19 +674,19 @@ const SectionFormBooking = () => {
                   />
                   <div className="flex w-full flex-col items-start lg:w-[365px]">
                     <h3 className="text-sm font-semibold md:text-base lg:text-xl">
-                      {selectedCategory?.name || 'No Category'}
+                      {selectedService?.name || 'No Category'}
                     </h3>
                     <p className="mt-1 font-medium">
                       Giá:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {formatPrice(selectedCategory.price.sale)}
+                        {formatPrice(selectedService.price)}
                       </span>
                       <span> VND / Lần</span>
                     </p>
                     <p className="mt-1 font-medium">
                       Thời gian:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {selectedService.duration.minutes}
+                        {selectedService.duration}
                       </span>
                       <span> phút</span>
                     </p>

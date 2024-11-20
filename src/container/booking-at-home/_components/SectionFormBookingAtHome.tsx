@@ -114,7 +114,6 @@ const SectionFormBookingAtHome = () => {
         location_id: yup.string().required(),
         selectedTime: yup.string().required(),
         services: yup.mixed(),
-        room: yup.string().required(),
         service: yup.mixed().nonNullable().required(),
         staff: yup.string().required(),
         gender: yup.string().required(),
@@ -131,13 +130,13 @@ const SectionFormBookingAtHome = () => {
   const selectedTime = watch('selectedTime');
   const currentServices = watch('services');
   const selectedService = watch('service');
-  console.log(selectedService);
+  console.log(currentServices);
 
   const selectedCategory = watch('category');
   const staff = watch('staff');
   const [selectedPayment, setSelectedPayment] = useState('counter');
   const location = methods.watch('location_id');
-
+  const location_at_home = 'at-home';
   useEffect(() => {
     if (location === 'in-store') {
       router.push('/dat-lich');
@@ -540,7 +539,7 @@ const SectionFormBookingAtHome = () => {
               </button>
 
               <ServiceSelectionModal
-                location={location}
+                location={location_at_home}
                 isOpen={isModalOpenService}
                 onClose={handleCloseModalService}
                 onSelectServices={(v) => {
