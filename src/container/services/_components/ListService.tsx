@@ -174,7 +174,7 @@ const ListService = () => {
                       </span>
                       {service.description}
                     </div>
-                  </div>s
+                  </div>
 
                   <div className="mt-6 flex flex-col items-center justify-between gap-3 lg:flex-row">
                     <p className="text-sm font-semibold text-[#181818] md:text-base">

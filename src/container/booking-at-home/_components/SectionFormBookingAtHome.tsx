@@ -147,7 +147,7 @@ const SectionFormBookingAtHome = () => {
   };
 
   // Tính toán giá dịch vụ và sản phẩm
-  const priceService = formatPrice(selectedService?.price);
+  const priceService = formatPrice(selectedCategory?.price.sale);
   const totalPriceProducts = formatPrice(calculateTotalPrice(selectedProducts));
 
   // Khai báo state cho tổng giá ban đầu (chưa áp dụng voucher)
@@ -172,7 +172,8 @@ const SectionFormBookingAtHome = () => {
 
     setTotalPrice(NewTotalPrice); // Cập nhật lại giá trị totalPrice
   }, [selectedVoucher, priceService, totalPriceProducts]);
-  const initTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
+  const initTotalPrice = parseInt(selectedCategory?.price.sale) + parseInt(totalPriceProducts);
+
   const sale = formatPrice(initTotalPrice - totalPrice);
 
   const timeValue = useMemo(() => {
@@ -201,28 +202,10 @@ const SectionFormBookingAtHome = () => {
     if (location === 'at-home' && isEmpty(staff)) methods.setValue('staff', staffs[0]?.id);
   }, [staffs, location, setValue]);
 
-  const handlePayment = async () => {
-    // Check if selected payment is "momo" or "bank"
-    if (selectedPayment === 'momo' || selectedPayment === 'bank') {
-      await setShowThankYouModal(false); // Show thank-you modal
-      setShowThankYouText(true); // Show thank-you modal
-
-      setTimeout(() => {
-        router.push('/dich-vu');
-      }, 5000); // Delay in milliseconds (e.g., 2 seconds)
-    }
-    if (selectedPayment === 'counter') {
-      await setShowThankYouModal(false); // Show thank-you modal
-      setShowThankYouText(true); // Show thank-you modal
-
-      setTimeout(() => {
-        router.push('/dich-vu');
-      }, 5000); // Delay in milliseconds (e.g., 2 seconds)
-    }
-  };
   const { mutate: bookMutate } = usePostBooking();
 
   const [idBooking, setIdBooking] = useState<number | null>(null);
+  const [dataForm, setDataForm] = useState<any>(null);
   const postPaymentMutation = usePostPayment(idBooking);
 
   const handleBooking: SubmitHandler<any> = (data) => {
@@ -254,9 +237,10 @@ const SectionFormBookingAtHome = () => {
       // })),
       delivery_type: location, // Should map directly to `service_type` in DB if this is the correct interpretation
     };
-    console.log(formData);
-
-    bookMutate(formData, {
+    setDataForm(formData);
+  };
+  const handleBook = () => {
+    bookMutate(dataForm, {
       onSuccess: (response: any) => {
         const bookingId = response?.data?.id;
         if (bookingId) {
@@ -634,7 +618,7 @@ const SectionFormBookingAtHome = () => {
 
             {/* Hide this button if there are selected services */}
             <div className="flex w-full flex-col">
-              {isEmpty(selectedService) ? (
+              {isEmpty(selectedCategory) ? (
                 <button
                   onClick={() => setModalOpenServiceBooking(true)}
                   type="button"
@@ -649,9 +633,9 @@ const SectionFormBookingAtHome = () => {
                 </div>
               ) : null}
 
-              {!isEmpty(selectedService) ? (
+              {!isEmpty(selectedCategory) ? (
                 <div
-                  key={selectedService?.id}
+                  key={selectedCategory?.id}
                   className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"
                 >
                   <CustomImage
@@ -664,19 +648,19 @@ const SectionFormBookingAtHome = () => {
                   />
                   <div className="flex w-full flex-col items-start lg:w-[365px]">
                     <h3 className="text-sm font-semibold md:text-base lg:text-xl">
-                      {selectedService?.name || 'No Category'}
+                      {selectedCategory?.name || 'No Category'}
                     </h3>
                     <p className="mt-1 font-medium">
                       Giá:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {formatPrice(selectedService.price)}
+                        {formatPrice(selectedCategory?.price.sale)}
                       </span>
                       <span> VND / Lần</span>
                     </p>
                     <p className="mt-1 font-medium">
                       Thời gian:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {selectedService.duration}
+                        {selectedService?.duration.munites}
                       </span>
                       <span> phút</span>
                     </p>
@@ -869,8 +853,8 @@ const SectionFormBookingAtHome = () => {
               <p> Tổng thanh toán:</p>{' '}
               <p className="text-[#3A449B]">
                 {isEmpty(selectedVoucher)
-                  ? `${formatPrice(initTotalPrice)}.000 VND`
-                  : `${formatPrice(totalPrice)}.000 VND` || '0'}
+                  ? `${formatPrice(initTotalPrice)} VND`
+                  : `${formatPrice(totalPrice)} VND` || '0'}
               </p>
             </div>
             {selectedVoucher && (
@@ -1005,9 +989,12 @@ const SectionFormBookingAtHome = () => {
 
             {/* Payment Button */}
             <button
-              onClick={(e) => {
+              type="submit"
+              onClick={async (e) => {
                 e.preventDefault();
-                handlePayment();
+                handleBook();
+                await setShowThankYouModal(false);
+                setShowThankYouText(true);
               }}
               className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
             >

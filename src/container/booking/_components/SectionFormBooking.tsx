@@ -100,8 +100,8 @@ const SectionFormBooking = () => {
   // };
   const {
     register,
-    handleSubmit,
     setValue,
+    handleSubmit,
     watch,
     reset,
     formState: { errors },
@@ -145,7 +145,7 @@ const SectionFormBooking = () => {
     }
   }, [location]);
 
-  const nameService = selectedService?.name || 'Chưa chọn dịch vụ';
+  const nameService = selectedCategory?.name || 'Chưa chọn dịch vụ';
   const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
   const handleSelectRoom = (room: RoomProps) => {
     setSelectedRoom(room);
@@ -157,7 +157,7 @@ const SectionFormBooking = () => {
   };
 
   // Tính toán giá dịch vụ và sản phẩm
-  const priceService = formatPrice(selectedService?.price);
+  const priceService = formatPrice(selectedCategory?.price.sale);
   const totalPriceProducts = formatPrice(calculateTotalPrice(selectedProducts));
 
   // Khai báo state cho tổng giá ban đầu (chưa áp dụng voucher)
@@ -181,7 +181,7 @@ const SectionFormBooking = () => {
     setTotalPrice(newTotalPrice);
   }, [selectedVoucher, priceService, totalPriceProducts]);
 
-  const initTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
+  const initTotalPrice = parseInt(selectedCategory?.price.sale) + parseInt(totalPriceProducts);
   const sale = formatPrice(initTotalPrice - totalPrice);
 
   const { data: DATA_ROOMS } = useRoomsData(store || 1);
@@ -216,12 +216,13 @@ const SectionFormBooking = () => {
   }, [DATA_ROOMS]);
 
   const [idBooking, setIdBooking] = useState<number | null>(null);
+  const [dataForm, setDataForm] = useState<any>(null);
   const postPaymentMutation = usePostPayment(idBooking);
 
   // Triggering the postPaymentMutation with idBooking
   const { mutate: bookMutate } = usePostBooking();
 
-  const handleBook: SubmitHandler<any> = (data) => {
+  const handleBooking: SubmitHandler<any> = (data) => {
     forEach(data, (value, key) => methods.setValue(key, value)); // Set form values
     const values = methods.getValues(); // Get form values
     setShowThankYouModal(true); // Show the success modal
@@ -248,11 +249,15 @@ const SectionFormBooking = () => {
         service_id: parseInt(item.id),
         quantity: item.quantity,
       })),
-      delivery_type: location, // Ensure this maps correctly in the DB
+      delivery_type: location,
     };
+    // TriggsetDataFormer the booking mutation
+    setDataForm(formData);
+  };
 
+  const handleBookingForm = () => {
     // Trigger the booking mutation
-    bookMutate(formData, {
+    bookMutate(dataForm, {
       onSuccess: (response: any) => {
         const bookingId = response?.data?.id;
         if (bookingId) {
@@ -289,7 +294,7 @@ const SectionFormBooking = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(handleBook)} className="mb-5 md:mb-10">
+    <form className="mb-5 md:mb-10" onSubmit={handleSubmit(handleBooking)}>
       {/* heading */}
       <Title>thông tin đặt chỗ</Title>
       <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
@@ -649,7 +654,7 @@ const SectionFormBooking = () => {
 
             {/* Hide this button if there are selected services */}
             <div className="flex w-full flex-col">
-              {isEmpty(selectedService) ? (
+              {isEmpty(selectedCategory) ? (
                 <button
                   onClick={() => setModalOpenServiceBooking(true)}
                   type="button"
@@ -664,9 +669,9 @@ const SectionFormBooking = () => {
                 </div>
               ) : null}
 
-              {!isEmpty(selectedService) ? (
+              {!isEmpty(selectedCategory) ? (
                 <div
-                  key={selectedService?.id}
+                  key={selectedCategory?.id}
                   className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"
                 >
                   <CustomImage
@@ -679,19 +684,19 @@ const SectionFormBooking = () => {
                   />
                   <div className="flex w-full flex-col items-start lg:w-[365px]">
                     <h3 className="text-sm font-semibold md:text-base lg:text-xl">
-                      {selectedService?.name || 'No Category'}
+                      {selectedCategory?.name || 'No Category'}
                     </h3>
                     <p className="mt-1 font-medium">
                       Giá:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {formatPrice(selectedService.price)}
+                        {formatPrice(selectedCategory?.price.sale)}
                       </span>
                       <span> VND / Lần</span>
                     </p>
                     <p className="mt-1 font-medium">
                       Thời gian:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {selectedService.duration}
+                        {selectedCategory?.duration.minutes}
                       </span>
                       <span> phút</span>
                     </p>
@@ -884,7 +889,7 @@ const SectionFormBooking = () => {
               <p> Tổng thanh toán:</p>{' '}
               <p className="text-[#3A449B]">
                 {isEmpty(selectedVoucher)
-                  ? `${formatPrice(initTotalPrice)}.000 VND`
+                  ? `${formatPrice(initTotalPrice)} VND`
                   : `${formatPrice(totalPrice)}.000 VND` || '0'}
               </p>
             </div>
@@ -939,46 +944,6 @@ const SectionFormBooking = () => {
               &times;
             </button>
             <div className="mt-4 rounded-lg">
-              {/* MoMo Payment Option */}
-              {/* <div>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="payos"
-                        className="form-radio size-4 accent-[#3A449B] lg:size-5"
-                        onChange={() => setSelectedPayment('payos')}
-                      />
-                      <span className="text-sm font-semibold md:text-base lg:text-lg">Ví MoMo</span>
-                    </label>
-                    <p className="text-xs font-medium lg:text-sm">
-                      Thanh toán bằng QR qua ví điện tử MoMo
-                    </p>
-                  </div>
-                  <CustomImage
-                    src={momo.src}
-                    alt="momo"
-                    width={60}
-                    height={60}
-                    className="hidden size-7 sm:block lg:size-8"
-                  />
-                </div>
-                {selectedPayment === 'payos' && (
-                  <motion.div {...fadeAnimation}>
-                    <CustomImage
-                      src={action.src}
-                      alt="momo"
-                      width={500}
-                      height={500}
-                      className="mx-auto mt-3 size-[250px]"
-                    />
-                  </motion.div>
-                )}
-              </div> */}
-
-              {/* Bank Transfer Payment Option */}
               <div>
                 <div className="flex items-center justify-between">
                   <div>
@@ -1050,7 +1015,13 @@ const SectionFormBooking = () => {
 
             {/* Payment Button */}
             <button
-              onClick={() => setShowThankYouText(false)}
+              type="submit"
+              onClick={async (e) => {
+                e.preventDefault();
+                handleBookingForm();
+                await setShowThankYouModal(false);
+                setShowThankYouText(true);
+              }}
               className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
             >
               Thanh Toán
