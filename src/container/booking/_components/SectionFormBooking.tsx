@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import acb from '@/assets/images/banner/acb.png';
-import more from '@/assets/images/banner/more.png';
-import vcb from '@/assets/images/banner/vcb.png';
 import sv1 from '@/assets/images/new/sv1.png';
 import BoxIc from '@/assets/svgs/arrow/box.svg';
 import box1 from '@/assets/svgs/arrow/box1.svg';
@@ -1002,29 +999,7 @@ const SectionFormBooking = () => {
                       trạm ATM.
                     </p>
                   </div>
-                  <div className="hidden items-center gap-2 sm:flex">
-                    <CustomImage
-                      src={vcb.src}
-                      alt="vcb"
-                      width={80}
-                      height={80}
-                      className="size-7 lg:size-8"
-                    />
-                    <CustomImage
-                      src={acb.src}
-                      alt="acb"
-                      width={60}
-                      height={60}
-                      className="size-7 lg:size-9"
-                    />
-                    <CustomImage
-                      src={more.src}
-                      alt="more"
-                      width={60}
-                      height={60}
-                      className="size-7 lg:size-8"
-                    />
-                  </div>
+                  <div className="hidden items-center gap-2 sm:flex"></div>
                 </div>
                 {/* {selectedPayment === 'payos' && (
                   <motion.div {...fadeAnimation}>

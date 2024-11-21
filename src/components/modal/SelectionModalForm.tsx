@@ -75,6 +75,7 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
           <div className="mb-5 flex justify-center gap-4 lg:mb-8">
             {['Phòng thường', 'Phòng VIP', 'Phòng đôi'].map((type) => (
               <button
+                type="button"
                 key={type}
                 onClick={() => setSelectedType(type)}
                 className={`rounded-full px-4 py-2 ${
