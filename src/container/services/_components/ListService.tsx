@@ -52,7 +52,7 @@ const ListService = () => {
   };
 
   // Handle booking by setting form values and redirecting
-  const handleBook = (service: any) => {
+  const handleBookNavigate = (service: any) => {
     methods.setValue('service', service);
     methods.setValue('category', selectedPackage);
     router.push(location === 'in-store' ? '/dat-lich' : '/dat-lich-tai-nha');
@@ -174,7 +174,7 @@ const ListService = () => {
                       </span>
                       {service.description}
                     </div>
-                  </div>
+                  </div>s
 
                   <div className="mt-6 flex flex-col items-center justify-between gap-3 lg:flex-row">
                     <p className="text-sm font-semibold text-[#181818] md:text-base">
@@ -183,7 +183,7 @@ const ListService = () => {
 
                     <button
                       className="group flex items-center gap-2 text-sm text-[#3A449B] hover:underline md:text-base"
-                      onClick={() => handleBook(service)}
+                      onClick={() => handleBookNavigate(service)}
                     >
                       Đặt lịch ngay
                       <span className="transition-all duration-300 group-hover:translate-x-2">

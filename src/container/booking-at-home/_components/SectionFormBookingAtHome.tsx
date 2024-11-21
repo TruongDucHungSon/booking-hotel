@@ -225,7 +225,7 @@ const SectionFormBookingAtHome = () => {
   const [idBooking, setIdBooking] = useState<number | null>(null);
   const postPaymentMutation = usePostPayment(idBooking);
 
-  const handleBook: SubmitHandler<any> = (data) => {
+  const handleBooking: SubmitHandler<any> = (data) => {
     forEach(data, (value, key) => methods.setValue(key, value));
     const values = methods.getValues();
     setShowThankYouModal(true);
@@ -293,7 +293,7 @@ const SectionFormBookingAtHome = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(handleBook)} className="mb-5 md:mb-10">
+    <form onSubmit={handleSubmit(handleBooking)} className="mb-5 md:mb-10">
       {/* heading */}
       <Title>thông tin đặt chỗ tại nhà</Title>
       <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
