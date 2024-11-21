@@ -889,7 +889,7 @@ const SectionFormBooking = () => {
               <p> Tổng thanh toán:</p>{' '}
               <p className="text-[#3A449B]">
                 {isEmpty(selectedVoucher)
-                  ? `${formatPrice(initTotalPrice)} VND`
+                  ? `${formatPrice(initTotalPrice)}.000 VND`
                   : `${formatPrice(totalPrice)}.000 VND` || '0'}
               </p>
             </div>
