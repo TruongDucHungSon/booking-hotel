@@ -34,7 +34,6 @@ import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
-import { motion } from 'framer-motion';
 import { filter, find, forEach, head, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -96,12 +95,12 @@ const SectionFormBooking = () => {
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
-  const fadeAnimation = {
-    initial: { opacity: 0, scale: 0.95 },
-    animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 },
-    transition: { duration: 0.3 },
-  };
+  // const fadeAnimation = {
+  //   initial: { opacity: 0, scale: 0.95 },
+  //   animate: { opacity: 1, scale: 1 },
+  //   exit: { opacity: 0, scale: 0.95 },
+  //   transition: { duration: 0.3 },
+  // };
   const {
     register,
     handleSubmit,
@@ -220,9 +219,7 @@ const SectionFormBooking = () => {
   }, [DATA_ROOMS]);
 
   const [idBooking, setIdBooking] = useState<number | null>(null);
-  const [paymentResponse, setPaymentResponse] = useState<any>(null); // State để lưu response của payment
   const postPaymentMutation = usePostPayment(idBooking);
-  const QrSrc = paymentResponse?.payment_url || '';
 
   // Triggering the postPaymentMutation with idBooking
   const { mutate: bookMutate } = usePostBooking();
@@ -278,14 +275,14 @@ const SectionFormBooking = () => {
     if (paymentMethod === 'payos' && idBooking) {
       const paymentData = {
         payment_method: 'payos',
-        return_url: `http://localhost:3000/dich-vu`, // Replace with your actual base URL or environment variable
-        cancel_url: `http://localhost:3000`, // Replace with your actual cancel URL
+        return_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
+        cancel_url: `https://booking-hotel-lake.vercel.app/`,
       };
 
       // Trigger the payment mutation
       postPaymentMutation.mutate(paymentData, {
         onSuccess: (response: any) => {
-          setPaymentResponse(response?.data); // Lưu response vào state
+          router.push(response?.data?.payment_url);
         },
         onError: (error: any) => {
           console.error('Payment failed:', error);
@@ -1029,9 +1026,9 @@ const SectionFormBooking = () => {
                     />
                   </div>
                 </div>
-                {selectedPayment === 'payos' && (
+                {/* {selectedPayment === 'payos' && (
                   <motion.div {...fadeAnimation}>
-                    {QrSrc ? ( // Kiểm tra nếu URL hợp lệ trước khi render
+                    {QrSrc ? (
                       <CustomImage
                         src={QrSrc}
                         alt="bank"
@@ -1043,7 +1040,7 @@ const SectionFormBooking = () => {
                       <p className="mt-3 text-center text-red-500">QR code không khả dụng</p>
                     )}
                   </motion.div>
-                )}
+                )} */}
               </div>
 
               {/* Counter Payment Option */}
@@ -1078,9 +1075,7 @@ const SectionFormBooking = () => {
 
             {/* Payment Button */}
             <button
-              onClick={(e) => {
-                e.preventDefault();
-              }}
+              onClick={() => setShowThankYouText(false)}
               className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
             >
               Thanh Toán

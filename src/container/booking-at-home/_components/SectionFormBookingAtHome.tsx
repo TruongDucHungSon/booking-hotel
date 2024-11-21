@@ -33,7 +33,6 @@ import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
-import { motion } from 'framer-motion';
 import { filter, find, forEach, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -94,12 +93,7 @@ const SectionFormBookingAtHome = () => {
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenstaff, staffHandlers] = useBoolean(false);
-  const fadeAnimation = {
-    initial: { opacity: 0, scale: 0.95 },
-    animate: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.95 },
-    transition: { duration: 0.3 },
-  };
+
   const {
     register,
     handleSubmit,
@@ -279,14 +273,22 @@ const SectionFormBookingAtHome = () => {
   const handlePaymentSelection = (paymentMethod: string) => {
     setSelectedPayment(paymentMethod); // Set the selected payment method
 
-    // Post payment immediately when "payos" is selected
     if (paymentMethod === 'payos' && idBooking) {
       const paymentData = {
         payment_method: 'payos',
-        return_url: `http://localhost:3000/dich-vu`, // Replace with your actual base URL or environment variable
-        cancel_url: `http://localhost:3000`, // Replace with your actual cancel URL
+        return_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
+        cancel_url: `https://booking-hotel-lake.vercel.app/`,
       };
-      postPaymentMutation.mutate(paymentData); // Trigger payment mutation
+
+      // Trigger the payment mutation
+      postPaymentMutation.mutate(paymentData, {
+        onSuccess: (response: any) => {
+          router.push(response?.data?.payment_url);
+        },
+        onError: (error: any) => {
+          console.error('Payment failed:', error);
+        },
+      });
     }
   };
 
@@ -969,19 +971,6 @@ const SectionFormBookingAtHome = () => {
                     />
                   </div>
                 </div>
-                {selectedPayment === 'bank' && (
-                  <motion.div {...fadeAnimation}>
-                    <CustomImage
-                      src={
-                        'https://img.vietqr.io/image/970422-VQRQAAVPC8942-vietqr_pro.jpg?addInfo=Test+thanh+toan+PayOS&amount=5000'
-                      }
-                      alt="bank"
-                      width={500}
-                      height={500}
-                      className="mx-auto mt-3 size-[250px]"
-                    />
-                  </motion.div>
-                )}
               </div>
 
               {/* Counter Payment Option */}

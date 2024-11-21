@@ -20,7 +20,7 @@ const nextConfig = {
       {
         protocol: 'https', // Update to 'https' if your QA domain uses https
         hostname: 'pay.payos.vn',
-        pathname: '/**', // Ensure this path is correct for your images
+        pathname: '/web/**', // Ensure this path is correct for your images
       },
     ],
   },
