@@ -16,7 +16,6 @@ import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import ProductModal from '@/components/modal/ModalProduct';
 import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
-import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm, { RoomProps } from '@/components/modal/SelectionModalForm';
 import { usePostBooking } from '@/services/booking/Booking.Service';
@@ -25,13 +24,13 @@ import { usePostPayment } from '@/services/payment/Payment.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useRoomsData } from '@/services/room/Rooms.Service';
-import { useSubServiceData } from '@/services/services/Services.Service';
+// import { useSubServiceData } from '@/services/services/Services.Service';
 import { NUMBER_PEOPLE, serviceLocations } from '@/utils/constants';
 import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
-import { filter, find, forEach, head, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
+import { find, forEach, head, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -44,8 +43,8 @@ const SectionFormBooking = () => {
   const LOCATIONS: any = DATA_LOCATIONS || [];
   const { data: DATA_PROMOTIONS } = usePromotionData();
   const PROMOTIONS: any = DATA_PROMOTIONS || [];
-  const { data: DATA_SUB_SERVICES } = useSubServiceData();
-  const SUB_SERVICES: any = DATA_SUB_SERVICES?.data || [];
+  // const { data: DATA_SUB_SERVICES } = useSubServiceData();
+  // const SUB_SERVICES: any = DATA_SUB_SERVICES?.data || [];
   const { data: DATA_PRODUCTS } = useProductData();
   const PRODUCTS: any = DATA_PRODUCTS?.data || [];
 
@@ -69,7 +68,6 @@ const SectionFormBooking = () => {
   };
 
   const [selectedVoucher, setSelectedVoucher] = useState<string | null>(null);
-
   const [isModalOpenVoucher, setIsModalOpenVoucher] = useState(false);
   const toggleModalVoucher = () => {
     setIsModalOpenVoucher(!isModalOpenVoucher);
@@ -80,15 +78,15 @@ const SectionFormBooking = () => {
     setIsModalOpenVoucher(false); // Close modal after selection
   };
 
-  const [isModalOpenService, setIsModalOpenService] = useState(false);
+  // const [isModalOpenService, setIsModalOpenService] = useState(false);
 
-  const handleOpenModalService = () => {
-    setIsModalOpenService(true);
-  };
+  // const handleOpenModalService = () => {
+  //   setIsModalOpenService(true);
+  // };
 
-  const handleCloseModalService = () => {
-    setIsModalOpenService(false);
-  };
+  // const handleCloseModalService = () => {
+  //   setIsModalOpenService(false);
+  // };
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
@@ -131,7 +129,7 @@ const SectionFormBooking = () => {
   const location = methods.watch('location_id');
   const selectedTime = watch('selectedTime');
   const room = watch('room');
-  const currentServices = watch('services');
+  // const currentServices = watch('services');
 
   const selectedService = watch('service');
   const selectedCategory = watch('category');
@@ -145,7 +143,7 @@ const SectionFormBooking = () => {
     }
   }, [location]);
 
-  const nameService = selectedCategory?.name || 'Chưa chọn dịch vụ';
+  const nameService = selectedService?.name || 'Chưa chọn dịch vụ';
   const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
   const handleSelectRoom = (room: RoomProps) => {
     setSelectedRoom(room);
@@ -157,7 +155,7 @@ const SectionFormBooking = () => {
   };
 
   // Tính toán giá dịch vụ và sản phẩm
-  const priceService = formatPrice(selectedCategory?.price.sale);
+  const priceService = formatPrice(selectedService?.price);
   const totalPriceProducts = formatPrice(calculateTotalPrice(selectedProducts));
 
   // Khai báo state cho tổng giá ban đầu (chưa áp dụng voucher)
@@ -172,16 +170,18 @@ const SectionFormBooking = () => {
     if (selectedVoucher) {
       const voucherValue = parseInt(selectedVoucher);
       if (voucherValue < 100) {
+        console.log(selectedService);
         newTotalPrice = Math.round(newTotalPrice - (newTotalPrice * voucherValue) / 100);
-      } else {
-        newTotalPrice = newTotalPrice - voucherValue;
+      } else if (voucherValue >= 100) {
+        newTotalPrice -= parseInt(formatPrice(voucherValue));
       }
     }
 
     setTotalPrice(newTotalPrice);
   }, [selectedVoucher, priceService, totalPriceProducts]);
 
-  const initTotalPrice = parseInt(selectedCategory?.price.sale) + parseInt(totalPriceProducts);
+  const initTotalPrice =
+    parseInt(formatPrice(selectedService?.price)) + parseInt(totalPriceProducts);
   const sale = formatPrice(initTotalPrice - totalPrice);
 
   const { data: DATA_ROOMS } = useRoomsData(store || 1);
@@ -225,7 +225,7 @@ const SectionFormBooking = () => {
   const handleBooking: SubmitHandler<any> = (data) => {
     forEach(data, (value, key) => methods.setValue(key, value)); // Set form values
     const values = methods.getValues(); // Get form values
-    setShowThankYouModal(true); // Show the success modal
+    setShowThankYouModal(true);
 
     const formData = {
       room_id: selectedRoom?.id,
@@ -241,14 +241,14 @@ const SectionFormBooking = () => {
       staff_id: 9,
       packages: [
         {
-          package_id: selectedCategory?.id,
+          package_id: selectedService?.id,
           quantity: 1,
         },
       ],
-      services: currentServices?.map((item: any) => ({
-        service_id: parseInt(item.id),
-        quantity: item.quantity,
-      })),
+      // services: currentServices?.map((item: any) => ({
+      //   service_id: parseInt(item.id),
+      //   quantity: item.quantity,
+      // })),
       delivery_type: location,
     };
     // TriggsetDataFormer the booking mutation
@@ -568,7 +568,7 @@ const SectionFormBooking = () => {
               sutTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
             />
 
-            <div>
+            {/* <div>
               <label className="mb-1 block text-sm font-medium text-black md:text-base">
                 Dịch vụ
               </label>
@@ -601,7 +601,7 @@ const SectionFormBooking = () => {
               />
 
               {/* Display selected services below the button */}
-              <div className="mt-2">
+            {/* <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-4">
                   {map(currentServices, ({ id, quantity }) => {
                     const service = find(DATA_SUB_SERVICES, { id });
@@ -633,7 +633,7 @@ const SectionFormBooking = () => {
                   })}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="my-4">
               <label className="block text-sm font-medium text-black md:text-base">Ghi chú</label>
@@ -654,7 +654,7 @@ const SectionFormBooking = () => {
 
             {/* Hide this button if there are selected services */}
             <div className="flex w-full flex-col">
-              {isEmpty(selectedCategory) ? (
+              {isEmpty(selectedService) ? (
                 <button
                   onClick={() => setModalOpenServiceBooking(true)}
                   type="button"
@@ -669,9 +669,9 @@ const SectionFormBooking = () => {
                 </div>
               ) : null}
 
-              {!isEmpty(selectedCategory) ? (
+              {!isEmpty(selectedService) ? (
                 <div
-                  key={selectedCategory?.id}
+                  key={selectedService?.id}
                   className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"
                 >
                   <CustomImage
@@ -684,19 +684,19 @@ const SectionFormBooking = () => {
                   />
                   <div className="flex w-full flex-col items-start lg:w-[365px]">
                     <h3 className="text-sm font-semibold md:text-base lg:text-xl">
-                      {selectedCategory?.name || 'No Category'}
+                      {selectedService?.name || 'No Category'}
                     </h3>
                     <p className="mt-1 font-medium">
                       Giá:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {formatPrice(selectedCategory?.price.sale)}
+                        {formatPrice(selectedService?.price)}
                       </span>
                       <span> VND / Lần</span>
                     </p>
                     <p className="mt-1 font-medium">
                       Thời gian:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {selectedCategory?.duration.minutes}
+                        {selectedService?.duration}
                       </span>
                       <span> phút</span>
                     </p>
@@ -743,7 +743,7 @@ const SectionFormBooking = () => {
                   Giảm{' '}
                   {formatPrice(selectedVoucher) === '100.000'
                     ? `${formatPrice(selectedVoucher)} VND`
-                    : `${selectedVoucher}%`}
+                    : `${formatPrice(selectedVoucher)}%`}
                 </div>
               )}
             </button>
@@ -878,7 +878,7 @@ const SectionFormBooking = () => {
                   -
                   {formatPrice(selectedVoucher) === '100.000'
                     ? `${formatPrice(selectedVoucher)} VND`
-                    : `${selectedVoucher}%` || 0}
+                    : `${formatPrice(selectedVoucher)}%` || 0}
                 </span>
               )}
             </p>
@@ -966,21 +966,6 @@ const SectionFormBooking = () => {
                   </div>
                   <div className="hidden items-center gap-2 sm:flex"></div>
                 </div>
-                {/* {selectedPayment === 'payos' && (
-                  <motion.div {...fadeAnimation}>
-                    {QrSrc ? (
-                      <CustomImage
-                        src={QrSrc}
-                        alt="bank"
-                        width={500}
-                        height={500}
-                        className="mx-auto mt-3 size-[250px]"
-                      />
-                    ) : (
-                      <p className="mt-3 text-center text-red-500">QR code không khả dụng</p>
-                    )}
-                  </motion.div>
-                )} */}
               </div>
 
               {/* Counter Payment Option */}

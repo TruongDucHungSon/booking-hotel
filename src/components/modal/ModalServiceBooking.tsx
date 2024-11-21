@@ -83,9 +83,8 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
   useEffect(() => {
     if (selectedService) {
       methods.setValue('service', selectedService);
-      methods.setValue('category', selectedCategory);
     }
-  }, [selectedService, methods, selectedCategory]);
+  }, [selectedService, methods]);
 
   if (!isOpen) return null;
 

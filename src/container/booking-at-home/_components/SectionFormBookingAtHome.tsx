@@ -123,7 +123,6 @@ const SectionFormBookingAtHome = () => {
   const selectedTime = watch('selectedTime');
   const currentServices = watch('services');
   const selectedService = watch('service');
-  console.log(currentServices);
 
   const selectedCategory = watch('category');
   const staff = watch('staff');
@@ -147,7 +146,7 @@ const SectionFormBookingAtHome = () => {
   };
 
   // Tính toán giá dịch vụ và sản phẩm
-  const priceService = formatPrice(selectedCategory?.price.sale);
+  const priceService = formatPrice(selectedService?.price);
   const totalPriceProducts = formatPrice(calculateTotalPrice(selectedProducts));
 
   // Khai báo state cho tổng giá ban đầu (chưa áp dụng voucher)
@@ -157,23 +156,23 @@ const SectionFormBookingAtHome = () => {
 
   // useEffect để cập nhật totalPrice khi selectedVoucher thay đổi
   useEffect(() => {
-    let NewTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
+    let newTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
+
     if (selectedVoucher) {
       const voucherValue = parseInt(selectedVoucher);
-      console.log(voucherValue);
-
       if (voucherValue < 100) {
-        NewTotalPrice = Math.round(NewTotalPrice - (NewTotalPrice * voucherValue) / 100);
-      }
-      if (voucherValue > 100) {
-        NewTotalPrice = NewTotalPrice - parseInt(formatPrice(voucherValue), 10);
+        console.log(selectedService);
+        newTotalPrice = Math.round(newTotalPrice - (newTotalPrice * voucherValue) / 100);
+      } else if (voucherValue >= 100) {
+        newTotalPrice -= parseInt(formatPrice(voucherValue));
       }
     }
 
-    setTotalPrice(NewTotalPrice); // Cập nhật lại giá trị totalPrice
+    setTotalPrice(newTotalPrice);
   }, [selectedVoucher, priceService, totalPriceProducts]);
-  const initTotalPrice = parseInt(selectedCategory?.price.sale) + parseInt(totalPriceProducts);
 
+  const initTotalPrice =
+    parseInt(formatPrice(selectedService?.price)) + parseInt(totalPriceProducts);
   const sale = formatPrice(initTotalPrice - totalPrice);
 
   const timeValue = useMemo(() => {
@@ -618,7 +617,7 @@ const SectionFormBookingAtHome = () => {
 
             {/* Hide this button if there are selected services */}
             <div className="flex w-full flex-col">
-              {isEmpty(selectedCategory) ? (
+              {isEmpty(selectedService) ? (
                 <button
                   onClick={() => setModalOpenServiceBooking(true)}
                   type="button"
@@ -633,9 +632,9 @@ const SectionFormBookingAtHome = () => {
                 </div>
               ) : null}
 
-              {!isEmpty(selectedCategory) ? (
+              {!isEmpty(selectedService) ? (
                 <div
-                  key={selectedCategory?.id}
+                  key={selectedService?.id}
                   className="flex w-full flex-col items-center gap-3 md:flex-row md:gap-6"
                 >
                   <CustomImage
@@ -648,19 +647,19 @@ const SectionFormBookingAtHome = () => {
                   />
                   <div className="flex w-full flex-col items-start lg:w-[365px]">
                     <h3 className="text-sm font-semibold md:text-base lg:text-xl">
-                      {selectedCategory?.name || 'No Category'}
+                      {selectedService?.name || 'No Category'}
                     </h3>
                     <p className="mt-1 font-medium">
                       Giá:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {formatPrice(selectedCategory?.price.sale)}
+                        {formatPrice(selectedService?.price)}
                       </span>
                       <span> VND / Lần</span>
                     </p>
                     <p className="mt-1 font-medium">
                       Thời gian:{' '}
                       <span className="text-sm font-bold text-[#EF5F5F] md:text-base">
-                        {selectedService?.duration.munites}
+                        {selectedService?.duration}
                       </span>
                       <span> phút</span>
                     </p>
@@ -853,8 +852,8 @@ const SectionFormBookingAtHome = () => {
               <p> Tổng thanh toán:</p>{' '}
               <p className="text-[#3A449B]">
                 {isEmpty(selectedVoucher)
-                  ? `${formatPrice(initTotalPrice)} VND`
-                  : `${formatPrice(totalPrice)} VND` || '0'}
+                  ? `${formatPrice(initTotalPrice)}.000 VND`
+                  : `${formatPrice(totalPrice)}.000  VND` || '0'}
               </p>
             </div>
             {selectedVoucher && (

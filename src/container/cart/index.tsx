@@ -7,18 +7,29 @@ import SectionProducts from '@/components/SectionProducts/SectionProducts';
 import Title from '@/components/Title/Title';
 import { removeFromCart, updateCartItem } from '@/redux/cart/slide';
 import { RootState } from '@/redux/rootReducers';
+import { useProductData } from '@/services/product/Products.Service';
 import { formatPrice } from '@/utils/helpers';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FormCart from './_componens/FormCart';
+// import { useProductData } from '@/services/product/Products.Service';
 
 const PageCart = () => {
   const dispatch = useDispatch();
   const items = useSelector((state: RootState) => state.cart.items);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  console.log(items);
+  const { data: DATA_PRODUCTS } = useProductData();
+  const PRODUCTS: any = DATA_PRODUCTS?.data || [];
 
+  // const { data: DATA_PRODUCTS } = useProductData();
+  // const PRODUCTS: any = DATA_PRODUCTS?.data || [];
+
+  // const filteredProducts = PRODUCTDETAIL?.category?.id
+  //   ? PRODUCTS.filter((product: any) => product.category.id === PRODUCTDETAIL?.category.id)
+  //   : PRODUCTS;
   const handleQuantityChange = (id: number, delta: number) => {
     const item = items.find((item) => item.id === id);
     if (item) {
@@ -115,13 +126,13 @@ const PageCart = () => {
                         checked={selectedItems.includes(item.id)}
                         onChange={() => toggleSelectItem(item.id)}
                       />
-                      <div className="rounded-[32px] border border-[#E3E3E3] bg-white p-[24px]">
+                      <div className="rounded-[16px] border border-[#E3E3E3] bg-white p-[16px]">
                         <CustomImage
                           src={item.image || CartSrc.src}
                           alt="cart"
                           width={100}
                           height={100}
-                          className="size-[80px] md:size-[100px]"
+                          className="size-[80px]"
                           classNameImg="rounded-xl"
                         />
                       </div>
@@ -192,7 +203,7 @@ const PageCart = () => {
             )}
           </motion.div>
         </div>
-        <SectionProducts />
+        <SectionProducts PRODUCTS={PRODUCTS} />
       </div>
     </main>
   );

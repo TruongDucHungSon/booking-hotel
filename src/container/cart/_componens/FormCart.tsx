@@ -1,9 +1,13 @@
+'use client';
+
+import Title from '@/components/Title/Title';
 import { clearCart } from '@/redux/cart/slide';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as yup from 'yup';
 
@@ -25,29 +29,24 @@ const FormCart = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
   const dispatch = useDispatch();
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
+  const [showThankYouText, setShowThankYouText] = useState(false);
 
   const onSubmit = (data: any) => {
-    console.log(data); // Handle form submission here
-    dispatch(clearCart());
-    // Hiển thị thông báo thành công
-    toast.success('Đặt hàng thành công!', {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
+    console.log(data);
+    setShowThankYouModal(true); // Handle form submission here
+  };
 
-    // Reset form sau khi thành công
-    reset();
+  const handlePostCart = async () => {
+    await dispatch(clearCart());
+    await setShowThankYouModal(false); // Handle form submission here
+    setShowThankYouText(true);
   };
 
   return (
@@ -158,6 +157,102 @@ const FormCart = () => {
           Đặt hàng
         </motion.button>
       </form>
+      {showThankYouModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <form className="sidebar-scroll over relative h-[70%] w-full max-w-[90%] overflow-y-scroll rounded-3xl bg-white p-10 lg:max-w-[60%] lg:px-16 lg:py-12">
+            {/* Modal Title */}
+            <Title>Hình thức thanh toán</Title>
+            <button
+              type="button"
+              onClick={() => setShowThankYouModal(false)}
+              className="absolute right-6 top-6 text-[32px] text-xl font-bold"
+            >
+              &times;
+            </button>
+            <div className="mt-4 rounded-lg">
+              {/* MoMo Payment Option */}
+
+              {/* Bank Transfer Payment Option */}
+              <div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="mt-4 flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="payment"
+                        value="bank"
+                        className="form-radio size-4 accent-[#3A449B] lg:size-5"
+                      />
+                      <span className="text-sm font-semibold md:text-base lg:text-lg">
+                        Chuyển Khoản Ngân Hàng
+                      </span>
+                    </label>
+                    <p className="text-xs font-medium lg:w-[356px] lg:text-sm">
+                      Chuyển tiền mặt tại quầy giao dịch hoặc chuyển khoản qua Internet Banking và
+                      trạm ATM.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Counter Payment Option */}
+              <div>
+                <label className="mt-4 flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="payment"
+                    value="counter"
+                    className="form-radio size-4 accent-[#3A449B] lg:size-5"
+                  />
+                  <span className="text-sm font-semibold md:text-base lg:text-lg">
+                    Tại Quầy Lễ Tân
+                  </span>
+                </label>
+                <p className="mt-1 text-xs font-medium lg:text-sm">
+                  Thanh toán trực tiếp tại quầy lễ tân của chúng tôi khi bạn đến nhận phòng
+                </p>
+                <div className="mt-4 rounded-[7px] border border-[#17C653] bg-[#eafff1] px-[14px] py-[17px]">
+                  <p className="text-xs font-semibold text-[#17C653] md:text-sm">
+                    Lưu ý trước khi thanh toán
+                  </p>
+                  <p className="text-xs font-medium text-[#000000]">
+                    Sau khi đặt phòng thành công, bạn có thể đến cơ sở của chúng tôi để thanh toán
+                    và bắt đầu sử dụng dịch vụ.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Button */}
+            <button
+              type="submit"
+              onClick={async (e) => {
+                e.preventDefault();
+                handlePostCart();
+              }}
+              className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
+            >
+              Thanh Toán
+            </button>
+          </form>
+        </div>
+      )}
+      {showThankYouText && (
+        <div className="z-60 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-full max-w-md rounded-lg bg-white p-6 text-center">
+            <h2 className="text-xl font-semibold text-[#3A449B]">Cảm ơn bạn!</h2>
+            <p className="mt-2 text-gray-700">
+              Đơn hàng của bạn đã được đặt. Chúng tôi sẽ liên hệ với bạn sớm nhất
+            </p>
+            <button
+              onClick={() => setShowThankYouText(false)}
+              className="mt-4 rounded-lg bg-[#3A449B] px-4 py-2 text-white hover:opacity-90"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
