@@ -205,7 +205,7 @@ const FormCart = () => {
                     className="form-radio size-4 accent-[#3A449B] lg:size-5"
                   />
                   <span className="text-sm font-semibold md:text-base lg:text-lg">
-                    Tại Quầy Lễ Tân
+                    Thánh toán khi nhận hàng
                   </span>
                 </label>
                 <p className="mt-1 text-xs font-medium lg:text-sm">

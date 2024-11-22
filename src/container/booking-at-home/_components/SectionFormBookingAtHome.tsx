@@ -260,7 +260,7 @@ const SectionFormBookingAtHome = () => {
       const paymentData = {
         payment_method: 'payos',
         return_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
-        cancel_url: `https://booking-hotel-lake.vercel.app/`,
+        cancel_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
       };
 
       // Trigger the payment mutation
