@@ -1,16 +1,19 @@
 'use client';
 
 import Title from '@/components/Title/Title';
+import { publicRequest } from '@/config/HandleApi.Service';
 import { clearCart } from '@/redux/cart/slide';
+import { RootState } from '@/redux/rootReducers';
+import { usePostOrder } from '@/services/order/Order.Service';
+import { API_ENDPOINT } from '@/utils/endpoint';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import * as yup from 'yup';
-
 // Schema validation
 const schema = yup.object().shape({
   fullName: yup.string().required('Họ và tên là bắt buộc.'),
@@ -29,29 +32,105 @@ const FormCart = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
   });
 
+  const router = useRouter();
+
+  const items = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch();
+  const { mutate: POST_ORDER } = usePostOrder();
   const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [showThankYouText, setShowThankYouText] = useState(false);
+  const [dataFormCart, setDataFormCart] = useState({});
+  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    setShowThankYouModal(true); // Handle form submission here
-  };
-
-  const handlePostCart = async () => {
+  const handlePostCartSuccess = async () => {
     await dispatch(clearCart());
     await setShowThankYouModal(false); // Handle form submission here
     setShowThankYouText(true);
+    reset();
+  };
+  const onSubmit = (data: any) => {
+    if (items.length === 0) {
+      toast.error('Giỏ hàng của bạn đang trống.');
+      return;
+    }
+    const cartItems = items.map((item) => ({
+      product_id: item.id,
+      quantity: item.quantity,
+      price: item.price,
+    }));
+
+    const DATA_ORDER = {
+      customer_id: 1,
+      location_id: 1,
+      items: cartItems,
+      shipping_method: 'standard',
+      shipping_address: data.address,
+      note: data.note || '',
+    };
+
+    setDataFormCart(DATA_ORDER);
+    setShowThankYouModal(true);
+  };
+  const handlePostCart = () => {
+    POST_ORDER(dataFormCart, {
+      onSuccess: () => {
+        handlePostCartSuccess();
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const handlePostCartPayment = async () => {
+    try {
+      // Gửi request để tạo đơn hàng
+      const orderResponse = await publicRequest.request({
+        method: 'POST',
+        url: `${API_ENDPOINT.POST_ORDER}`,
+        data: dataFormCart,
+      });
+
+      // Kiểm tra xem response có trả về orderId hay không
+      const orderId = orderResponse?.data?.id; // Đảm bảo lấy đúng dữ liệu từ response
+      if (!orderId) throw new Error('Không tìm thấy Order ID.');
+
+      // Nếu phương thức thanh toán là "payos", thực hiện API tiếp theo
+      if (paymentMethod === 'payos') {
+        const paymentData = {
+          payment_method: 'payos',
+          return_url: `https://booking-hotel-lake.vercel.app/san-pham`,
+          cancel_url: `https://booking-hotel-lake.vercel.app/san-pham`,
+        };
+
+        const paymentResponse = await publicRequest.request({
+          method: 'POST',
+          url: `${API_ENDPOINT.POST_PAYMENT_ORDER}/${orderId}/payments`,
+          data: paymentData,
+        });
+
+        // Điều hướng đến URL thanh toán từ response
+        const paymentUrl = paymentResponse?.data?.payment_url;
+        if (paymentUrl) {
+          router.push(paymentUrl);
+        } else {
+          throw new Error('Không tìm thấy URL thanh toán.');
+        }
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
+    }
   };
 
   return (
     <div className="w-full lg:w-[70%]">
-      <ToastContainer /> {/* Container của react-toastify */}
       <h2 className="mb-2 text-base font-semibold md:text-lg lg:mb-4">Thông Tin Khách Hàng</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Họ và tên */}
@@ -150,6 +229,7 @@ const FormCart = () => {
 
         {/* Nút đặt hàng */}
         <motion.button
+          onClick={onSubmit}
           type="submit"
           className="mt-4 w-full rounded-full bg-[#3A449B] py-3 text-sm font-semibold text-white md:mt-6 md:text-base"
           whileHover={{ scale: 1.05 }}
@@ -180,8 +260,12 @@ const FormCart = () => {
                       <input
                         type="radio"
                         name="payment"
-                        value="bank"
+                        value="payos"
                         className="form-radio size-4 accent-[#3A449B] lg:size-5"
+                        onChange={async () => {
+                          setPaymentMethod('payos');
+                          await handlePostCartPayment(); // Gọi hàm ngay khi chọn payos
+                        }}
                       />
                       <span className="text-sm font-semibold md:text-base lg:text-lg">
                         Chuyển Khoản Ngân Hàng

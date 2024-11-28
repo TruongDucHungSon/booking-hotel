@@ -13,6 +13,8 @@ export const API_ENDPOINT = {
   GET_ARTICLES: '/api/articles',
   GET_CATEGORY: '/api/products/categories',
   POST_PAYMENT: '/api/bookings',
+  POST_ORDER: '/api/orders',
+  POST_PAYMENT_ORDER: '/api/orders',
 };
 
 export const STALE_TIME: number = 5 * 60 * 1000;

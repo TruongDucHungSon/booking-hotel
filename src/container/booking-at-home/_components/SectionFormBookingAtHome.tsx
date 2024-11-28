@@ -234,7 +234,7 @@ const SectionFormBookingAtHome = () => {
       //   service_id: parseInt(item.id),
       //   quantity: item.quantity,
       // })),
-      delivery_type: location, // Should map directly to `service_type` in DB if this is the correct interpretation
+      delivery_type: location,
     };
     setDataForm(formData);
   };

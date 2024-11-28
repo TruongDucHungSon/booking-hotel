@@ -20,7 +20,6 @@ const PageCart = () => {
   const dispatch = useDispatch();
   const items = useSelector((state: RootState) => state.cart.items);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  console.log(items);
   const { data: DATA_PRODUCTS } = useProductData();
   const PRODUCTS: any = DATA_PRODUCTS?.data || [];
 
