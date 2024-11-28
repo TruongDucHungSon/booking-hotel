@@ -62,7 +62,7 @@ const ListService = () => {
     <section className="mt-[28px] lg:mt-[56px]">
       {/* Display packages */}
       <div className="mt-6 w-full">
-        <div className="flex space-x-6 overflow-x-auto lg:space-x-8 lg:overflow-x-visible">
+        <div className="sidebar-scroll flex space-x-6 overflow-x-auto lg:space-x-8 lg:overflow-x-visible">
           {SERVICES.map((pkg: any) => (
             <div
               key={pkg.id}

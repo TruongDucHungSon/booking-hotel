@@ -8,8 +8,8 @@ import Title from '../Title/Title';
 type VoucherModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSelectVoucher: (voucher: string) => void;
-  selectedVoucher: string | null;
+  onSelectVoucher: (voucher: { id: string; discount: string } | null) => void;
+  selectedVoucher: { id: string; discount: string } | null;
   vouchers: any;
 };
 
@@ -20,17 +20,20 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
   selectedVoucher,
   vouchers,
 }) => {
-  const [selectedDiscount, setSelectedDiscount] = useState<string | null>(selectedVoucher);
+  const [selectedVoucherData, setSelectedVoucherData] = useState<{
+    id: string;
+    discount: string;
+  } | null>(selectedVoucher);
 
   if (!isOpen) return null;
 
-  const handleVoucherSelect = (discount: string) => {
-    setSelectedDiscount(discount);
+  const handleVoucherSelect = (id: string, discount: string) => {
+    setSelectedVoucherData({ id, discount });
   };
 
   const handleApplyVoucher = () => {
-    if (selectedDiscount) {
-      onSelectVoucher(selectedDiscount);
+    if (selectedVoucherData) {
+      onSelectVoucher(selectedVoucherData);
       onClose(); // Close modal after selection
     }
   };
@@ -74,8 +77,8 @@ const VoucherModal: React.FC<VoucherModalProps> = ({
                 discount={voucher.formatted_discount}
                 minimum={voucher.description}
                 validDate={voucher.start_date}
-                selected={selectedDiscount === voucher.discount_value}
-                onSelect={() => handleVoucherSelect(voucher.discount_value)}
+                selected={selectedVoucherData?.id === voucher.id}
+                onSelect={() => handleVoucherSelect(voucher.id, voucher.discount_value)}
               />
             </div>
           ))}

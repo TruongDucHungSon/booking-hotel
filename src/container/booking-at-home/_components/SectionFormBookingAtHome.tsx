@@ -20,20 +20,18 @@ import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
 import ProductModal from '@/components/modal/ModalProduct';
 import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
-import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import { usePostBooking } from '@/services/booking/Booking.Service';
 import { usePostPayment } from '@/services/payment/Payment.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
-import { useSubServiceData } from '@/services/services/Services.Service';
 import { useStaffData } from '@/services/staff/Staff.service';
 import { NUMBER_PEOPLE, serviceLocations } from '@/utils/constants';
 import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
-import { filter, find, forEach, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
+import { find, forEach, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -43,9 +41,6 @@ const SectionFormBookingAtHome = () => {
   const router = useRouter();
   const { data: DATA_PROMOTIONS } = usePromotionData();
   const PROMOTIONS: any = DATA_PROMOTIONS || [];
-
-  const { data: DATA_SUB_SERVICES } = useSubServiceData();
-  const SUB_SERVICES: any = DATA_SUB_SERVICES || [];
 
   const { data: DATA_STAFFS } = useStaffData();
   const staffs: any = DATA_STAFFS?.data || [];
@@ -69,26 +64,19 @@ const SectionFormBookingAtHome = () => {
     );
   };
 
-  const [selectedVoucher, setSelectedVoucher] = useState<string | null>(null);
+  const [selectedVoucher, setSelectedVoucher] = useState<{
+    id: string;
+    discount: string;
+  } | null>(null);
 
   const [isModalOpenVoucher, setIsModalOpenVoucher] = useState(false);
   const toggleModalVoucher = () => {
     setIsModalOpenVoucher(!isModalOpenVoucher);
   };
 
-  const handleVoucherSelect = (voucher: string) => {
+  const handleVoucherSelect = (voucher: { id: string; discount: string } | null) => {
     setSelectedVoucher(voucher);
     setIsModalOpenVoucher(false); // Close modal after selection
-  };
-
-  const [isModalOpenService, setIsModalOpenService] = useState(false);
-
-  const handleOpenModalService = () => {
-    setIsModalOpenService(true);
-  };
-
-  const handleCloseModalService = () => {
-    setIsModalOpenService(false);
   };
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
@@ -121,14 +109,12 @@ const SectionFormBookingAtHome = () => {
   });
   const [showThankYouModal, setShowThankYouModal] = useState(false);
   const selectedTime = watch('selectedTime');
-  const currentServices = watch('services');
   const selectedService = watch('service');
 
   const selectedCategory = watch('category');
   const staff = watch('staff');
   const [selectedPayment, setSelectedPayment] = useState('counter');
   const location = methods.watch('location_id');
-  const location_at_home = 'at-home';
   useEffect(() => {
     if (location === 'in-store') {
       router.push('/dat-lich');
@@ -159,7 +145,7 @@ const SectionFormBookingAtHome = () => {
     let newTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
 
     if (selectedVoucher) {
-      const voucherValue = parseInt(selectedVoucher);
+      const voucherValue = parseInt(selectedVoucher?.discount);
       if (voucherValue < 100) {
         console.log(selectedService);
         newTotalPrice = Math.round(newTotalPrice - (newTotalPrice * voucherValue) / 100);
@@ -224,9 +210,10 @@ const SectionFormBookingAtHome = () => {
       address: values.address,
       booking_time: `${formatDateString(values.startDate)} ${values.selectedTime}:00`,
       staff_id: parseInt(staff),
-      packages: [
+      promotion_id: selectedVoucher?.id || null,
+      services: [
         {
-          package_id: selectedCategory?.id,
+          service_id: selectedService?.id,
           quantity: 1,
         },
       ],
@@ -531,73 +518,6 @@ const SectionFormBookingAtHome = () => {
 
             {/* Room Selection Modal */}
 
-            <div>
-              <label className="mb-1 block text-sm font-medium text-black md:text-base">
-                Dịch vụ
-              </label>
-              <button
-                type="button"
-                onClick={handleOpenModalService}
-                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base"
-              >
-                Dịch vụ
-                <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
-              </button>
-
-              <ServiceSelectionModal
-                location={location_at_home}
-                isOpen={isModalOpenService}
-                onClose={handleCloseModalService}
-                onSelectServices={(v) => {
-                  const result = map(v, (quantity, id) => ({
-                    id,
-                    quantity,
-                  }));
-
-                  setValue('services', result);
-                }}
-                services={SUB_SERVICES}
-                title="Đặt dịch vụ"
-                subTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
-                subTitle2="chỉ chấp nhận đặt phòng sau một tuần"
-                subTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
-              />
-
-              {/* Display selected services below the button */}
-              <div className="mt-2">
-                <div className="flex flex-wrap items-center gap-4">
-                  {map(currentServices, ({ id, quantity }) => {
-                    const service = find(SUB_SERVICES, { id });
-
-                    if (isEmpty(service)) return null;
-
-                    return (
-                      <div
-                        key={id}
-                        onClick={() => {
-                          const result = filter(currentServices, ({ id: i }) => i !== id);
-
-                          setValue('services', result);
-                        }}
-                        className="flex w-fit cursor-pointer items-center gap-4 rounded-xl bg-[#F1F1F4] px-4 py-2 text-[13px] leading-4"
-                      >
-                        <CustomImage
-                          width={18}
-                          height={18}
-                          src={deleteIc}
-                          alt="Arrow Down"
-                          className="h-[14px] w-[14px]"
-                        />
-                        <p className="text-xs md:text-base">
-                          {quantity} {service.name}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
             <div className="my-4">
               <label className="block text-sm font-medium text-black md:text-base">Ghi chú</label>
               <textarea
@@ -839,9 +759,9 @@ const SectionFormBookingAtHome = () => {
               {selectedVoucher && (
                 <span className="font-semibold text-[#DA0000]">
                   -
-                  {formatPrice(selectedVoucher) === '100.000'
-                    ? `${formatPrice(selectedVoucher)} VND`
-                    : `${selectedVoucher}%` || 0}
+                  {formatPrice(selectedVoucher.discount) === '100.000'
+                    ? `${formatPrice(selectedVoucher.discount)} VND`
+                    : `${selectedVoucher.discount}%` || 0}
                 </span>
               )}
             </p>

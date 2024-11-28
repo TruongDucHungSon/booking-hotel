@@ -67,13 +67,17 @@ const SectionFormBooking = () => {
     );
   };
 
-  const [selectedVoucher, setSelectedVoucher] = useState<string | null>(null);
+  const [selectedVoucher, setSelectedVoucher] = useState<{
+    id: string;
+    discount: string;
+  } | null>(null);
+
   const [isModalOpenVoucher, setIsModalOpenVoucher] = useState(false);
   const toggleModalVoucher = () => {
     setIsModalOpenVoucher(!isModalOpenVoucher);
   };
 
-  const handleVoucherSelect = (voucher: string) => {
+  const handleVoucherSelect = (voucher: { id: string; discount: string } | null) => {
     setSelectedVoucher(voucher);
     setIsModalOpenVoucher(false); // Close modal after selection
   };
@@ -132,6 +136,7 @@ const SectionFormBooking = () => {
   // const currentServices = watch('services');
 
   const selectedService = watch('service');
+
   const selectedCategory = watch('category');
   const store = watch('store');
 
@@ -168,7 +173,7 @@ const SectionFormBooking = () => {
     let newTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
 
     if (selectedVoucher) {
-      const voucherValue = parseInt(selectedVoucher);
+      const voucherValue = parseInt(selectedVoucher?.discount);
       if (voucherValue < 100) {
         console.log(selectedService);
         newTotalPrice = Math.round(newTotalPrice - (newTotalPrice * voucherValue) / 100);
@@ -235,20 +240,18 @@ const SectionFormBooking = () => {
         gender: values.gender,
       },
       location_id: parseInt(values.store),
+      promotion_id: selectedVoucher?.id || null,
       number_of_people: parseInt(values.number_of_people),
       notes: values.note,
       booking_time: `${formatDateString(values.startDate)} ${values.selectedTime}:00`,
       staff_id: 9,
-      packages: [
+      services: [
         {
-          package_id: selectedService?.id,
+          service_id: selectedService?.id,
           quantity: 1,
         },
       ],
-      // services: currentServices?.map((item: any) => ({
-      //   service_id: parseInt(item.id),
-      //   quantity: item.quantity,
-      // })),
+
       delivery_type: location,
     };
     // TriggsetDataFormer the booking mutation
@@ -741,9 +744,9 @@ const SectionFormBooking = () => {
               ) : (
                 <div className="flex items-center justify-center rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-3 text-[#3A449B]">
                   Giảm{' '}
-                  {formatPrice(selectedVoucher) === '100.000'
-                    ? `${formatPrice(selectedVoucher)} VND`
-                    : `${formatPrice(selectedVoucher)}%`}
+                  {formatPrice(selectedVoucher.discount) === '100.000'
+                    ? `${formatPrice(selectedVoucher.discount)} VND`
+                    : `${formatPrice(selectedVoucher.discount)}%`}
                 </div>
               )}
             </button>
@@ -876,9 +879,9 @@ const SectionFormBooking = () => {
               {selectedVoucher && (
                 <span className="font-semibold text-[#DA0000]">
                   -
-                  {formatPrice(selectedVoucher) === '100.000'
-                    ? `${formatPrice(selectedVoucher)} VND`
-                    : `${formatPrice(selectedVoucher)}%` || 0}
+                  {formatPrice(selectedVoucher.discount) === '100.000'
+                    ? `${formatPrice(selectedVoucher.discount)} VND`
+                    : `${formatPrice(selectedVoucher.discount)}%` || 0}
                 </span>
               )}
             </p>
