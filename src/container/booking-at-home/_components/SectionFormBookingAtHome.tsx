@@ -676,9 +676,9 @@ const SectionFormBookingAtHome = () => {
               ) : (
                 <div className="flex items-center justify-center rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-3 text-[#3A449B]">
                   Giảm{' '}
-                  {formatPrice(selectedVoucher) === '100.000'
-                    ? `${formatPrice(selectedVoucher)} VND`
-                    : `${selectedVoucher}%`}
+                  {formatPrice(selectedVoucher.discount) === '100.000'
+                    ? `${formatPrice(selectedVoucher.discount)} VND`
+                    : `${formatPrice(selectedVoucher.discount)}%`}
                 </div>
               )}
             </button>
