@@ -140,6 +140,7 @@ const FormCart = () => {
       const orderId = orderResponse?.data?.id; // Đảm bảo lấy đúng dữ liệu từ response
       if (!orderId) throw new Error('Không tìm thấy Order ID.');
       setOrderId(orderId);
+      handlePostCartSuccess();
     } catch (error: any) {
       console.error(error);
       toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
