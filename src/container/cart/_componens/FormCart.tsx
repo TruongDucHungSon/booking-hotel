@@ -9,7 +9,7 @@ import { API_ENDPOINT } from '@/utils/endpoint';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -32,7 +32,6 @@ const FormCart = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -47,12 +46,12 @@ const FormCart = () => {
   const [showThankYouText, setShowThankYouText] = useState(false);
   const [dataFormCart, setDataFormCart] = useState({});
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
-
+  const [orderId, setOrderId] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const handlePostCartSuccess = async () => {
     await dispatch(clearCart());
     await setShowThankYouModal(false); // Handle form submission here
     setShowThankYouText(true);
-    reset();
   };
   const onSubmit = (data: any) => {
     if (items.length === 0) {
@@ -66,7 +65,12 @@ const FormCart = () => {
     }));
 
     const DATA_ORDER = {
-      customer_id: 1,
+      guest_info: {
+        name: data.fullName,
+        phone_number: data.phone,
+        gender: data.gender,
+        email: data.email,
+      },
       location_id: 1,
       items: cartItems,
       shipping_method: 'standard',
@@ -77,32 +81,12 @@ const FormCart = () => {
     setDataFormCart(DATA_ORDER);
     setShowThankYouModal(true);
   };
-  const handlePostCart = () => {
-    POST_ORDER(dataFormCart, {
-      onSuccess: () => {
-        handlePostCartSuccess();
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-    });
-  };
 
-  const handlePostCartPayment = async () => {
-    try {
-      // Gửi request để tạo đơn hàng
-      const orderResponse = await publicRequest.request({
-        method: 'POST',
-        url: `${API_ENDPOINT.POST_ORDER}`,
-        data: dataFormCart,
-      });
+  useEffect(() => {
+    const postPayment = async () => {
+      if (!orderId || paymentMethod !== 'payos') return;
 
-      // Kiểm tra xem response có trả về orderId hay không
-      const orderId = orderResponse?.data?.id; // Đảm bảo lấy đúng dữ liệu từ response
-      if (!orderId) throw new Error('Không tìm thấy Order ID.');
-
-      // Nếu phương thức thanh toán là "payos", thực hiện API tiếp theo
-      if (paymentMethod === 'payos') {
+      try {
         const paymentData = {
           payment_method: 'payos',
           return_url: `https://booking-hotel-lake.vercel.app/san-pham`,
@@ -115,14 +99,47 @@ const FormCart = () => {
           data: paymentData,
         });
 
-        // Điều hướng đến URL thanh toán từ response
         const paymentUrl = paymentResponse?.data?.payment_url;
         if (paymentUrl) {
           router.push(paymentUrl);
         } else {
           throw new Error('Không tìm thấy URL thanh toán.');
         }
+      } catch (error: any) {
+        setIsLoading(false);
+        console.error(error);
+        toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
       }
+    };
+
+    postPayment();
+  }, [orderId, paymentMethod]);
+
+  const handlePostCart = () => {
+    POST_ORDER(dataFormCart, {
+      onSuccess: () => {
+        handlePostCartSuccess();
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const handlePostCartPayment = async () => {
+    setIsLoading(true);
+    try {
+      // Gửi request để tạo đơn hàng
+      const orderResponse = await publicRequest.request({
+        method: 'POST',
+        url: `${API_ENDPOINT.POST_ORDER}`,
+        data: dataFormCart,
+      });
+
+      // Kiểm tra xem response có trả về orderId hay không
+      const orderId = orderResponse?.data?.id; // Đảm bảo lấy đúng dữ liệu từ response
+      if (!orderId) throw new Error('Không tìm thấy Order ID.');
+      setOrderId(orderId);
     } catch (error: any) {
       console.error(error);
       toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
@@ -263,8 +280,8 @@ const FormCart = () => {
                         value="payos"
                         className="form-radio size-4 accent-[#3A449B] lg:size-5"
                         onChange={async () => {
-                          setPaymentMethod('payos');
-                          await handlePostCartPayment(); // Gọi hàm ngay khi chọn payos
+                          await setPaymentMethod('payos');
+                          handlePostCartPayment(); // Gọi hàm ngay khi chọn payos
                         }}
                       />
                       <span className="text-sm font-semibold md:text-base lg:text-lg">
@@ -306,7 +323,22 @@ const FormCart = () => {
                 </div>
               </div>
             </div>
-
+            {/* Hiển thị spinner khi đang loading */}
+            {isLoading && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                <motion.div
+                  className="h-8 w-8 rounded-full border-4 border-gray-300 border-t-[#3A449B]"
+                  animate={{
+                    rotate: 360,
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 1,
+                    ease: 'linear',
+                  }}
+                ></motion.div>
+              </div>
+            )}
             {/* Payment Button */}
             <button
               type="submit"

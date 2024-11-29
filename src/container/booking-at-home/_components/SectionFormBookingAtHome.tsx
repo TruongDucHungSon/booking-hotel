@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
+import { motion } from 'framer-motion';
+
 import acb from '@/assets/images/banner/acb.png';
 import more from '@/assets/images/banner/more.png';
 import vcb from '@/assets/images/banner/vcb.png';
@@ -21,12 +23,13 @@ import Title from '@/components/Title/Title';
 import ProductModal from '@/components/modal/ModalProduct';
 import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
 import VoucherModal from '@/components/modal/ModalVoucher';
+import { publicRequest } from '@/config/HandleApi.Service';
 import { usePostBooking } from '@/services/booking/Booking.Service';
-import { usePostPayment } from '@/services/payment/Payment.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useStaffData } from '@/services/staff/Staff.service';
 import { NUMBER_PEOPLE, serviceLocations } from '@/utils/constants';
+import { API_ENDPOINT } from '@/utils/endpoint';
 import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
@@ -36,6 +39,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import * as yup from 'yup';
 const SectionFormBookingAtHome = () => {
   const router = useRouter();
@@ -115,6 +119,8 @@ const SectionFormBookingAtHome = () => {
   const staff = watch('staff');
   const [selectedPayment, setSelectedPayment] = useState('counter');
   const location = methods.watch('location_id');
+  const [dataForm, setDataForm] = useState<any>(null);
+
   useEffect(() => {
     if (location === 'in-store') {
       router.push('/dat-lich');
@@ -123,6 +129,44 @@ const SectionFormBookingAtHome = () => {
     }
     setModalOpenServiceBooking(true);
   }, [location]);
+
+  const [idBooking, setIdBooking] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const postPayment = async () => {
+      if (!idBooking || selectedPayment !== 'payos') return;
+
+      try {
+        const paymentData = {
+          payment_method: 'payos',
+          return_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
+          cancel_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
+        };
+
+        const paymentResponse = await publicRequest.request({
+          method: 'POST',
+          url: `${API_ENDPOINT.POST_PAYMENT}/${idBooking}/payments`,
+          data: paymentData,
+        });
+
+        const paymentUrl = paymentResponse?.data?.payment_url;
+        if (paymentUrl) {
+          router.push(paymentUrl);
+        } else {
+          setIsLoading(false);
+
+          throw new Error('Không tìm thấy URL thanh toán.');
+        }
+      } catch (error: any) {
+        setIsLoading(false);
+        console.error(error);
+        toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
+      }
+    };
+
+    postPayment();
+  }, [idBooking, selectedPayment]);
 
   const nameService = selectedService?.name || 'Chưa chọn dịch vụ';
 
@@ -189,10 +233,6 @@ const SectionFormBookingAtHome = () => {
 
   const { mutate: bookMutate } = usePostBooking();
 
-  const [idBooking, setIdBooking] = useState<number | null>(null);
-  const [dataForm, setDataForm] = useState<any>(null);
-  const postPaymentMutation = usePostPayment(idBooking);
-
   const handleBooking: SubmitHandler<any> = (data) => {
     forEach(data, (value, key) => methods.setValue(key, value));
     const values = methods.getValues();
@@ -227,43 +267,55 @@ const SectionFormBookingAtHome = () => {
   };
   const handleBook = () => {
     bookMutate(dataForm, {
-      onSuccess: (response: any) => {
-        const bookingId = response?.data?.id;
-        if (bookingId) {
-          setIdBooking(bookingId); // Set the booking ID after successful booking
-        }
-        reset(); // Reset the form after successful booking
+      onSuccess: () => {
+        reset();
+        setIsLoading(false);
       },
       onError: (error: any) => {
+        setIsLoading(false);
+
         console.error('Booking failed:', error);
       },
     });
   };
 
-  const handlePaymentSelection = (paymentMethod: string) => {
-    setSelectedPayment(paymentMethod); // Set the selected payment method
-
-    if (paymentMethod === 'payos' && idBooking) {
-      const paymentData = {
-        payment_method: 'payos',
-        return_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
-        cancel_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
-      };
-
-      // Trigger the payment mutation
-      postPaymentMutation.mutate(paymentData, {
-        onSuccess: (response: any) => {
-          router.push(response?.data?.payment_url);
-        },
-        onError: (error: any) => {
-          console.error('Payment failed:', error);
-        },
-      });
-    }
+  const handleBookingFormPayment = () => {
+    setIsLoading(true);
+    // Trigger the booking mutation
+    bookMutate(dataForm, {
+      onSuccess: (response: any) => {
+        const bookingId = response?.data?.id;
+        if (bookingId) {
+          setIdBooking(bookingId); // Set the booking ID after successful booking
+        }
+        reset();
+        setIsLoading(false); // Reset the form after successful booking
+      },
+      onError: (error: any) => {
+        setIsLoading(false);
+        console.error('Booking failed:', error);
+      },
+    });
   };
 
   return (
     <form onSubmit={handleSubmit(handleBooking)} className="mb-5 md:mb-10">
+      {/* Hiển thị spinner khi đang loading */}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <motion.div
+            className="h-8 w-8 rounded-full border-4 border-gray-300 border-t-[#3A449B]"
+            animate={{
+              rotate: 360,
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 1,
+              ease: 'linear',
+            }}
+          ></motion.div>
+        </div>
+      )}
       {/* heading */}
       <Title>thông tin đặt chỗ tại nhà</Title>
       <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
@@ -761,7 +813,7 @@ const SectionFormBookingAtHome = () => {
                   -
                   {formatPrice(selectedVoucher.discount) === '100.000'
                     ? `${formatPrice(selectedVoucher.discount)} VND`
-                    : `${selectedVoucher.discount}%` || 0}
+                    : `${formatPrice(selectedVoucher.discount)}%` || 0}
                 </span>
               )}
             </p>
@@ -839,7 +891,10 @@ const SectionFormBookingAtHome = () => {
                         name="payment"
                         value="bank"
                         className="form-radio size-4 accent-[#3A449B] lg:size-5"
-                        onChange={() => handlePaymentSelection('payos')}
+                        onChange={async () => {
+                          await setSelectedPayment('payos');
+                          handleBookingFormPayment();
+                        }}
                       />
                       <span className="text-sm font-semibold md:text-base lg:text-lg">
                         Chuyển Khoản Ngân Hàng

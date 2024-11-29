@@ -18,14 +18,17 @@ import ProductModal from '@/components/modal/ModalProduct';
 import ModalServiceBooking from '@/components/modal/ModalServiceBooking';
 import VoucherModal from '@/components/modal/ModalVoucher';
 import SelectionModalForm, { RoomProps } from '@/components/modal/SelectionModalForm';
+import { publicRequest } from '@/config/HandleApi.Service';
 import { usePostBooking } from '@/services/booking/Booking.Service';
 import { useLocationData } from '@/services/location/Location.Service';
-import { usePostPayment } from '@/services/payment/Payment.Service';
 import { useProductData } from '@/services/product/Products.Service';
 import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useRoomsData } from '@/services/room/Rooms.Service';
+import { motion } from 'framer-motion';
+
 // import { useSubServiceData } from '@/services/services/Services.Service';
 import { NUMBER_PEOPLE, serviceLocations } from '@/utils/constants';
+import { API_ENDPOINT } from '@/utils/endpoint';
 import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
@@ -35,6 +38,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { SubmitHandler, useForm, useFormContext } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import * as yup from 'yup';
 const SectionFormBooking = () => {
   const router = useRouter();
@@ -128,7 +132,7 @@ const SectionFormBooking = () => {
     ),
   });
   const [showThankYouModal, setShowThankYouModal] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState('counter');
+  const [selectedPayment, setSelectedPayment] = useState<any>(null);
 
   const location = methods.watch('location_id');
   const selectedTime = watch('selectedTime');
@@ -220,9 +224,45 @@ const SectionFormBooking = () => {
     }
   }, [DATA_ROOMS]);
 
-  const [idBooking, setIdBooking] = useState<number | null>(null);
   const [dataForm, setDataForm] = useState<any>(null);
-  const postPaymentMutation = usePostPayment(idBooking);
+  // const postPaymentMutation = usePostPayment(idBooking);
+  const [idBooking, setIdBooking] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const postPayment = async () => {
+      if (!idBooking || selectedPayment !== 'payos') return;
+
+      try {
+        const paymentData = {
+          payment_method: 'payos',
+          return_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
+          cancel_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
+        };
+
+        const paymentResponse = await publicRequest.request({
+          method: 'POST',
+          url: `${API_ENDPOINT.POST_PAYMENT}/${idBooking}/payments`,
+          data: paymentData,
+        });
+
+        const paymentUrl = paymentResponse?.data?.payment_url;
+        if (paymentUrl) {
+          router.push(paymentUrl);
+        } else {
+          setIsLoading(false);
+
+          throw new Error('Không tìm thấy URL thanh toán.');
+        }
+      } catch (error: any) {
+        setIsLoading(false);
+        console.error(error);
+        toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
+      }
+    };
+
+    postPayment();
+  }, [idBooking, selectedPayment]);
 
   // Triggering the postPaymentMutation with idBooking
   const { mutate: bookMutate } = usePostBooking();
@@ -261,43 +301,52 @@ const SectionFormBooking = () => {
   const handleBookingForm = () => {
     // Trigger the booking mutation
     bookMutate(dataForm, {
+      onSuccess: () => {
+        reset();
+        setIsLoading(false); // Reset the form after successful booking
+      },
+      onError: (error: any) => {
+        setIsLoading(false);
+        console.error('Booking failed:', error);
+      },
+    });
+  };
+  const handleBookingFormPayment = () => {
+    setIsLoading(true);
+    // Trigger the booking mutation
+    bookMutate(dataForm, {
       onSuccess: (response: any) => {
         const bookingId = response?.data?.id;
         if (bookingId) {
           setIdBooking(bookingId); // Set the booking ID after successful booking
         }
-        reset(); // Reset the form after successful booking
+        reset();
+        setIsLoading(false); // Reset the form after successful booking
       },
       onError: (error: any) => {
+        setIsLoading(false);
         console.error('Booking failed:', error);
       },
     });
   };
 
-  const handlePaymentSelection = (paymentMethod: string) => {
-    setSelectedPayment(paymentMethod); // Set the selected payment method
-
-    if (paymentMethod === 'payos' && idBooking) {
-      const paymentData = {
-        payment_method: 'payos',
-        return_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
-        cancel_url: `https://booking-hotel-lake.vercel.app/dich-vu`,
-      };
-
-      // Trigger the payment mutation
-      postPaymentMutation.mutate(paymentData, {
-        onSuccess: (response: any) => {
-          router.push(response?.data?.payment_url);
-        },
-        onError: (error: any) => {
-          console.error('Payment failed:', error);
-        },
-      });
-    }
-  };
-
   return (
     <form className="mb-5 md:mb-10" onSubmit={handleSubmit(handleBooking)}>
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <motion.div
+            className="h-8 w-8 rounded-full border-4 border-gray-300 border-t-[#3A449B]"
+            animate={{
+              rotate: 360,
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 1,
+              ease: 'linear',
+            }}
+          ></motion.div>
+        </div>
+      )}
       {/* heading */}
       <Title>thông tin đặt chỗ</Title>
       <p className="mt-2 text-center text-sm text-[#1B1B1B] md:mt-[10px] md:text-base">
@@ -953,10 +1002,13 @@ const SectionFormBooking = () => {
                     <label className="mt-4 flex items-center space-x-2">
                       <input
                         type="radio"
-                        name="payment"
+                        name="payos"
                         value="payos"
                         className="form-radio size-4 accent-[#3A449B] lg:size-5"
-                        onChange={() => handlePaymentSelection('payos')}
+                        onChange={async () => {
+                          await setSelectedPayment('payos');
+                          handleBookingFormPayment();
+                        }}
                       />
                       <span className="text-sm font-semibold md:text-base lg:text-lg">
                         Chuyển Khoản Ngân Hàng
