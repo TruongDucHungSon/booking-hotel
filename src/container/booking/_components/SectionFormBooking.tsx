@@ -1060,7 +1060,10 @@ const SectionFormBooking = () => {
                 e.preventDefault();
                 handleBookingForm();
                 await setShowThankYouModal(false);
-                setShowThankYouText(true);
+                await setShowThankYouText(true);
+                setTimeout(() => {
+                  router.push('/dich-vu');
+                }, 2000);
               }}
               className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
             >
