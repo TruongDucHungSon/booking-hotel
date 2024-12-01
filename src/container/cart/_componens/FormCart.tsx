@@ -6,6 +6,7 @@ import { clearCart } from '@/redux/cart/slide';
 import { RootState } from '@/redux/rootReducers';
 import { usePostOrder } from '@/services/order/Order.Service';
 import { API_ENDPOINT } from '@/utils/endpoint';
+import { IFormCartData } from '@/utils/type';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -15,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 // Schema validation
+
 const schema = yup.object().shape({
   fullName: yup.string().required('Họ và tên là bắt buộc.'),
   phone: yup
@@ -32,6 +34,7 @@ const FormCart = () => {
   const {
     register,
     handleSubmit,
+
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -51,19 +54,41 @@ const FormCart = () => {
   const handlePostCartSuccess = async () => {
     await dispatch(clearCart());
     await setShowThankYouModal(false); // Handle form submission here
+    await setShowThankYouText(true);
+    setTimeout(() => {
+      router.push('/san-pham');
+    }, 2000);
+  };
+  const handlePostCartPaymentSuccess = async () => {
+    await dispatch(clearCart());
+    await setShowThankYouModal(false); // Handle form submission here
     setShowThankYouText(true);
   };
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: IFormCartData) => {
+    // Check if the cart is empty
     if (items.length === 0) {
       toast.error('Giỏ hàng của bạn đang trống.');
       return;
     }
+
+    // Check for missing required fields
+    const missingFields = Object.keys(errors).filter(
+      (field) => errors[field as keyof typeof errors],
+    );
+
+    if (missingFields.length > 0) {
+      toast.error('Vui lòng điền đầy đủ thông tin trước khi thanh toán.');
+      return;
+    }
+
+    // Map cart items
     const cartItems = items.map((item) => ({
       product_id: item.id,
       quantity: item.quantity,
       price: item.price,
     }));
 
+    // Prepare order data
     const DATA_ORDER = {
       guest_info: {
         name: data.fullName,
@@ -78,6 +103,7 @@ const FormCart = () => {
       note: data.note || '',
     };
 
+    // Set form data and show modal
     setDataFormCart(DATA_ORDER);
     setShowThankYouModal(true);
   };
@@ -140,7 +166,7 @@ const FormCart = () => {
       const orderId = orderResponse?.data?.id; // Đảm bảo lấy đúng dữ liệu từ response
       if (!orderId) throw new Error('Không tìm thấy Order ID.');
       setOrderId(orderId);
-      handlePostCartSuccess();
+      handlePostCartPaymentSuccess();
     } catch (error: any) {
       console.error(error);
       toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
@@ -247,7 +273,6 @@ const FormCart = () => {
 
         {/* Nút đặt hàng */}
         <motion.button
-          onClick={onSubmit}
           type="submit"
           className="mt-4 w-full rounded-full bg-[#3A449B] py-3 text-sm font-semibold text-white md:mt-6 md:text-base"
           whileHover={{ scale: 1.05 }}
@@ -311,15 +336,14 @@ const FormCart = () => {
                   </span>
                 </label>
                 <p className="mt-1 text-xs font-medium lg:text-sm">
-                  Thanh toán trực tiếp tại quầy lễ tân của chúng tôi khi bạn đến nhận phòng
+                  Thanh toán trực tiếp khi nhận hàng
                 </p>
                 <div className="mt-4 rounded-[7px] border border-[#17C653] bg-[#eafff1] px-[14px] py-[17px]">
                   <p className="text-xs font-semibold text-[#17C653] md:text-sm">
                     Lưu ý trước khi thanh toán
                   </p>
                   <p className="text-xs font-medium text-[#000000]">
-                    Sau khi đặt phòng thành công, bạn có thể đến cơ sở của chúng tôi để thanh toán
-                    và bắt đầu sử dụng dịch vụ.
+                    Bạn có thể kiểm tra sản phẩm trước khi thanh toán nhé
                   </p>
                 </div>
               </div>

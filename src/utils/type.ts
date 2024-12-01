@@ -23,3 +23,12 @@ export type FormValues = {
   service: string[];
   note: string;
 };
+
+export interface IFormCartData {
+  fullName: string;
+  phone: string;
+  gender: string;
+  email: string;
+  address: string;
+  note?: string;
+}

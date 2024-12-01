@@ -56,8 +56,7 @@ const PageCart = () => {
       <div className="container py-10 lg:py-20">
         <Title>Giỏ Hàng</Title>
         <p className="mt-2 text-center text-sm text-[#1B1B1B] md:text-base">
-          Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi chỉ có thể đặt tối đa 1 dịch vụ cùng
-          một lúc.
+          Hệ thống của chúng tôi mang đến cho bạn những sản phẩm tốt nhất để chăm sóc cơ thể
         </p>
 
         <div className="my-[28px] flex flex-col items-start gap-3 md:gap-6 lg:my-[56px] lg:flex-row">
