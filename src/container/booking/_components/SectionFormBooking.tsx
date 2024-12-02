@@ -123,7 +123,7 @@ const SectionFormBooking = () => {
         gender: yup.string().required(),
         fullName: yup.string().required(),
         address: yup.string(),
-        store: yup.string(),
+        store: yup.string().required(),
         phoneNumber: yup
           .string()
           .required()
