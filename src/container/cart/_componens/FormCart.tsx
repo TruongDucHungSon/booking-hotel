@@ -329,6 +329,9 @@ const FormCart = () => {
                     name="payment"
                     value="counter"
                     className="form-radio size-4 accent-[#3A449B] lg:size-5"
+                    onChange={() => {
+                      setPaymentMethod('counter');
+                    }}
                   />
                   <span className="text-sm font-semibold md:text-base lg:text-lg">
                     Thánh toán khi nhận hàng
