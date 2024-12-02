@@ -305,9 +305,8 @@ const FormCart = () => {
                         name="payment"
                         value="payos"
                         className="form-radio size-4 accent-[#3A449B] lg:size-5"
-                        onChange={async () => {
-                          await setPaymentMethod('payos');
-                          handlePostCartPayment(); // Gọi hàm ngay khi chọn payos
+                        onChange={() => {
+                          setPaymentMethod('payos');
                         }}
                       />
                       <span className="text-sm font-semibold md:text-base lg:text-lg">
@@ -369,7 +368,11 @@ const FormCart = () => {
               type="submit"
               onClick={async (e) => {
                 e.preventDefault();
-                handlePostCart();
+                if (paymentMethod === 'payos') {
+                  handlePostCartPayment();
+                } else {
+                  handlePostCart();
+                }
               }}
               className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
             >
