@@ -152,6 +152,7 @@ const SectionFormBookingAtHome = () => {
 
         const paymentUrl = paymentResponse?.data?.payment_url;
         if (paymentUrl) {
+          setIsLoading(true);
           router.push(paymentUrl);
         } else {
           setIsLoading(false);
@@ -889,11 +890,10 @@ const SectionFormBookingAtHome = () => {
                       <input
                         type="radio"
                         name="payment"
-                        value="bank"
+                        value="payos"
                         className="form-radio size-4 accent-[#3A449B] lg:size-5"
-                        onChange={async () => {
-                          await setSelectedPayment('payos');
-                          handleBookingFormPayment();
+                        onChange={() => {
+                          setSelectedPayment('payos');
                         }}
                       />
                       <span className="text-sm font-semibold md:text-base lg:text-lg">
@@ -940,7 +940,6 @@ const SectionFormBookingAtHome = () => {
                     value="counter"
                     className="form-radio size-4 accent-[#3A449B] lg:size-5"
                     onChange={() => setSelectedPayment('counter')}
-                    checked={selectedPayment === 'counter'}
                   />
                   <span className="text-sm font-semibold md:text-base lg:text-lg">
                     Tại Quầy Lễ Tân
@@ -966,12 +965,18 @@ const SectionFormBookingAtHome = () => {
               type="submit"
               onClick={async (e) => {
                 e.preventDefault();
-                handleBook();
-                await setShowThankYouModal(false);
-                await setShowThankYouText(true);
-                setTimeout(() => {
-                  router.push('/dich-vu');
-                }, 2000);
+                if (selectedPayment === 'payos') {
+                  await setShowThankYouModal(false);
+                  await setShowThankYouText(true);
+                  handleBookingFormPayment();
+                } else {
+                  handleBook();
+                  await setShowThankYouModal(false);
+                  await setShowThankYouText(true);
+                  setTimeout(() => {
+                    router.push('/dich-vu');
+                  }, 2000);
+                }
               }}
               className="mx-auto mt-8 flex w-full max-w-[145px] justify-center rounded-2xl bg-[#3A449B] py-3 text-white transition-all duration-300 hover:opacity-90"
             >
