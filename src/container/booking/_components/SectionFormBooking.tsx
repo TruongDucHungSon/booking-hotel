@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import sv1 from '@/assets/images/new/sv1.png';
-import bed from '@/assets/svgs/arrow/bed.svg';
+import bedIc from '@/assets/svgs/arrow/bed.svg';
 import BoxIc from '@/assets/svgs/arrow/box.svg';
 import box1 from '@/assets/svgs/arrow/box1.svg';
 import check from '@/assets/svgs/arrow/check1.svg';
@@ -28,9 +28,10 @@ import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useRoomsData } from '@/services/room/Rooms.Service';
 import { motion } from 'framer-motion';
 
+import ModalBeds from '@/components/modal/ModalBeds';
 import ServiceSelectionModal from '@/components/modal/ModalServicer';
 import { calculateTotalPriceFood } from '@/container/booking/action/action';
-import { useSubServiceData } from '@/services/services/Services.Service';
+import { useBedData, useSubServiceData } from '@/services/services/Services.Service';
 import { NUMBER_PEOPLE, serviceLocations } from '@/utils/constants';
 import { API_ENDPOINT } from '@/utils/endpoint';
 import { formatDateString, formatPrice } from '@/utils/helpers';
@@ -66,11 +67,16 @@ const SectionFormBooking = () => {
   const SUB_SERVICES: any = DATA_SUB_SERVICES?.data || [];
   const { data: DATA_PRODUCTS } = useProductData();
   const PRODUCTS: any = DATA_PRODUCTS?.data || [];
+  const { data: DATA_BEDS } = useBedData();
+  const BEDS: any = DATA_BEDS?.data || [];
 
   const methods = useFormContext();
   const [isModalOpenRoom, setModalOpenRoom] = useState(false);
   const openModalRoom = () => setModalOpenRoom(true);
   const closeModalRoom = () => setModalOpenRoom(false);
+  const [isModalOpenBed, setModalOpenBed] = useState(false);
+  const openModalBed = () => setModalOpenBed(true);
+  const closeModalBed = () => setModalOpenBed(false);
   const [isModalOpenServiceBooking, setModalOpenServiceBooking] = useState(false);
 
   const [isProductModalOpen, setProductModalOpen] = useState(false);
@@ -147,18 +153,26 @@ const SectionFormBooking = () => {
   const location = methods.watch('location_id');
   const selectedTime = watch('selectedTime');
   const currentServices = watch('services');
-
-  const selectedService = watch('service');
+  const idBed = watch('bed');
+  console.log(idBed);
 
   const selectedCategory = watch('category');
+  const selectedService = watch('service');
+  const selectBed = selectedCategory?.services.filter(
+    (service: any) => service.service_type === 'bed_service',
+  );
+  const [selectedBed, setSelectedBed] = useState<any | null>(null);
+  const handleSelectBed = (bed: any) => {
+    setSelectedBed(bed);
+    setValue('bed', bed.id);
+  };
+  const idSelectBed = selectBed?.map((bed: any) => bed.id);
+  const resutBed = BEDS.find((bed: any) => idSelectBed?.includes(bed.id));
 
   const selectFood = selectedCategory?.services.filter(
     (service: any) => service?.service_type === 'food_drink',
   );
-  const selectBed = selectedCategory?.services.filter(
-    (service: any) => service.service_type === 'bed_service',
-  );
-  console.log(selectBed);
+  console.log(resutBed);
 
   const store = watch('store');
 
@@ -176,6 +190,7 @@ const SectionFormBooking = () => {
     setSelectedRoom(room);
     setValue('room', room.id);
   };
+
   const calculateTotalPrice = (products: any) => {
     return products.reduce((total: any, product: any) => total + parseInt(product.price), 0);
   };
@@ -611,7 +626,17 @@ const SectionFormBooking = () => {
                 ) : null}
               </div>
             </div>
-
+            {/* Room Selection Modal */}
+            <SelectionModalForm
+              isOpen={isModalOpenRoom}
+              onClose={closeModalRoom}
+              onSelectRoom={handleSelectRoom}
+              rooms={ROOMS}
+              title="Đặt phòng"
+              sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
+              sutTitle2="chỉ chấp nhận đặt phòng sau một tuần"
+              sutTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
+            />
             {/* Room choice */}
             <div className={`relative mb-4 w-full ${location === 'at-home' ? 'hidden' : 'block'}`}>
               <button
@@ -637,14 +662,44 @@ const SectionFormBooking = () => {
                 </div>
               )}
             </div>
+            <div className={`relative mb-4 w-full`}>
+              <button
+                type="button"
+                onClick={openModalBed}
+                className="flex w-full items-center justify-between rounded-2xl border bg-white px-4 py-[10px] text-sm font-medium focus:border-[#3A449B] focus:outline-none md:text-base"
+              >
+                Giường massage
+                <CustomImage width={18} height={18} src={downBlue} alt="Arrow Down" />
+              </button>
+              {/* {errors.room ? (
+                <div className="text-[12px] font-medium text-red-500">
+                  Quý khách vui lòng chọn giường
+                </div>
+              ) : null} */}
+              {/* Display selected room */}
+              {selectedBed ? (
+                <div
+                  key={selectedBed?.id}
+                  className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] text-xs font-medium leading-4 text-black/85 md:text-base"
+                >
+                  {selectedBed?.name}
+                </div>
+              ) : (
+                <div
+                  key={resutBed?.id}
+                  className="mt-2 w-fit rounded-xl border bg-[#f1f1f4] px-4 py-2 text-[13px] text-xs font-medium leading-4 text-black/85 md:text-base"
+                >
+                  {resutBed?.name}
+                </div>
+              )}
+            </div>
 
-            {/* Room Selection Modal */}
-            <SelectionModalForm
-              isOpen={isModalOpenRoom}
-              onClose={closeModalRoom}
-              onSelectRoom={handleSelectRoom}
-              rooms={ROOMS}
-              title="Đặt phòng"
+            <ModalBeds
+              isOpen={isModalOpenBed}
+              onClose={closeModalBed}
+              onSelectRoom={handleSelectBed}
+              rooms={BEDS}
+              title="Đặt giường"
               sutTitle1="Hệ thống đặt phòng trực tuyến hiện tại của chúng tôi"
               sutTitle2="chỉ chấp nhận đặt phòng sau một tuần"
               sutTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
@@ -909,7 +964,7 @@ const SectionFormBooking = () => {
                   className="h-6 w-6"
                   width={18}
                   height={18}
-                  src={bed}
+                  src={bedIc}
                   alt="Arrow Down"
                 />{' '}
                 Giá giường

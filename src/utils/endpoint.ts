@@ -1,6 +1,8 @@
 export const API_ENDPOINT = {
   LOGIN: '/auth/login',
   REFRESH: '/auth/refresh',
+  GET_BED: '/api/services/search?service_type=bed_service',
+
   GET_LOCATION: '/api/locations',
   GET_SERVICE: '/api/service-packages',
   GET_SUB_SERVICE: '/api/services/search?service_type=food_drink',
