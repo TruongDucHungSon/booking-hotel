@@ -37,7 +37,18 @@ import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
-import { filter, find, forEach, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
+import {
+  filter,
+  find,
+  forEach,
+  isEmpty,
+  isNaN,
+  isNil,
+  map,
+  parseInt,
+  split,
+  toNumber,
+} from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -148,8 +159,6 @@ const SectionFormBooking = () => {
     (service: any) => service.service_type === 'bed_service',
   );
 
-  console.log(selectBed);
-
   const store = watch('store');
 
   useEffect(() => {
@@ -166,41 +175,45 @@ const SectionFormBooking = () => {
     setSelectedRoom(room);
     setValue('room', room.id);
   };
-
   const calculateTotalPrice = (products: any) => {
     return products.reduce((total: any, product: any) => total + parseInt(product.price), 0);
   };
-
-  // Tính toán giá dịch vụ và sản phẩm
   const totalFood = calculateTotalPriceFood(selecFood);
-  const selectPriceBed = selectBed?.map((service: any) => service.price);
-  const priceService = formatPrice(selectedService?.price);
-  const totalPriceProducts = formatPrice(calculateTotalPrice(selectedProducts));
+  const selectPriceBed = selectBed?.reduce(
+    (total: number, service: any) => total + parseFloat(service.price || '0'),
+    0,
+  ); // Tổng giá giường
+  const priceService = parseFloat(selectedService?.price || '0');
+  const totalPriceProducts = calculateTotalPrice(selectedProducts);
 
   // Khai báo state cho tổng giá ban đầu (chưa áp dụng voucher)
   const [totalPrice, setTotalPrice] = useState(
-    parseInt(priceService) + parseInt(totalPriceProducts),
+    priceService + totalPriceProducts + totalFood + selectPriceBed, // Tổng giá ban đầu
   );
 
   // useEffect để cập nhật totalPrice khi selectedVoucher thay đổi
   useEffect(() => {
-    let newTotalPrice = parseInt(priceService) + parseInt(totalPriceProducts);
+    let newTotalPrice = priceService + totalPriceProducts + totalFood + selectPriceBed;
 
     if (selectedVoucher) {
-      const voucherValue = parseInt(selectedVoucher?.discount);
+      const voucherValue = parseInt(selectedVoucher?.discount, 10);
       if (voucherValue < 100) {
-        console.log(selectedService);
+        // Giảm giá theo phần trăm
         newTotalPrice = Math.round(newTotalPrice - (newTotalPrice * voucherValue) / 100);
       } else if (voucherValue >= 100) {
-        newTotalPrice -= parseInt(formatPrice(voucherValue));
+        // Giảm giá theo giá trị tuyệt đối
+        newTotalPrice -= voucherValue; // Không cần dùng formatPrice
       }
     }
 
-    setTotalPrice(newTotalPrice);
-  }, [selectedVoucher, priceService, totalPriceProducts]);
+    // Đảm bảo giá trị không âm
+    setTotalPrice(Math.max(0, newTotalPrice));
+  }, [selectedVoucher, priceService, totalPriceProducts, totalFood, selectPriceBed]);
 
-  const initTotalPrice =
-    parseInt(formatPrice(selectedService?.price)) + parseInt(totalPriceProducts);
+  // Tính giá ban đầu (chưa giảm giá)
+  const initTotalPrice = priceService + totalPriceProducts + totalFood + selectPriceBed;
+
+  // Giá giảm giá
   const sale = formatPrice(initTotalPrice - totalPrice);
 
   const { data: DATA_ROOMS } = useRoomsData(store || 1);
@@ -875,7 +888,7 @@ const SectionFormBooking = () => {
                 />{' '}
                 {nameService}
               </p>
-              <span className="font-semibold">{priceService} VND</span>
+              <span className="font-semibold">{priceService || 0} VND</span>
             </p>
             <p className="flex justify-between">
               <p className="flex items-center gap-2">
@@ -944,8 +957,8 @@ const SectionFormBooking = () => {
               <p> Tổng thanh toán:</p>{' '}
               <p className="text-[#3A449B]">
                 {isEmpty(selectedVoucher)
-                  ? `${formatPrice(initTotalPrice)}.000 VND`
-                  : `${formatPrice(totalPrice)}.000 VND` || '0'}
+                  ? `${formatPrice(initTotalPrice) || '0'} VND`
+                  : `${formatPrice(totalPrice) || '0'} VND`}
               </p>
             </div>
             {selectedVoucher && (
