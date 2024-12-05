@@ -927,7 +927,7 @@ const SectionFormBooking = () => {
                 />{' '}
                 Sản phẩm mua kèm
               </p>
-              <span className="font-semibold">{formatPrice(totalPriceProducts)}.000 VND</span>
+              <span className="font-semibold">{formatPrice(totalPriceProducts) || 0} VND</span>
             </p>
             <p className="flex justify-between text-black/85">
               <p className="flex items-center gap-2">
