@@ -18,7 +18,7 @@ const ListService = () => {
   const methods = useFormContext();
   const location = methods.watch('location_id'); // Watching location_id
 
-  // Filter services based on selected location
+  // Filter packages based on selected location
   const SERVICES = useMemo(() => {
     return (
       DATA_SERVICES?.data?.filter((pkg: any) =>
@@ -40,10 +40,15 @@ const ListService = () => {
     return new Intl.NumberFormat('vi-VN').format(price);
   };
 
-  // Filter services based on selected package and location
+  // Filter services based on selected package, location, and service type
   const filteredServices = useMemo(() => {
     if (!selectedPackage || !location) return [];
-    return selectedPackage.services.filter((service: any) => service.delivery_type === location);
+    return selectedPackage.services?.filter(
+      (service: any) =>
+        (service.delivery_type === location && service.service_type === 'massage') ||
+        service.service_type === 'spa' ||
+        service.service_type === 'therapy',
+    );
   }, [selectedPackage, location]);
 
   // Handle package click to update selected package
@@ -127,7 +132,7 @@ const ListService = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 1 }}
             >
-              {filteredServices.map((service: any) => (
+              {filteredServices?.map((service: any) => (
                 <div key={service.id} className="mb-8 rounded-3xl border border-[#E4E4E7] p-6">
                   <h2 className="text-base font-semibold text-primary md:text-lg">
                     {service.name}

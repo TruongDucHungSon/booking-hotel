@@ -152,12 +152,13 @@ const SectionFormBooking = () => {
 
   const selectedCategory = watch('category');
 
-  const selecFood = selectedCategory?.services.filter(
+  const selectFood = selectedCategory?.services.filter(
     (service: any) => service?.service_type === 'food_drink',
   );
   const selectBed = selectedCategory?.services.filter(
     (service: any) => service.service_type === 'bed_service',
   );
+  console.log(selectBed);
 
   const store = watch('store');
 
@@ -178,7 +179,7 @@ const SectionFormBooking = () => {
   const calculateTotalPrice = (products: any) => {
     return products.reduce((total: any, product: any) => total + parseInt(product.price), 0);
   };
-  const totalFood = calculateTotalPriceFood(selecFood);
+  const totalFood = calculateTotalPriceFood(selectFood);
   const selectPriceBed = selectBed?.reduce(
     (total: number, service: any) => total + parseFloat(service.price || '0'),
     0,
@@ -288,7 +289,24 @@ const SectionFormBooking = () => {
     forEach(data, (value, key) => methods.setValue(key, value)); // Set form values
     const values = methods.getValues(); // Get form values
     setShowThankYouModal(true);
-
+    const services = [
+      {
+        service_id: selectedService?.id,
+        quantity: 1, // Số lượng dịch vụ chính
+      },
+      ...(selectBed
+        ? selectBed.map((bed: any) => ({
+            service_id: bed.id, // ID của giường
+            quantity: 1, // Hoặc số lượng giường nếu cần
+          }))
+        : []),
+      ...(selectFood
+        ? selectFood.map((food: any) => ({
+            service_id: food.id, // ID của đồ ăn
+            quantity: 1, // Hoặc số lượng đồ ăn nếu cần
+          }))
+        : []),
+    ];
     const formData = {
       room_id: selectedRoom?.id,
       guest_info: {
@@ -302,12 +320,7 @@ const SectionFormBooking = () => {
       notes: values.note,
       booking_time: `${formatDateString(values.startDate)} ${values.selectedTime}:00`,
       staff_id: 9,
-      services: [
-        {
-          service_id: selectedService?.id,
-          quantity: 1,
-        },
-      ],
+      services,
 
       delivery_type: location,
     };
