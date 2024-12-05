@@ -901,7 +901,7 @@ const SectionFormBooking = () => {
                 />{' '}
                 {nameService}
               </p>
-              <span className="font-semibold">{priceService || 0} VND</span>
+              <span className="font-semibold">{formatPrice(priceService) || 0} VND</span>
             </p>
             <p className="flex justify-between">
               <p className="flex items-center gap-2">
