@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import sv1 from '@/assets/images/new/sv1.png';
+import bed from '@/assets/svgs/arrow/bed.svg';
 import BoxIc from '@/assets/svgs/arrow/box.svg';
 import box1 from '@/assets/svgs/arrow/box1.svg';
 import check from '@/assets/svgs/arrow/check1.svg';
@@ -9,6 +10,7 @@ import ArrowIc from '@/assets/svgs/arrow/down.svg';
 import LocationIc from '@/assets/svgs/arrow/location.svg';
 import massa from '@/assets/svgs/arrow/massa.svg';
 import SaleIc from '@/assets/svgs/arrow/sale.svg';
+import service from '@/assets/svgs/arrow/service.svg';
 import StoreIc from '@/assets/svgs/arrow/store.svg';
 import voucher from '@/assets/svgs/arrow/voucher.svg';
 import downBlue from '@/assets/svgs/search/dropdowBlu.svg';
@@ -26,14 +28,16 @@ import { usePromotionData } from '@/services/promotion/promotion.service';
 import { useRoomsData } from '@/services/room/Rooms.Service';
 import { motion } from 'framer-motion';
 
-// import { useSubServiceData } from '@/services/services/Services.Service';
+import ServiceSelectionModal from '@/components/modal/ModalServicer';
+import { calculateTotalPriceFood } from '@/container/booking/action/action';
+import { useSubServiceData } from '@/services/services/Services.Service';
 import { NUMBER_PEOPLE, serviceLocations } from '@/utils/constants';
 import { API_ENDPOINT } from '@/utils/endpoint';
 import { formatDateString, formatPrice } from '@/utils/helpers';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useBoolean } from 'ahooks';
 import dayjs from 'dayjs';
-import { find, forEach, head, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
+import { filter, find, forEach, isEmpty, isNaN, isNil, map, split, toNumber } from 'lodash';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -47,8 +51,8 @@ const SectionFormBooking = () => {
   const LOCATIONS: any = DATA_LOCATIONS || [];
   const { data: DATA_PROMOTIONS } = usePromotionData();
   const PROMOTIONS: any = DATA_PROMOTIONS || [];
-  // const { data: DATA_SUB_SERVICES } = useSubServiceData();
-  // const SUB_SERVICES: any = DATA_SUB_SERVICES?.data || [];
+  const { data: DATA_SUB_SERVICES } = useSubServiceData();
+  const SUB_SERVICES: any = DATA_SUB_SERVICES?.data || [];
   const { data: DATA_PRODUCTS } = useProductData();
   const PRODUCTS: any = DATA_PRODUCTS?.data || [];
 
@@ -86,24 +90,19 @@ const SectionFormBooking = () => {
     setIsModalOpenVoucher(false); // Close modal after selection
   };
 
-  // const [isModalOpenService, setIsModalOpenService] = useState(false);
+  const [isModalOpenService, setIsModalOpenService] = useState(false);
 
-  // const handleOpenModalService = () => {
-  //   setIsModalOpenService(true);
-  // };
+  const handleOpenModalService = () => {
+    setIsModalOpenService(true);
+  };
 
-  // const handleCloseModalService = () => {
-  //   setIsModalOpenService(false);
-  // };
+  const handleCloseModalService = () => {
+    setIsModalOpenService(false);
+  };
 
   const [isOpenLocation, locationHandlers] = useBoolean(false);
   const [isOpenStore, storeHandlers] = useBoolean(false);
-  // const fadeAnimation = {
-  //   initial: { opacity: 0, scale: 0.95 },
-  //   animate: { opacity: 1, scale: 1 },
-  //   exit: { opacity: 0, scale: 0.95 },
-  //   transition: { duration: 0.3 },
-  // };
+
   const {
     register,
     setValue,
@@ -136,12 +135,21 @@ const SectionFormBooking = () => {
 
   const location = methods.watch('location_id');
   const selectedTime = watch('selectedTime');
-  const room = watch('room');
-  // const currentServices = watch('services');
+  const currentServices = watch('services');
 
   const selectedService = watch('service');
 
   const selectedCategory = watch('category');
+
+  const selecFood = selectedCategory?.services.filter(
+    (service: any) => service?.service_type === 'food_drink',
+  );
+  const selectBed = selectedCategory?.services.filter(
+    (service: any) => service.service_type === 'bed_service',
+  );
+
+  console.log(selectBed);
+
   const store = watch('store');
 
   useEffect(() => {
@@ -164,6 +172,8 @@ const SectionFormBooking = () => {
   };
 
   // Tính toán giá dịch vụ và sản phẩm
+  const totalFood = calculateTotalPriceFood(selecFood);
+  const selectPriceBed = selectBed?.map((service: any) => service.price);
   const priceService = formatPrice(selectedService?.price);
   const totalPriceProducts = formatPrice(calculateTotalPrice(selectedProducts));
 
@@ -217,12 +227,6 @@ const SectionFormBooking = () => {
   useEffect(() => {
     reset(methods.getValues());
   }, []);
-
-  useEffect(() => {
-    if (isEmpty(room) && ROOMS?.length > 0) {
-      setValue('room', head(DATA_ROOMS)?.id);
-    }
-  }, [DATA_ROOMS]);
 
   const [dataForm, setDataForm] = useState<any>(null);
   // const postPaymentMutation = usePostPayment(idBooking);
@@ -620,7 +624,7 @@ const SectionFormBooking = () => {
               sutTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
             />
 
-            {/* <div>
+            <div>
               <label className="mb-1 block text-sm font-medium text-black md:text-base">
                 Dịch vụ
               </label>
@@ -652,8 +656,7 @@ const SectionFormBooking = () => {
                 subTitle3="chỉ có thể đặt tối đa 1 phòng cùng một lúc."
               />
 
-              {/* Display selected services below the button */}
-            {/* <div className="mt-2">
+              <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-4">
                   {map(currentServices, ({ id, quantity }) => {
                     const service = find(DATA_SUB_SERVICES, { id });
@@ -685,7 +688,7 @@ const SectionFormBooking = () => {
                   })}
                 </div>
               </div>
-            </div> */}
+            </div>
 
             <div className="my-4">
               <label className="block text-sm font-medium text-black md:text-base">Ghi chú</label>
@@ -874,7 +877,7 @@ const SectionFormBooking = () => {
               </p>
               <span className="font-semibold">{priceService} VND</span>
             </p>
-            {/* <p className="flex justify-between">
+            <p className="flex justify-between">
               <p className="flex items-center gap-2">
                 <CustomImage
                   className="h-6 w-6"
@@ -885,9 +888,9 @@ const SectionFormBooking = () => {
                 />{' '}
                 Giá giường
               </p>
-              <span className="font-semibold">100.000 VND</span>
-            </p> */}
-            {/* <p className="flex justify-between">
+              <span className="font-semibold">{formatPrice(selectPriceBed)} VND</span>
+            </p>
+            <p className="flex justify-between">
               <p className="flex items-center gap-2">
                 <CustomImage
                   className="h-6 w-6"
@@ -898,8 +901,8 @@ const SectionFormBooking = () => {
                 />
                 Giá dịch vụ
               </p>
-              <span className="font-semibold">90.000 VND</span>
-            </p> */}
+              <span className="font-semibold">{formatPrice(totalFood)} VND</span>
+            </p>
             <p className="flex justify-between">
               <p className="flex items-center gap-2">
                 <CustomImage

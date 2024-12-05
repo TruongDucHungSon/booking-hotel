@@ -3,7 +3,7 @@ export const API_ENDPOINT = {
   REFRESH: '/auth/refresh',
   GET_LOCATION: '/api/locations',
   GET_SERVICE: '/api/service-packages',
-  GET_SUB_SERVICE: '/api/services',
+  GET_SUB_SERVICE: '/api/services/search?service_type=food_drink',
   GET_STAFF: '/api/staffs',
   GET_PROMOTION: '/api/promotions',
   GET_ROOM: '/api/rooms/available',

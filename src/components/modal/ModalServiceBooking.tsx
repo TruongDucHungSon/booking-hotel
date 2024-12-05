@@ -152,54 +152,62 @@ const ModalServiceBooking: FC<ServiceModalProps> = ({
             </div>
 
             <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {map(get(selectedCategory, 'services', []), (service) => (
-                <motion.div
-                  key={service.id}
-                  className={`cursor-pointer rounded-3xl border p-5 transition-all duration-300 ease-in-out lg:p-6 ${
-                    selectedService?.id === service?.id
-                      ? 'border-[#3A449B]'
-                      : 'border-gray-200 opacity-100'
-                  }`}
-                  onClick={() => setSelectedService(service)}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1 }}
-                >
-                  <h3
-                    className={`text-center text-base font-semibold md:text-lg ${
-                      selectedService?.id === service?.id ? 'text-[#3A449B]' : 'text-[#18181B]'
+              {map(
+                get(selectedCategory, 'services', []).filter(
+                  (service: any) =>
+                    service.service_type === 'massage' ||
+                    service.service_type === 'spa' ||
+                    service.service_type === 'therapy', // Chỉ lấy service-type là massage
+                ),
+                (service) => (
+                  <motion.div
+                    key={service.id}
+                    className={`cursor-pointer rounded-3xl border p-5 transition-all duration-300 ease-in-out lg:p-6 ${
+                      selectedService?.id === service?.id
+                        ? 'border-[#3A449B]'
+                        : 'border-gray-200 opacity-100'
                     }`}
+                    onClick={() => setSelectedService(service)}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1 }}
                   >
-                    {service.name}
-                  </h3>
-                  <div className="my-4 flex items-center justify-between rounded-xl bg-custom-gradient px-2 py-[10px] text-sm text-white">
-                    <p className="text-xs font-semibold lg:text-sm">
-                      <span className="font-normal">Thời gian: </span>
-                      {service.duration}
-                      <span className="font-normal"> phút</span>
-                    </p>
-                    <p className="text-xs font-semibold lg:text-sm">
-                      {formatPrice(service.price)} <span className="font-normal">VND/LẦN</span>
-                    </p>
-                  </div>
-                  <div className="mt-2 space-y-1 text-sm text-gray-600">
-                    <div className="flex items-center gap-3">
-                      <CustomImage
-                        src={check}
-                        alt="check"
-                        width={32}
-                        height={32}
-                        className="h-6 w-6"
-                      />
-                      <p className="w-[320px] text-xs md:text-sm">{service.description}</p>
+                    <h3
+                      className={`text-center text-base font-semibold md:text-lg ${
+                        selectedService?.id === service?.id ? 'text-[#3A449B]' : 'text-[#18181B]'
+                      }`}
+                    >
+                      {service.name}
+                    </h3>
+                    <div className="my-4 flex items-center justify-between rounded-xl bg-custom-gradient px-2 py-[10px] text-sm text-white">
+                      <p className="text-xs font-semibold lg:text-sm">
+                        <span className="font-normal">Thời gian: </span>
+                        {service.duration}
+                        <span className="font-normal"> phút</span>
+                      </p>
+                      <p className="text-xs font-semibold lg:text-sm">
+                        {formatPrice(service.price)} <span className="font-normal">VND/LẦN</span>
+                      </p>
                     </div>
-                    <p className="mt-2 text-sm font-semibold text-[#18181B] md:mt-4 md:text-base">
-                      Giá chưa bao gồm VAT & TIP.
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="mt-2 space-y-1 text-sm text-gray-600">
+                      <div className="flex items-center gap-3">
+                        <CustomImage
+                          src={check}
+                          alt="check"
+                          width={32}
+                          height={32}
+                          className="h-6 w-6"
+                        />
+                        <p className="w-[320px] text-xs md:text-sm">{service.description}</p>
+                      </div>
+                      <p className="mt-2 text-sm font-semibold text-[#18181B] md:mt-4 md:text-base">
+                        Giá chưa bao gồm VAT & TIP.
+                      </p>
+                    </div>
+                  </motion.div>
+                ),
+              )}
             </div>
 
             <div className="mt-6 flex justify-center">
