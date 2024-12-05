@@ -153,8 +153,7 @@ const SectionFormBooking = () => {
   const location = methods.watch('location_id');
   const selectedTime = watch('selectedTime');
   const currentServices = watch('services');
-  const idBed = watch('bed');
-  console.log(idBed);
+  console.log(currentServices);
 
   const selectedCategory = watch('category');
   const selectedService = watch('service');
@@ -172,7 +171,6 @@ const SectionFormBooking = () => {
   const selectFood = selectedCategory?.services.filter(
     (service: any) => service?.service_type === 'food_drink',
   );
-  console.log(resutBed);
 
   const store = watch('store');
 
@@ -202,23 +200,19 @@ const SectionFormBooking = () => {
   const priceService = parseFloat(selectedService?.price || '0');
   const totalPriceProducts = calculateTotalPrice(selectedProducts);
 
-  // Khai báo state cho tổng giá ban đầu (chưa áp dụng voucher)
   const [totalPrice, setTotalPrice] = useState(
     priceService + totalPriceProducts + totalFood + selectPriceBed, // Tổng giá ban đầu
   );
 
-  // useEffect để cập nhật totalPrice khi selectedVoucher thay đổi
   useEffect(() => {
     let newTotalPrice = priceService + totalPriceProducts + totalFood + selectPriceBed;
 
     if (selectedVoucher) {
       const voucherValue = parseInt(selectedVoucher?.discount, 10);
       if (voucherValue < 100) {
-        // Giảm giá theo phần trăm
         newTotalPrice = Math.round(newTotalPrice - (newTotalPrice * voucherValue) / 100);
       } else if (voucherValue >= 100) {
-        // Giảm giá theo giá trị tuyệt đối
-        newTotalPrice -= voucherValue; // Không cần dùng formatPrice
+        newTotalPrice -= voucherValue;
       }
     }
 
@@ -740,16 +734,26 @@ const SectionFormBooking = () => {
               <div className="mt-2">
                 <div className="flex flex-wrap items-center gap-4">
                   {map(currentServices, ({ id, quantity }) => {
-                    const service = find(DATA_SUB_SERVICES, { id });
+                    // Tìm service dựa trên id (đảm bảo id là số)
+                    const service = find(SUB_SERVICES, { id: Number(id) });
 
-                    if (isEmpty(service)) return null;
+                    // Debug nếu không tìm thấy dịch vụ
+                    if (!service) {
+                      console.warn(`Không tìm thấy dịch vụ với id: ${id}`);
+                      return null;
+                    }
 
                     return (
                       <div
                         key={id}
                         onClick={() => {
-                          const result = filter(currentServices, ({ id: i }) => i !== id);
+                          // Loại bỏ dịch vụ hiện tại khỏi danh sách
+                          const result = filter(
+                            currentServices,
+                            ({ id: currentId }) => currentId !== id,
+                          );
 
+                          // Cập nhật giá trị
                           setValue('services', result);
                         }}
                         className="flex w-fit cursor-pointer items-center gap-4 rounded-xl bg-[#F1F1F4] px-4 py-2 text-[13px] leading-4"
@@ -758,7 +762,7 @@ const SectionFormBooking = () => {
                           width={18}
                           height={18}
                           src={deleteIc}
-                          alt="Arrow Down"
+                          alt="Delete Icon"
                           className="h-[14px] w-[14px]"
                         />
                         <p className="text-xs md:text-base">
