@@ -154,7 +154,7 @@ const SectionFormBooking = () => {
   const selectedTime = watch('selectedTime');
   const currentServices = watch('services');
   console.log(currentServices);
-
+  console.log(SUB_SERVICES);
   const selectedCategory = watch('category');
   const selectedService = watch('service');
   const selectBed = selectedCategory?.services.filter(
@@ -171,6 +171,7 @@ const SectionFormBooking = () => {
   const selectFood = selectedCategory?.services.filter(
     (service: any) => service?.service_type === 'food_drink',
   );
+  console.log(selectFood);
 
   const store = watch('store');
 
@@ -189,10 +190,22 @@ const SectionFormBooking = () => {
     setValue('room', room.id);
   };
 
+  const calculateTotalPriceSelectFood = (services: any, serviceData: any) => {
+    return services?.reduce((total: any, { id, quantity }: any) => {
+      // Tìm dịch vụ theo ID
+      const service = serviceData.find((item: any) => item.id === parseInt(id, 10));
+      if (service) {
+        total += parseFloat(service.price) * quantity; // Nhân giá với số lượng
+      }
+      return total;
+    }, 0);
+  };
+  const totalPriceSelectFood = calculateTotalPriceSelectFood(currentServices, SUB_SERVICES);
+
   const calculateTotalPrice = (products: any) => {
     return products.reduce((total: any, product: any) => total + parseInt(product.price), 0);
   };
-  const totalFood = calculateTotalPriceFood(selectFood);
+  const totalFood = currentServices ? totalPriceSelectFood : calculateTotalPriceFood(selectFood);
   const selectPriceBed = selectBed?.reduce(
     (total: number, service: any) => total + parseFloat(service.price || '0'),
     0,
@@ -309,13 +322,17 @@ const SectionFormBooking = () => {
             quantity: 1, // Hoặc số lượng giường nếu cần
           }))
         : []),
-      ...(selectFood
-        ? selectFood.map((food: any) => ({
+      ...(currentServices
+        ? currentServices.map((food: any) => ({
+            service_id: food.id, // ID của đồ ăn
+            quantity: food.quantity, // Hoặc số lượng đồ ăn nếu cần
+          }))
+        : selectFood.map((food: any) => ({
             service_id: food.id, // ID của đồ ăn
             quantity: 1, // Hoặc số lượng đồ ăn nếu cần
-          }))
-        : []),
+          }))),
     ];
+
     const formData = {
       room_id: selectedRoom?.id,
       guest_info: {
