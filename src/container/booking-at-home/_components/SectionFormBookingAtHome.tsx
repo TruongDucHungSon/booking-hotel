@@ -7,7 +7,7 @@ import more from '@/assets/images/banner/more.png';
 import vcb from '@/assets/images/banner/vcb.png';
 import sv1 from '@/assets/images/new/sv1.png';
 import BoxIc from '@/assets/svgs/arrow/box.svg';
-import box1 from '@/assets/svgs/arrow/box1.svg';
+// import box1 from '@/assets/svgs/arrow/box1.svg';
 import check from '@/assets/svgs/arrow/check1.svg';
 import deleteIc from '@/assets/svgs/arrow/delete.svg';
 import ArrowIc from '@/assets/svgs/arrow/down.svg';
@@ -667,7 +667,7 @@ const SectionFormBookingAtHome = () => {
             />
           </div>
 
-          <div className="my-3 grid grid-cols-2 gap-4 text-sm md:my-6 md:text-base">
+          <div className="my-3 grid grid-cols-1 gap-4 text-sm md:my-6 md:text-base">
             <button type="button" onClick={toggleModalVoucher}>
               {isEmpty(selectedVoucher) ? (
                 <div className="flex items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-3 text-[#3A449B]">
@@ -694,7 +694,7 @@ const SectionFormBookingAtHome = () => {
             <button
               type="button"
               onClick={() => setProductModalOpen(true)}
-              className="ml-2 flex items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-2 text-[#3A449B]"
+              className="ml-2 hidden items-center justify-between rounded-xl border border-[#3A449B] bg-[#d6d7e7] p-2 text-[#3A449B]"
             >
               {isEmpty(selectedProducts) ? 'Sản phẩm mua kèm' : 'Chọn lại sản phẩm'}
               <CustomImage width={18} height={18} src={BoxIc} alt="Arrow Down" />
@@ -784,7 +784,7 @@ const SectionFormBookingAtHome = () => {
               </p>
               <span className="font-semibold">90.000 VND</span>
             </p> */}
-            <p className="flex justify-between">
+            {/* <p className="flex justify-between">
               <p className="flex items-center gap-2">
                 <CustomImage
                   className="h-6 w-6"
@@ -796,7 +796,7 @@ const SectionFormBookingAtHome = () => {
                 Sản phẩm mua kèm
               </p>
               <span className="font-semibold">{formatPrice(totalPriceProducts)}.000 VND</span>
-            </p>
+            </p> */}
             <p className="flex justify-between text-black/85">
               <p className="flex items-center gap-2">
                 {' '}
