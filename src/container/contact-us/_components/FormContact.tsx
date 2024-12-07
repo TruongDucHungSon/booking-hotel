@@ -64,8 +64,8 @@ const FormContact = ({ LOCATION_ID }: any) => {
       location_id: location_id || data.location_id || 1,
     };
     POST_CONTACT(DataContact, {
-      onSuccess: () => {
-        toast.success('Lưu thông tin thành công, chúng tôi sẽ liên hệ với bạn sớm nhất!', {
+      onSuccess: async () => {
+        await toast.success('Lưu thông tin thành công, chúng tôi sẽ liên hệ với bạn sớm nhất!', {
           position: 'top-right',
           autoClose: 3000,
           hideProgressBar: false,
