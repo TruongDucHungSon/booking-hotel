@@ -3,17 +3,19 @@ import { publicRequest } from '@/config/HandleApi.Service';
 import { API_ENDPOINT } from '@/utils/endpoint';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 
-export const useRoomsData = (locationId: number): UseQueryResult<any[], Error> => {
-  return useQuery<any[], Error>({
-    queryKey: ['rooms', { location_id: locationId }],
+export const useRoomData = (): UseQueryResult<any, Error> => {
+  return useQuery<any, Error>({
+    queryKey: ['room'], // Query key as an object with 'queryKey' property
     queryFn: async () => {
-      const response = await publicRequest.get(API_ENDPOINT.GET_ROOM, {
-        params: { location_id: locationId },
+      const response = publicRequest.request({
+        method: 'GET',
+        url: API_ENDPOINT.GET_ROOM,
       });
-      return response.data;
+
+      return response || [];
     },
-    staleTime: 1000 * 60 * 5, // Data remains fresh for 5 minutes
-    refetchOnWindowFocus: false, // Prevent refetching when the window is refocused
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 };

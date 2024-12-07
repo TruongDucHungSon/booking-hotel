@@ -34,10 +34,8 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
   sutTitle3,
 }) => {
   const [selectedRoom, setSelectedRoom] = useState<RoomProps | null>(null);
-  const [selectedType, setSelectedType] = useState<string>('Phòng thường');
 
   // Filter rooms directly inside the render method
-  const filteredRooms = rooms.filter((room) => room.type_text === selectedType);
   const methods = useFormContext();
 
   const handleRoomSelection = useCallback((room: RoomProps) => {
@@ -72,24 +70,11 @@ const SelectionModalForm: React.FC<RoomSelectionModalProps> = ({
           </p>
 
           {/* Room type selection buttons */}
-          <div className="mb-5 flex justify-center gap-4 lg:mb-8">
-            {['Phòng thường', 'Phòng VIP', 'Phòng đôi'].map((type) => (
-              <button
-                type="button"
-                key={type}
-                onClick={() => setSelectedType(type)}
-                className={`rounded-full px-4 py-2 ${
-                  selectedType === type ? 'bg-[#3A449B] text-white' : 'bg-gray-200 text-gray-600'
-                }`}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
+          <div className="mb-5 flex justify-center gap-4 lg:mb-8"></div>
 
           {/* Room list */}
           <motion.div layout className="grid-col1 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredRooms.map((room) => (
+            {rooms.map((room) => (
               <motion.div
                 key={room.id}
                 initial={{ opacity: 0.5 }}
