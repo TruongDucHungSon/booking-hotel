@@ -4,6 +4,7 @@ import UseIc from '@/assets/svgs/contact/user.svg';
 import CustomImage from '@/components/CustomImage';
 import { usePostContact } from '@/services/contact/contact.Service';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS của react-toastify
@@ -24,6 +25,7 @@ const schema = yup.object({
 });
 
 const FormContact = ({ LOCATION_ID }: any) => {
+  const router = useRouter();
   const location_id = LOCATION_ID || 1;
   const { mutate: POST_CONTACT } = usePostContact();
 
@@ -71,6 +73,7 @@ const FormContact = ({ LOCATION_ID }: any) => {
           pauseOnHover: true,
           draggable: true,
         });
+        router.push('/dich-vu');
       },
       onError: () => {
         toast.error('Vui lòng kiểm tra lại thông tin!', {
