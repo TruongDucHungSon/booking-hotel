@@ -49,19 +49,19 @@ const FormContact = ({ LOCATION_ID }: any) => {
   // Xử lý khi submit thành công
   const onSubmit = (data: any) => {
     const DataContact = {
-      name: data.fullName,
-      email: data.email,
-      phone: data.phone,
+      name: data.fullName || '',
+      email: data.email || '',
+      phone: data.phone || '',
       subject: 'Tư vấn dịch vụ',
       message: 'Tôi cần tư vấn về dịch vụ spa',
-      gender: data.gender,
+      gender: data.gender || '',
       delivery_type:
         data.service === 'Massage tại cửa hàng'
           ? 'in-store'
           : data.service === 'Massage tại nhà'
             ? 'at-home'
             : 'in-store',
-      location_id: location_id || data.location_id,
+      location_id: location_id || data.location_id || 1,
     };
     POST_CONTACT(DataContact, {
       onSuccess: () => {
@@ -76,7 +76,7 @@ const FormContact = ({ LOCATION_ID }: any) => {
         router.push('/dich-vu');
       },
       onError: () => {
-        toast.error('Vui lòng kiểm tra lại thông tin!', {
+        toast.error('Mạng không ổn định!', {
           position: 'top-right',
           autoClose: 3000,
           hideProgressBar: false,
