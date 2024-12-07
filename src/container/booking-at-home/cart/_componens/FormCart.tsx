@@ -127,6 +127,7 @@ const FormCart = () => {
 
         const paymentUrl = paymentResponse?.data?.payment_url;
         if (paymentUrl) {
+          setIsLoading(true);
           router.push(paymentUrl);
         } else {
           throw new Error('Không tìm thấy URL thanh toán.');
