@@ -156,7 +156,6 @@ const SectionFormBookingAtHome = () => {
           router.push(paymentUrl);
         } else {
           setIsLoading(false);
-
           throw new Error('Không tìm thấy URL thanh toán.');
         }
       } catch (error: any) {

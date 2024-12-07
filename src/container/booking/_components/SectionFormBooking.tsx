@@ -316,6 +316,7 @@ const SectionFormBooking = () => {
 
         const paymentUrl = paymentResponse?.data?.payment_url;
         if (paymentUrl) {
+          setIsLoading(true);
           router.push(paymentUrl);
         } else {
           setIsLoading(false);
@@ -325,7 +326,7 @@ const SectionFormBooking = () => {
       } catch (error: any) {
         setIsLoading(false);
         console.error(error);
-        toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
+        toast.error('Mạng không ổn định.');
       }
     };
 

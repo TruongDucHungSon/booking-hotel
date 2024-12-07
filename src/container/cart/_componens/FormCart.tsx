@@ -128,6 +128,7 @@ const FormCart = () => {
 
         const paymentUrl = paymentResponse?.data?.payment_url;
         if (paymentUrl) {
+          setIsLoading(true);
           router.push(paymentUrl);
         } else {
           throw new Error('Không tìm thấy URL thanh toán.');
@@ -135,7 +136,7 @@ const FormCart = () => {
       } catch (error: any) {
         setIsLoading(false);
         console.error(error);
-        toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
+        toast.error('Mạng không ổn định.');
       }
     };
 
@@ -170,7 +171,7 @@ const FormCart = () => {
       handlePostCartPaymentSuccess();
     } catch (error: any) {
       console.error(error);
-      toast.error('Đã xảy ra lỗi khi xử lý thanh toán. Vui lòng thử lại.');
+      toast.error('Mạng không ổn định');
     }
   };
 
