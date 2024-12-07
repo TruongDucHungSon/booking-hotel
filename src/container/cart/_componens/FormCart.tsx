@@ -34,7 +34,7 @@ const FormCart = () => {
   const {
     register,
     handleSubmit,
-
+    reset,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -50,6 +50,7 @@ const FormCart = () => {
   const [dataFormCart, setDataFormCart] = useState({});
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<number | null>(null);
+
   const [isLoading, setIsLoading] = useState(false);
   const handlePostCartSuccess = async () => {
     await dispatch(clearCart());
@@ -61,8 +62,8 @@ const FormCart = () => {
   };
   const handlePostCartPaymentSuccess = async () => {
     await dispatch(clearCart());
-    await setShowThankYouModal(false); // Handle form submission here
-    setShowThankYouText(true);
+    await setShowThankYouModal(false);
+    reset();
   };
   const onSubmit = (data: IFormCartData) => {
     // Check if the cart is empty
@@ -82,7 +83,7 @@ const FormCart = () => {
     }
 
     // Map cart items
-    const cartItems = items.map((item) => ({
+    const cartItems = items.map((item: any) => ({
       product_id: item.id,
       quantity: item.quantity,
       price: item.price,

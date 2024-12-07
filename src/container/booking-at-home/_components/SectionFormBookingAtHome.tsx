@@ -967,9 +967,8 @@ const SectionFormBookingAtHome = () => {
                 e.preventDefault();
                 if (selectedPayment === 'payos') {
                   await setShowThankYouModal(false);
-                  await setShowThankYouText(true);
                   handleBookingFormPayment();
-                } else {
+                } else if (selectedPayment === 'counter') {
                   handleBook();
                   await setShowThankYouModal(false);
                   await setShowThankYouText(true);

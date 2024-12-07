@@ -152,9 +152,12 @@ const SectionFormBooking = () => {
   const location = methods.watch('location_id');
   const selectedTime = watch('selectedTime');
   const currentServices = watch('services');
+
   const selectedCategory = watch('category');
 
   const selectedService = watch('service');
+  console.log(selectedService);
+
   const selectBed = selectedCategory?.services.filter(
     (service: any) => service.service_type === 'bed_service',
   );
@@ -171,13 +174,18 @@ const SectionFormBooking = () => {
   const idSelectRoom = selectRoom?.map((bed: any) => bed.id);
   const resutBed = BEDS.find((bed: any) => idSelectBed?.includes(bed.id));
   const resultRoom = ROOMS.find((room: any) => idSelectRoom?.includes(room.id));
-  console.log(resultRoom);
 
   const selectFood = selectedCategory?.services.filter(
     (service: any) => service?.service_type === 'food_drink',
   );
 
   const store = watch('store');
+
+  useEffect(() => {
+    if (selectedService?.delivery_type === 'at-home' && location === 'in-store') {
+      setValue('service', null);
+    }
+  }, [selectedService]);
 
   useEffect(() => {
     if (location === 'in-store') {
@@ -1219,9 +1227,8 @@ const SectionFormBooking = () => {
                 e.preventDefault();
                 if (selectedPayment === 'payos') {
                   await setShowThankYouModal(false);
-                  await setShowThankYouText(true);
                   handleBookingFormPayment();
-                } else {
+                } else if (selectedPayment === 'counter') {
                   handleBookingForm();
                   await setShowThankYouModal(false);
                   await setShowThankYouText(true);
