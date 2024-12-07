@@ -2,6 +2,7 @@ import mailIc from '@/assets/svgs/contact/mail.svg';
 import phoneIc from '@/assets/svgs/contact/phone.svg';
 import UseIc from '@/assets/svgs/contact/user.svg';
 import CustomImage from '@/components/CustomImage';
+import { usePostContact } from '@/services/contact/contact.Service';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
@@ -19,13 +20,16 @@ const schema = yup.object({
   email: yup.string().email('Email không hợp lệ').required('Email không được để trống'),
   service: yup.string().required('Vui lòng chọn dịch vụ'),
   note: yup.string().max(500, 'Ghi chú không được vượt quá 500 ký tự'),
+  location_id: yup.number().required('Vui lòng chọn vị trí '),
 });
 
-const FormContact = () => {
+const FormContact = ({ LOCATION_ID }: any) => {
+  const location_id = LOCATION_ID || 1;
+  const { mutate: POST_CONTACT } = usePostContact();
+
   const {
     control,
     handleSubmit,
-    reset, // Hàm reset form
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -36,30 +40,54 @@ const FormContact = () => {
       email: '',
       service: '',
       note: '',
+      location_id: 1,
     },
   });
 
   // Xử lý khi submit thành công
   const onSubmit = (data: any) => {
-    console.log('Form Data:', data);
-
-    // Hiển thị thông báo thành công
-    toast.success('Lưu thông tin thành công!', {
-      position: 'top-right',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
+    const DataContact = {
+      name: data.fullName,
+      email: data.email,
+      phone: data.phone,
+      subject: 'Tư vấn dịch vụ',
+      message: 'Tôi cần tư vấn về dịch vụ spa',
+      gender: data.gender,
+      delivery_type:
+        data.service === 'Massage tại cửa hàng'
+          ? 'in-store'
+          : data.service === 'Massage tại nhà'
+            ? 'at-home'
+            : 'in-store',
+      location_id: location_id || data.location_id,
+    };
+    POST_CONTACT(DataContact, {
+      onSuccess: () => {
+        toast.success('Lưu thông tin thành công, chúng tôi sẽ liên hệ với bạn sớm nhất!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      },
+      onError: () => {
+        toast.error('Vui lòng kiểm tra lại thông tin!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      },
     });
-
-    // Reset form sau khi hiển thị thông báo
-    reset();
   };
 
   return (
     <div>
-      <ToastContainer /> {/* Container cho react-toastify */}
+      <ToastContainer />
       <h3 className="mb-4 text-base font-semibold text-[#18181B] md:text-lg">
         Thông Tin Khách Hàng
       </h3>
@@ -120,16 +148,17 @@ const FormContact = () => {
               render={({ field }) => (
                 <>
                   <label className="flex items-center text-sm md:text-base">
-                    <input {...field} type="radio" value="Nam" className="mr-1 accent-[#3A449B]" />{' '}
+                    <input {...field} type="radio" value="male" className="mr-1 accent-[#3A449B]" />{' '}
                     Nam
                   </label>
                   <label className="flex items-center text-sm md:text-base">
-                    <input {...field} type="radio" value="Nữ" className="mr-1 accent-[#3A449B]" />{' '}
+                    <input
+                      {...field}
+                      type="radio"
+                      value="female"
+                      className="mr-1 accent-[#3A449B]"
+                    />{' '}
                     Nữ
-                  </label>
-                  <label className="flex items-center text-sm md:text-base">
-                    <input {...field} type="radio" value="Khác" className="mr-1 accent-[#3A449B]" />{' '}
-                    Khác
                   </label>
                 </>
               )}

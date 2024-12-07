@@ -16,6 +16,7 @@ export const API_ENDPOINT = {
   GET_CATEGORY: '/api/products/categories',
   POST_PAYMENT: '/api/bookings',
   POST_ORDER: '/api/orders',
+  POST_CONTACT: '/api/contacts',
   POST_PAYMENT_ORDER: '/api/orders',
 };
 

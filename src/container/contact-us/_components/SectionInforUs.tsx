@@ -9,7 +9,8 @@ import callWhite from '@/assets/svgs/contact/white_call.svg';
 import WhiteDrIc from '@/assets/svgs/contact/white_dr.svg';
 import CustomImage from '@/components/CustomImage';
 import Title from '@/components/Title/Title';
-import { Branch, branches } from '@/utils/constants';
+import { useLocationData } from '@/services/location/Location.Service';
+import { Branch, locationCoordinates } from '@/utils/constants';
 import L from 'leaflet';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
@@ -32,8 +33,13 @@ const customMarkerIcon = new L.Icon({
 });
 
 const SectionInforUs: React.FC = () => {
-  const [activeBranch, setActiveBranch] = useState<Branch | null>(null);
+  const { data: DATA_LOCATIONS } = useLocationData();
+  const LOCATIONS: any = DATA_LOCATIONS?.data || [];
+
+  const [activeBranch, setActiveBranch] = useState<any | null>(null);
+
   const [isClient, setIsClient] = useState(false);
+
   const handleBranchClick = (branch: Branch) => {
     setActiveBranch(branch);
   };
@@ -52,9 +58,9 @@ const SectionInforUs: React.FC = () => {
               Chi Nhánh Của Chúng Tôi
             </h3>
             <ul className="sidebar-scroll h-[530px] space-y-4 overflow-y-scroll">
-              {branches.map((branch) => (
+              {LOCATIONS?.map((branch: any) => (
                 <li
-                  key={branch.name}
+                  key={branch.id}
                   onClick={() => handleBranchClick(branch)}
                   className={`mr-2 cursor-pointer rounded-lg border p-4 text-sm md:text-base ${
                     activeBranch?.name === branch.name
@@ -81,7 +87,7 @@ const SectionInforUs: React.FC = () => {
                           src={activeBranch?.name === branch.name ? callWhite : phoneIc}
                           alt="Phone"
                         />
-                        <p className="text-sm">0981 123 106</p>
+                        <p className="text-sm">1900 1234</p>
                       </div>
                     </div>
                     <div>
@@ -94,7 +100,7 @@ const SectionInforUs: React.FC = () => {
           </div>
 
           {/* Customer Information Form */}
-          <FormContact />
+          <FormContact LOCATION_ID={activeBranch?.id} />
         </div>
 
         {/* Interactive Map */}
@@ -105,15 +111,20 @@ const SectionInforUs: React.FC = () => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               />
-              {branches.map((branch) => (
-                <Marker key={branch.name} position={branch.coords} icon={customMarkerIcon}>
-                  <Popup>
-                    <strong>{branch.name}</strong>
-                    <br />
-                    {branch.address}
-                  </Popup>
-                </Marker>
-              ))}
+              {LOCATIONS?.map((branch: any) => {
+                const coordinates = locationCoordinates[branch.id];
+                return (
+                  coordinates && (
+                    <Marker key={branch.id} position={coordinates} icon={customMarkerIcon}>
+                      <Popup>
+                        <strong>{branch.name}</strong>
+                        <br />
+                        {branch.address}
+                      </Popup>
+                    </Marker>
+                  )
+                );
+              })}
             </MapContainer>
           </div>
         )}

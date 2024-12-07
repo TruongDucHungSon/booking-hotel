@@ -758,3 +758,10 @@ export const availableTimes = [
 ];
 
 export const NUMBER_PEOPLE = [1, 2, 3, 4, 5];
+
+export const locationCoordinates: Record<number, [number, number]> = {
+  1: [21.0129, 105.8536], // Tọa độ của BLOOM SPA PHỐ HUẾ
+  2: [21.0382, 105.7829], // Tọa độ của BLOOM SPA XUÂN THỦY
+  3: [20.9811, 105.8419], // Tọa độ của BLOOM SPA KIM ĐỒNG
+  4: [21.2736, 106.1949], // Tọa độ của BLOOM SPA BẮC GIANG
+};
